@@ -64,8 +64,9 @@
              * @param type
              */
             onShowMain(type) {
-                if(type !== this.currentType) {
-                    return this.currentType = type;
+                this.currentType = type;
+                if(type !== this.currentType && this.showMain) {
+                    return;
                 }
                 this.showMain = !this.showMain;
                 setTimeout(() => {
