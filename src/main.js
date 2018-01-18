@@ -19,7 +19,7 @@ Vue.use(VueRouter);
 
 Vue.use(iView);
 
-
+Vue.prototype.$axios = Util;
 
 // 路由配置
 const RouterConfig = {
