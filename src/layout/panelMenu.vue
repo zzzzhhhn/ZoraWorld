@@ -11,21 +11,30 @@
         <!--左菜单-->
         <div class="left-menu" :class="{'show-left-menu': showLeftMenu, 'back-left-menu': backLeftMenu}">
             <div class="left-menu-item" v-for="item in currentMenu" :key="item.mId" @click="onShowMain(item.mId, item.mName)">
-                <router-link :to="item.mUrl || '#'"><span>{{item.mName}}</span></router-link>
+                <router-link :to="item.mUrl || '/'"><span>{{item.mName}}</span></router-link>
             </div>
         </div>
         <!--上标题-->
         <div class="top-title" :class="{'show-title': showTitle, 'back-title': backTitle}">
-            {{currentTitle}}
+            <span v-if="!isReading">{{currentTitle}}</span>
+            <div class="novel-msg container-fluid" v-if="isReading">
+                <div class="col-xs-12 text-center index-title">{{indexData.iName}}</div>
+                <div class="col-xs-6 text-center index-msg">字数： {{indexData.count}}</div>
+                <div class="col-xs-6 text-center index-msg">上传时间： {{indexData.createTime}}</div>
+            </div>
         </div>
         <!--下主体-->
         <div class="main" :class="{'show-main': showMain, 'back-main': backMain, 'expand': isExpand}">
             <div class="main-title">
-                <Icon type="android-contract" size="20" color="white" v-if="isExpand"  @click.native="onContract"></Icon>
+                <Icon type="ios-undo" size="20" color="white" v-if="isReading" @click.native="onBackToIndex"></Icon>
+                <Icon type="android-contract" size="20" color="white" v-if="isExpand" @click.native="onContract"></Icon>
                 <Icon type="android-expand" size="20" color="white" v-if="!isExpand" @click.native="onExpand"></Icon>
-                <Icon type="close-circled" size="20" color="white" @click.native="onHideMain"></Icon>
+                <Icon type="power" size="20" color="white" @click.native="onHideMain"></Icon>
             </div>
-            <novel-panel v-if="currentType === 'novels'" :novelData="novelData"></novel-panel>
+            <novel-panel v-if="currentType === 'novels' && !isReading" :novelData="novelData" @read="onBeginReading"></novel-panel>
+            <div class="novel-content" v-if="isReading">
+                {{contentData.content}}
+            </div>
             <router-view></router-view>
         </div>
 
@@ -60,7 +69,10 @@
                 backMain: false,
                 novelData: {},
                 isExpand: false,
-                currentTitle: ''
+                currentTitle: '',
+                isReading: false,    //是否阅读状态
+                contentData: {},        //章节内容
+                indexData: {},    //章节信息
             }
         },
         created() {
@@ -166,6 +178,7 @@
                 this.backMain = false;
                 this.backTitle = false;
                 this.isExpand = false;
+                this.isReading = false;
                 setTimeout(() => {
                     this.showLeftMenu = true;
                     this.showRightMenu = true;
@@ -188,6 +201,28 @@
              */
             onContract() {
                 this.isExpand = false;
+            },
+            /**
+             * 开始阅读
+             * @param obj
+             */
+            onBeginReading(obj) {
+                this.isReading = true;
+                this.indexData = obj;
+                this.$axios.ajax.post('server/main.php', {index: obj.iNo}).then(res => {
+                    if (res.data.code === 0) {
+                        this.contentData = res.data.data;
+                    } else {
+                        console.error('couldn`t get content data');
+                    }
+
+                });
+            },
+            /**
+             * 回到目录页
+             */
+            onBackToIndex() {
+                this.isReading = false;
             }
         },
         computed: {},
@@ -321,6 +356,21 @@
             text-align: center;
             color: lightsalmon;
 
+            .novel-msg {
+
+                .index-title {
+                    height: 10%;
+                    font-size: 25px;
+                    line-height: 200%;
+                }
+
+                .index-msg {
+                    height: 5%;
+                    font-size: 20px;
+                    line-height: 200%;
+                    color: lightyellow;
+                }
+            }
 
             &.show-title {
                 top: 0;
@@ -369,6 +419,13 @@
                 height: auto;
                 text-align: right;
                 padding: 10px 20px;
+            }
+
+            .novel-content {
+                padding: 20px;
+                font-size: 16px;
+                font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+                color: olivedrab;
             }
         }
     }

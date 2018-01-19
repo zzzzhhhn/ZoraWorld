@@ -1,11 +1,23 @@
 <template>
-    <div class="novel-contain">
-        <div class="novel-img"><img :src="novelData.bookImg" width="200px" height="300px"/></div>
-        <div class="msg-contain">
-            <div class="novel-msg"><span>题材： </span>{{novelData.Theme}}</div>
-            <div class="novel-msg"><span>创作状态： </span>{{novelData.isEnd}}</div>
-            <div class="novel-describe"><div>简介：</div><div class="describe-content">{{novelData.bDescribe}}</div></div>
+    <div>
+        <div class="novel-contain">
+            <div class="novel-img"><img :src="novelData.bookImg" width="200px" height="300px"/></div>
+            <div class="msg-contain">
+                <div class="novel-msg"><span>题材： </span>{{novelData.Theme}}</div>
+                <div class="novel-msg"><span>创作状态： </span>{{novelData.isEnd}}</div>
+                <div class="novel-describe"><div>简介：</div><div class="describe-content">{{novelData.bDescribe}}</div></div>
+                <button type="button" class="btn btn-warning" @click="onBeginReading(novelData.indexes[0])">开始阅读</button>
+                <button type="button" class="btn btn-warning">继续阅读</button>
+            </div>
         </div>
+
+        <div class="novel-indexes container-fluid">
+            <h3>目录</h3>
+            <div class="indexes-item col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="item in novelData.indexes" :key="item.iNo" @click="onBeginReading(item)">
+                {{item.iName}}
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -15,11 +27,15 @@
         props: {
             novelData: Object,
         },
-        data() {
-            return {
-
+        methods: {
+            /**
+             * 开始阅读
+             * @param id
+             */
+            onBeginReading(indexObj) {
+                this.$emit('read', indexObj);
             }
-        },
+        }
 
     }
 </script>
@@ -56,13 +72,13 @@
                 width: 80%;
                 font-size: 20px;
                 color: lightcyan;
-                margin-top: 20px;
+                margin: 20px 0;
 
                 .describe-content {
                     margin-top: 10px;
                     font-size: 16px;
                     color: lightgoldenrodyellow;
-                    height: 200px;
+                    height: 100px;
                     overflow-y: auto;
                 }
 
@@ -71,6 +87,22 @@
 
     }
 
+    .novel-indexes {
+        padding: 0 10%;
 
+        .indexes-item {
+            color: lightyellow;
+            cursor: pointer;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            border-radius: 10px;
+
+            &:hover {
+                background: lightcyan;
+                color: lightgreen;
+            }
+        }
+    }
 
 </style>

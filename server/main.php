@@ -31,7 +31,14 @@ if(@$posts['menu']) {
     $sql = 'select * from menu';
     returnResult(0, $sql);
 }else if(@$posts['novels']) {
-    $sql = "select * from book WHERE `mId` = ". $posts['novels'];
+    $sql1 = "select * from book WHERE `mId` = " . $posts['novels'];
+    $result1 = find($sql1)[0];
+    $sql2 = "select * from indexes WHERE `bNo` =" . $result1['bNo'];
+    $result2 = find($sql2);
+    $result1['indexes'] = $result2;
+    echoJSON(0, $result1);
+}else if(@$posts['index']) {
+    $sql = "select * from content WHERE `iNo` = " . $posts['index'];
     returnResult(0, $sql);
 }
 

@@ -14,7 +14,7 @@ const routers = [{
                 meta: {
                     title: '数独'
                 },
-                component: (resolve) => require(['./views/index.vue'], resolve),
+                component: (resolve) => require(['./views/sudoku.vue'], resolve),
             }
 
         ]

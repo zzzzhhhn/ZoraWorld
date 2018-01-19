@@ -4,23 +4,13 @@
         <router-view></router-view>
     </div>
 </template>
-<script>
+<script lang="ts">
+    import Vue from 'vue'
+    import Component from 'vue-class-component'
 
-    export default {
-
-        data() {
-            return {
-
-            };
-        },
-        mounted() {
-
-        },
-        methods: {
-
-
-        }
-    };
+    @Component({})
+    export default class App extends Vue {
+    }
 </script>
 
 <style lang="less">

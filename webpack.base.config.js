@@ -4,7 +4,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     entry: {
-        main: './src/main',
+        main: './src/main.ts',
         vendors: './src/vendors'
     },
     output: {
@@ -72,11 +72,25 @@ module.exports = {
             {
                 test: require.resolve('jquery'),
                 loader: 'expose-loader?$!expose-loader?jQuery'
-            }
+            },
+            // {
+            //     test: /\.ts$/,
+            //     exclude: /node_modules/,
+            //     enforce: 'pre',
+            //     loader: 'tslint-loader'
+            // },
+            {
+                test: /\.(ts|tsx)?$/,
+                loader: 'ts-loader',
+                exclude: /node_modules/,
+                options: {
+                    appendTsSuffixTo: [/\.vue$/],
+                }
+            },
         ]
     },
     resolve: {
-        extensions: ['.js', '.vue'],
+        extensions: ['.js', '.vue', '.ts'],
         alias: {
             'vue': 'vue/dist/vue.esm.js'
         }
