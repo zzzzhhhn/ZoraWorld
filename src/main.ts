@@ -9,7 +9,6 @@ import 'iview/dist/styles/iview.css';
 import store from './store';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/less/layouts.less';
-import './assets/less/suduku.less';
 
 var $ = require('expose-loader?$!jquery');
 

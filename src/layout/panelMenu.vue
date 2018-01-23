@@ -149,14 +149,16 @@
              */
             onShowMain(id, name) {
                 this.currentTitle = name;
-                this.$axios.ajax.post('server/main.php', {novels: id}).then(res => {
-                    if (res.data.code === 0) {
-                        this.novelData = res.data.data;
-                    } else {
-                        console.error('couldn`t get novels data');
-                    }
+                if(this.currentType === 'novels') {
+                    this.$axios.ajax.post('server/main.php', {novels: id}).then(res => {
+                        if (res.data.code === 0) {
+                            this.novelData = res.data.data;
+                        } else {
+                            console.error('couldn`t get novels data');
+                        }
 
-                });
+                    });
+                }
                 this.showLeftMenu = false;
                 this.backLeftMenu = false;
                 this.backRightMenu = false;

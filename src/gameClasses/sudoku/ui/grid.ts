@@ -28,7 +28,7 @@ export class Grid {
 
         const $divArray = $cells.map(($spanArray,$index) => {
             return $('<div>')
-                .addClass('row')
+                .addClass('row-sudoku')
                 .addClass(rowGroupClasses[$index % 3])
                 .append($spanArray);
     });
