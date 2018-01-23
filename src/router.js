@@ -15,8 +15,14 @@ const routers = [{
                     title: '数独'
                 },
                 component: (resolve) => require(['./views/sudoku.vue'], resolve),
-            }
-
+            },
+            {
+                path: 'tetris',
+                meta: {
+                    title: '俄罗斯方块（单机版）'
+                },
+                component: (resolve) => require(['./views/tetris.vue'], resolve),
+            },
         ]
     }];
 export default routers;

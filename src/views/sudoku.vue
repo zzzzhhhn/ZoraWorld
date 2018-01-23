@@ -35,13 +35,10 @@
 
     @Component
     export default class MyComponent extends Vue {
-        @Emit()
-        init() {
-            const game = new SudokuGame();
-            game.start();
-        }
+
         mounted() {
-            this.init();
+            const sudokuGame = new SudokuGame();
+            sudokuGame.start();
         }
     }
 </script>
