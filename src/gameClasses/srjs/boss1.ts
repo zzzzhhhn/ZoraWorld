@@ -3,7 +3,8 @@
  * boss1 类
  */
 
-import tookit from '../common/commonFunctions';
+import Toolkit from '../common/commonFunctions';
+import Sr from './sr';
 
 export default class Boss1 {
 
@@ -11,17 +12,36 @@ export default class Boss1 {
     private _y: number[];
     private _bodyTimer: number[];
     private _bodyCount: number[];
-    private _bodyPic: any[];
+    private _bodyPic: HTMLImageElement[];
     private _blood: number[];
     private _alive: boolean[];
     private _num: number;
-    private _boss1lPic: any[];
-    private _boss1rPic: any[];
+    private _boss1lPic: HTMLImageElement[];
+    private _boss1rPic: HTMLImageElement[];
     private _ctx2: any;
-    private _sr: any;
+    private _sr: Sr;
 
+    get x() {
+        return this._x;
+    }
 
-    constructor(ctx2: any, W: number, H: number, boss1lPic: any[], boss1rPic: any[], sr: any) {
+    get y() {
+        return this._y;
+    }
+
+    get num() {
+        return this._num;
+    }
+
+    set blood(val: number[]) {
+        this._blood = val;
+    }
+
+    set alive(val: boolean[]) {
+        this._alive = val;
+    }
+
+    constructor(ctx2: any, W: number, H: number, boss1lPic: HTMLImageElement[], boss1rPic: HTMLImageElement[], sr: Sr) {
         this._ctx2 = ctx2;
         this._sr = sr;
         this._boss1lPic = boss1lPic;
@@ -39,8 +59,8 @@ export default class Boss1 {
 
     draw (deltaTime: number) {
         for (let i = 0; i < this._num; i++) {
-            this._x[i] = tookit.lerpDistance(this._sr.x, this._x[i], 0.99);
-            this._y[i] = tookit.lerpDistance(this._sr.y, this._y[i], 0.99);
+            this._x[i] = Toolkit.lerpDistance(this._sr.x, this._x[i], 0.99);
+            this._y[i] = Toolkit.lerpDistance(this._sr.y, this._y[i], 0.99);
             this._bodyTimer[i] += deltaTime;
             if (this._x[i] > this._sr.x) {
                 this._bodyPic = this._boss1lPic;

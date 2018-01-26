@@ -1,114 +1,163 @@
 /**
  * Created by Zora on 2017/2/12.
+ * 兽人子弹
  */
-var seedObj = function () {
-    this.x = [];
-    this.y = [];
-    this.X = [];
-    this.Y = [];
-    this.s =0;
-    this.r = [];
-    this.num = 50;
-    this.alive = [];
-    this.growing = [];
-    this.al  = [];
-    this.dir  = [];
-    this.sp1  = 0;
-    this.sp2  = 0;
-    this.dps  = 0;
-    this.dpsup= false;
-    this.shadow=5;
-}
+import Sr from "./sr";
+import Toolkit from "../common/commonFunctions";
 
-seedObj.prototype.init = function () {
-    for (var i=0;i<this.num;i++) {
-        this.x[i] = sr.x;
-        this.y[i] = sr.y;
-        this.s = 10;
-        this.r[i] = 0;
-        this.alive[i] = false;
-        this.growing[i]  = false;
-        this.X[i] = 0;
-        this.Y[i] = 0;
-        this.dir[i] = sr.dir;
-        this.sp1 = 0.03;
-        this.sp2 = 0.5;
-        this.dps = 10;
+export default class Seed {
+    private _x: number[];
+    private _y: number[];
+    private _X: number[];
+    private _Y: number[];
+    private _s: number;
+    private _r: number[];
+    private _num: number;
+    private _alive: boolean[];
+    private _growing: boolean[];
+    private _dir: string[];
+    private _sp1: number;
+    private _sp2: number;
+    private _dps: number;
+    private _dpsup: boolean;
+    private _shadow: number;
+    private _sr: Sr;
+    private _ctx2: any;
+    private _srPicl: HTMLImageElement[];
+
+    get x() {
+        return this._x;
     }
-}
 
-seedObj.prototype.born = function (i) {
-    this.alive[i]  = true;
-    this.x[i] = sr.x;
-    this.y[i] = sr.y;
-    this.r[i]      = 0;
-    this.dir[i] = sr.dir;
-}
+    get y() {
+        return this._y;
+    }
 
-seedObj.prototype.die =function (i) {
-    this.growing[i] = false;
-    this.alive[i] = false;
-    this.r[i]     = 0;
-}
+    get num() {
+        return this._num;
+    }
 
-seedObj.prototype.draw = function () {
+    set alive(val: boolean[]) {
+        this._alive = val;
+    }
 
-    ctx2.save();
+    get dps() {
+        return this._dps;
+    }
 
+    set dpsup(val: boolean) {
+        this._dpsup = val;
+    }
 
-    ctx2.lineWidth = 2;
-    for (var i=0;i<this.num;i++) {
-        if (this.r[i] < this.s) {
-            if(sr.dir=="left"){
-                this.x[i] = sr.x;
-            }else{
-                this.x[i] = sr.x + srPicl[0].width;
+    set dps(val: number) {
+        this._dps = val;
+    }
+
+    set sp1(val: number) {
+        this._sp1 = val;
+    }
+
+    set sp2(val: number) {
+        this._sp2 = val;
+    }
+
+    set s(val: number) {
+        this._s = val;
+    }
+
+    constructor(ctx2: any, sr: Sr, srPicl: HTMLImageElement[]) {
+        this._num = 50;
+        this._s = 10;
+        this._sp1 = 0.03;
+        this._sp2 = 0.5;
+        this._dps = 10;
+        this._dpsup= false;
+        this._shadow=5;
+        this._sr = sr;
+        this._srPicl = srPicl;
+        for (let i=0;i<this._num;i++) {
+            this._x[i] = this._sr.x;
+            this._y[i] = this._sr.y;
+            this._r[i] = 0;
+            this._alive[i] = false;
+            this._growing[i]  = false;
+            this._X[i] = 0;
+            this._Y[i] = 0;
+            this._dir[i] = this._sr.dir;
+        }
+    }
+
+    born(i: number) {
+        this._alive[i]  = true;
+        this._x[i] =this._sr.x;
+        this._y[i] =this._sr.y;
+        this._r[i]      = 0;
+        this._dir[i] =this._sr.dir;
+    }
+
+    die(i: number) {
+        this._growing[i] = false;
+        this._alive[i] = false;
+        this._r[i]     = 0;
+    }
+
+    draw(W: number, H: number, deltaTime: number) {
+        this._ctx2.save();
+        this._ctx2.lineWidth = 2;
+        for (let i=0;i<this._num;i++) {
+            if (this._r[i] < this._s) {
+                if(this._sr.dir=="left"){
+                    this._x[i] =this._sr.x;
+                }else{
+                    this._x[i] =this._sr.x + this._srPicl[0].width;
+                }
+                this._r[i] += deltaTime*this._sp1;
+                this._growing[i] = true;
+            } else {
+                this._growing[i] = false;
+                if(this._dir[i]=="left"){
+                    this._x[i] -= deltaTime * this._sp2;
+                } else{
+                    this._x[i] += deltaTime * this._sp2;
+                }
             }
-            this.r[i] += deltaTime*this.sp1;
-            this.growing[i] = true;
-        } else {
-            this.growing[i] = false;
-            if(this.dir[i]=="left"){
-                this.x[i] -= deltaTime * this.sp2;
-            } else{
-                this.x[i] += deltaTime * this.sp2;
+            if(this._y[i] < 0 || this._x[i] < 0 || this._x[i] > W || this._y[i] > H){
+                this.die(i);
+            }
+            if(this._alive[i]){
+                this._ctx2.beginPath();
+                this._ctx2.strokeStyle = "yellow";
+                this._ctx2.arc(this._x[i],this._y[i],this._r[i],0,Math.PI*2);
+                this._ctx2.fillStyle = "blue";
+                if(this._dpsup){
+                    this._ctx2.shadowBlur = 20;
+                    this._ctx2.shadowColor = Toolkit.randomColor() + "1)";
+                    this._ctx2.strokeStyle = Toolkit.randomColor() + "1)";
+                    this._ctx2.fillStyle = Toolkit.randomColor() + "0.6)";
+
+                }
+                this._ctx2.fill();
+                this._ctx2.closePath();
+                this._ctx2.stroke();
+            }
+
+
+        }
+        this._ctx2.restore();
+    }
+
+
+    sentseed() {
+        let count = 0;
+        for (let i=0;i<this._num;i++) {
+            if(this._alive[i] && this._growing[i]){
+                count++;
+            }
+            if(!this._alive[i] && count<1){
+                this.born(i);
+                return;
             }
         }
-        if(this.y[i] < 0 || this.x[i] < 0 || this.x[i] > W || this.y[i] > H){
-            this.die(i);
-        }
-        if(this.alive[i]){
-            ctx2.beginPath();
-            ctx2.strokeStyle = "yellow";
-            ctx2.arc(this.x[i],this.y[i],this.r[i],0,Math.PI*2);
-            ctx2.fillStyle = "blue";
-            if(this.dpsup){
-            ctx2.shadowBlur = 20;
-            ctx2.shadowColor = randomColor() + "1)";
-            ctx2.strokeStyle = randomColor() + "1)";
-            ctx2.fillStyle = randomColor() + "0.6)";
-
-             }
-            ctx2.fill();
-            ctx2.closePath();
-            ctx2.stroke();
-        }
-
-
-    }
-    ctx2.restore();
-}
-
-
-function sentseed() {
-    var count = 0;
-    for (var i=0;i<seed.num;i++) {
-        if(seed.alive[i] && seed.growing[i]){
-            count++;
-        }
-        if(!seed.alive[i] && count<1){
-            seed.born(i);
-            return;
-        }
     }
 }
+

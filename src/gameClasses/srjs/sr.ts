@@ -1,100 +1,151 @@
 /**
  * Created by zoramac on 2017/2/8.
  */
-var srObj = function () {
-    this.x;
-    this.y;
-    this.srTimer = 0;
-    this.srCount = 0;
-    this.Left = false;
-    this.Up = false;
-    this.Right = false;
-    this.Down = false;
-    this.dir  = 'left';
-    this.sr;
-    this.sp;
-    this.wd  = false;
-    this.wdtime = 5000;
-}
-srObj.prototype.init = function () {
-    this.x = W*0.5;
-    this.y = H*0.5;
-    this.sp = 5;
-}
-srObj.prototype.draw = function () {
-     this.srTimer += deltaTime;
-     if(this.dir == 'left'){
-        this.sr = srPicl;
-     }else {
-         this.sr = srPicr;
-     }
-     if(this.srTimer > 100){
-         this.srCount = (this.srCount + 1)%4;
-         this.srTimer %= 100;
-     }
-     if(this.Left){
-         this.x -= this.sp;
-     }
-    if(this.Right){
-        this.x += this.sp;
+import Toolkit from '../common/commonFunctions';
+
+export default class Sr {
+
+    private _x: number;
+    private _y: number;
+    private _sp: number;
+    private _srTimer: number;
+    private _srCount: number;
+    private _Left: boolean;
+    private _Up: boolean;
+    private _Right: boolean;
+    private _Down: boolean;
+    private _dir: string;
+    private _sr: HTMLImageElement[];
+    private _wd: boolean;
+    private _wdtime: number;
+    private _srPicl: HTMLImageElement[];
+    private _srPicr: HTMLImageElement[];
+    private _ctx2: any;
+
+    get x() {
+        return this._x;
     }
-    if(this.Up){
-        this.y -= this.sp;
+
+    get y() {
+        return this._y;
     }
-    if(this.Down){
-        this.y += this.sp;
+
+    set sp(val: number) {
+        this._sp = val;
     }
-    if(this.x < 0){
-        this.x = 0;
+
+    set wd(val: boolean) {
+        this._wd = val;
     }
-    if(this.x > W-srPicl[0].width){
-        this.x = W-srPicl[0].width;
+
+    set wdtime(val: number) {
+        this._wdtime = val;
     }
-    if(this.y < 0){
-        this.y = 0;
+
+    get dir() {
+        return this._dir;
     }
-    if(this.y > H-srPicl[0].height){
-        this.y = H-srPicl[0].height;
+
+    constructor(ctx2: any, W: number, H: number, srPicl: HTMLImageElement[], srPicr: HTMLImageElement[]) {
+        this._ctx2 = ctx2;
+        this._x = W * 0.5;
+        this._y = H * 0.5;
+        this._sp = 5;
+        this._srTimer = 0;
+        this._srCount = 0;
+        this._Left = false;
+        this._Up = false;
+        this._Right = false;
+        this._Down = false;
+        this._dir = 'left';
+        this._srPicl = srPicl;
+        this._srPicr = srPicr;
+        this._sr = srPicl;
+        this._wd = false;
+        this._wdtime = 5000;
     }
-    ctx2.save();
-    if(this.wd){
-        ctx2.shadowBlur=10;
-        ctx2.shadowColor=randomColor()+"1)";
-        this.wdtime -= deltaTime;
-        if(this.wdtime<=0){
-            this.wd = false;
+
+    draw(W: number, H: number, deltaTime: number) {
+        this._srTimer += deltaTime;
+        if (this._dir == 'left') {
+            this._sr = this._srPicl;
+        } else {
+            this._sr = this._srPicr;
         }
+        if (this._srTimer > 100) {
+            this._srCount = (this._srCount + 1) % 4;
+            this._srTimer %= 100;
+        }
+        if (this._Left) {
+            this._x -= this._sp;
+        }
+        if (this._Right) {
+            this._x += this._sp;
+        }
+        if (this._Up) {
+            this._y -= this._sp;
+        }
+        if (this._Down) {
+            this._y += this._sp;
+        }
+        if (this._x < 0) {
+            this._x = 0;
+        }
+        if (this._x > W - this._srPicl[0].width) {
+            this._x = W - this._srPicl[0].width;
+        }
+        if (this._y < 0) {
+            this._y = 0;
+        }
+        if (this._y > H - this._srPicl[0].height) {
+            this._y = H - this._srPicl[0].height;
+        }
+        this._ctx2.save();
+        if (this._wd) {
+            this._ctx2.shadowBlur = 10;
+            this._ctx2.shadowColor = Toolkit.randomColor() + "1)";
+            this._wdtime -= deltaTime;
+            if (this._wdtime <= 0) {
+                this._wd = false;
+            }
+        }
+        this._ctx2.drawImage(this._sr[this._srCount], this._x, this._y);
+        this._ctx2.restore();
     }
-    ctx2.drawImage(this.sr[this.srCount],this.x,this.y);
-    ctx2.restore();
-}
-srObj.prototype.moveLeft = function () {
-    this.Left = true;
-    this.dir  = 'left';
+
+    moveLeft() {
+        this._Left = true;
+        this._dir = 'left';
+    }
+
+    moveRight() {
+        this._Right = true;
+        this._dir = 'right';
+    }
+
+    moveUp() {
+        this._Up = true;
+    }
+
+    moveDown() {
+        this._Down = true;
+    }
+
+    stopLeft() {
+        this._Left = false;
+    }
+
+    stopRight() {
+        this._Right = false;
+    }
+
+    stopUp() {
+        this._Up = false;
+    }
+
+    stopDown() {
+        this._Down = false;
+    }
 }
 
-srObj.prototype.moveRight = function () {
-    this.Right = true;
-    this.dir   = 'right';
-}
-srObj.prototype.moveUp = function () {
-    this.Up = true;
-}
 
-srObj.prototype.moveDown = function () {
-    this.Down = true;
-}
-srObj.prototype.stopLeft = function () {
-    this.Left = false;
-}
-
-srObj.prototype.stopRight = function () {
-    this.Right = false;
-}
-srObj.prototype.stopUp = function () {
-    this.Up = false;
-}
-
-srObj.prototype.stopDown = function () {
-    this.Down = false;
-}
