@@ -5,11 +5,11 @@
 import Toolkit from '../common/commonFunctions';
 
 export default class Fz {
-    private _x: number[];
-    private _y: number[];
+    private _x: number[] = [];
+    private _y: number[] = [];
     private _num: number;
-    private _alive: boolean[];
-    private _lifetime: number[];
+    private _alive: boolean[] = [];
+    private _lifetime: number[] = [];
     private _ctx2: any;
     private _fzPic: HTMLImageElement;
 
@@ -50,7 +50,7 @@ export default class Fz {
                 }
                 this._ctx2.save();
                 this._ctx2.shadowBlur = 5;
-                this._ctx2.shadowColor = Toolkit.randomColor()+"1)";
+                this._ctx2.shadowColor = Toolkit.randomColor(1);
                 this._ctx2.drawImage(this._fzPic,this._x[i],this._y[i],50,100);
                 this._ctx2.restore();
             }

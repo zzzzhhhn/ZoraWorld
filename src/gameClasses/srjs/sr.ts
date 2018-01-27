@@ -15,11 +15,11 @@ export default class Sr {
     private _Right: boolean;
     private _Down: boolean;
     private _dir: string;
-    private _sr: HTMLImageElement[];
+    private _sr: HTMLImageElement[] = [];
     private _wd: boolean;
     private _wdtime: number;
-    private _srPicl: HTMLImageElement[];
-    private _srPicr: HTMLImageElement[];
+    private _srPicl: HTMLImageElement[] = [];
+    private _srPicr: HTMLImageElement[] = [];
     private _ctx2: any;
 
     get x() {
@@ -103,7 +103,7 @@ export default class Sr {
         this._ctx2.save();
         if (this._wd) {
             this._ctx2.shadowBlur = 10;
-            this._ctx2.shadowColor = Toolkit.randomColor() + "1)";
+            this._ctx2.shadowColor = Toolkit.randomColor(1);
             this._wdtime -= deltaTime;
             if (this._wdtime <= 0) {
                 this._wd = false;

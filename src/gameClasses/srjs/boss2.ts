@@ -5,19 +5,19 @@ import Sr from './sr';
 
 export default class Boss2 {
 
-    private _x: number[];
-    private _y: number[];
-    private _bodyTimer: number[];
-    private _bodyCount: number[];
-    private _bodyPic: HTMLImageElement[];
-    private _blood: number[];
-    private _alive: boolean[];
+    private _x: number[] = [];
+    private _y: number[] = [];
+    private _bodyTimer: number[] = [];
+    private _bodyCount: number[] = [];
+    private _bodyPic: HTMLImageElement[] = [];
+    private _blood: number[] = [];
+    private _alive: boolean[] = [];
     private _num: number;
-    private _dir: string[];
+    private _dir: string[] = [];
     private _ctx2: any;
     private _sr: any;
-    private _boss2lPic: HTMLImageElement[];
-    private _boss2rPic: HTMLImageElement[];
+    private _boss2lPic: HTMLImageElement[] = [];
+    private _boss2rPic: HTMLImageElement[] = [];
 
     get x() {
         return this._x;
@@ -29,6 +29,14 @@ export default class Boss2 {
 
     get num() {
         return this._num;
+    }
+
+    get dir() {
+        return this._dir;
+    }
+
+    get alive() {
+        return this._alive;
     }
 
     set blood(val: number[]) {

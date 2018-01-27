@@ -8,16 +8,16 @@ import Sr from './sr';
 
 export default class Boss1 {
 
-    private _x: number[];
-    private _y: number[];
-    private _bodyTimer: number[];
-    private _bodyCount: number[];
-    private _bodyPic: HTMLImageElement[];
-    private _blood: number[];
-    private _alive: boolean[];
+    private _x: number[] = [];
+    private _y: number[] = [];
+    private _bodyTimer: number[] = [];
+    private _bodyCount: number[] = [];
+    private _bodyPic: HTMLImageElement[] = [];
+    private _blood: number[] = [];
+    private _alive: boolean[] = [];
     private _num: number;
-    private _boss1lPic: HTMLImageElement[];
-    private _boss1rPic: HTMLImageElement[];
+    private _boss1lPic: HTMLImageElement[] = [];
+    private _boss1rPic: HTMLImageElement[] = [];
     private _ctx2: any;
     private _sr: Sr;
 
@@ -31,6 +31,10 @@ export default class Boss1 {
 
     get num() {
         return this._num;
+    }
+
+    get alive() {
+        return this._alive;
     }
 
     set blood(val: number[]) {

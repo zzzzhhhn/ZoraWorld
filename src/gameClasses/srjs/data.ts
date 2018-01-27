@@ -16,9 +16,9 @@ import Boss1 from "./boss1";
 import Boss2 from "./boss2";
 import Sr from "./sr";
 import Seed1 from "./seed1";
+import Game from "./game";
 
 export default class Data {
-    private _gameover: boolean;
     private _score: number;
     private _life: number;
     private _lifeLimit: number;
@@ -30,25 +30,29 @@ export default class Data {
     private _boss1: Boss1;
     private _boss2: Boss2;
     private _seed: Seed;
-    private _boss1lPic: HTMLImageElement[];
-    private _boss2lPic: HTMLImageElement[];
+    private _boss1lPicWidth: number;
+    private _boss1lPicHeight: number;
+    private _boss2lPicWidth: number;
+    private _boss2lPicHeight: number;
     private _xz: Xz;
     private _ypr: Ypr;
     private _zb: Zb;
     private _fz: Fz;
     private _sz: Sz;
     private _ypy: Ypy;
-    private _jsPic: HTMLImageElement[];
-    private _srPicl: HTMLImageElement[];
+    private _jsPicWidth: number;
+    private _jsPicHeight: number;
+    private _srPiclWidth: number;
+    private _srPiclHeight: number;
     private _sr: Sr;
     private _seed1: Seed1;
+    private _game: Game;
 
-    set gameover(val: boolean) {
-        this._gameover = val;
-    }
 
-    constructor(ctx2: any, js: Js, boss1: Boss1, boss2: Boss2, seed: Seed, boss1lPic: HTMLImageElement[],
-                boss2lPic: HTMLImageElement[], xz: Xz, ypr: Ypr, zb: Zb, fz: Fz, sz: Sz, ypy: Ypy, jsPic: HTMLImageElement[], srPicl: HTMLImageElement[], sr: Sr, seed1: Seed1) {
+
+    constructor(ctx2: any, js: Js, boss1: Boss1, boss2: Boss2, seed: Seed, boss1lPicWidth: number, boss1lPicHeight: number,
+                boss2lPicWidth: number,boss2lPicHeight: number, xz: Xz, ypr: Ypr, zb: Zb, fz: Fz, sz: Sz, ypy: Ypy,
+                jsPicWidth: number, jsPicHeight: number, srPiclWidth: number,srPiclHeight: number, sr: Sr, seed1: Seed1, game: Game) {
         this._ctx2 = ctx2;
         this._js = js;
         this._boss1 = boss1;
@@ -61,12 +65,16 @@ export default class Data {
         this._sz = sz;
         this._ypy = ypy;
         this._sr = sr;
-        this._jsPic = jsPic;
-        this._srPicl = srPicl;
-        this._boss1lPic = boss1lPic;
-        this._boss2lPic = boss2lPic;
+        this._game = game;
+        this._jsPicWidth = jsPicWidth;
+        this._jsPicHeight = jsPicHeight;
+        this._srPiclWidth = srPiclWidth;
+        this._srPiclHeight = srPiclHeight;
+        this._boss1lPicWidth = boss1lPicWidth;
+        this._boss1lPicHeight = boss1lPicHeight;
+        this._boss2lPicWidth = boss2lPicWidth;
+        this._boss2lPicHeight = boss2lPicHeight;
         this._seed1 = seed1;
-        this._gameover = false;
         this._score = 0;
         this._life = 100;
         this._lifeLimit = 100;
@@ -120,13 +128,13 @@ export default class Data {
         this._ctx2.restore();
         this._ctx2.save();
         this._ctx2.shadowBlur = 20;
-        this._ctx2.shadowColor = Toolkit.randomColor() + "1)";
+        this._ctx2.shadowColor = Toolkit.randomColor(1);
         this._ctx2.font = "30px Verdana";
-        this._ctx2.fillStyle = Toolkit.randomColor() + "1)";
+        this._ctx2.fillStyle = Toolkit.randomColor(1);
         this._ctx2.textAlign = "center";
         this._ctx2.fillText("兽人大战僵尸", 600, 40);
         this._ctx2.restore();
-        if (this._gameover) {
+        if (this._game.gameover) {
             this._al += deltaTime * 0.0005;
             if (this._al >= 1) {
                 this._al = 1;
@@ -156,7 +164,7 @@ export default class Data {
     hit() {
         for (let i = 0; i < this._boss1.num; i++) {
             for (let j = 0; j < this._seed.num; j++) {
-                const l3 = Toolkit.calLength2(this._boss1.x[i] + this._boss1lPic[0].width * 0.5, this._boss1.y[i] + this._boss1lPic[0].height * 0.5, this._seed.x[j], this._seed.y[j]);
+                const l3 = Toolkit.calLength2(this._boss1.x[i] + this._boss1lPicWidth * 0.5, this._boss1.y[i] + this._boss1lPicHeight * 0.5, this._seed.x[j], this._seed.y[j]);
 
                 if (l3 < 5000 && this._boss1.alive[i] && this._seed.alive[j]) {
                     this._seed.alive[j] = false;
@@ -164,7 +172,7 @@ export default class Data {
                     if (this._boss1.blood[i] <= 0) {
                         this._boss1.blood[i] = 0;
                         this._boss1.alive[i] = false;
-                        if (!this._gameover) {
+                        if (!this._game.gameover) {
                             this._score += 100;
                             this._ypr.alive[j] = true;
                             this._ypr.x[j] = this._boss1.x[i];
@@ -182,7 +190,7 @@ export default class Data {
         }
         for (let i = 0; i < this._boss2.num; i++) {
             for (let j = 0; j < this._seed.num; j++) {
-                const l4 = Toolkit.calLength2(this._boss2.x[i] + this._boss2lPic[0].width * 0.5, this._boss2.y[i] + this._boss2lPic[0].height * 0.5, this._seed.x[j], this._seed.y[j]);
+                const l4 = Toolkit.calLength2(this._boss2.x[i] + this._boss2lPicWidth * 0.5, this._boss2.y[i] + this._boss2lPicHeight * 0.5, this._seed.x[j], this._seed.y[j]);
 
                 if (l4 < 5000 && this._boss2.alive[i] && this._seed.alive[j]) {
                     this._seed.alive[j] = false;
@@ -190,7 +198,7 @@ export default class Data {
                     if (this._boss2.blood[i] <= 0) {
                         this._boss2.blood[i] = 0;
                         this._boss2.alive[i] = false;
-                        if (!this._gameover) {
+                        if (!this._game.gameover) {
                             this._score += 200;
                             this._fz.alive[j] = true;
                             this._fz.x[j] = this._boss2.x[i];
@@ -208,15 +216,15 @@ export default class Data {
         }
         for (let i = 0; i < this._js.num; i++) {
             for (let j = 0; j < this._seed.num; j++) {
-                const l1 = Toolkit.calLength2(this._js.x[i] + this._jsPic[0].width * 0.5, this._js.y[i] + this._jsPic[0].height * 0.25, this._seed.x[j], this._seed.y[j]);
-                const l2 = Toolkit.calLength2(this._js.x[i] + this._jsPic[0].width * 0.5, this._js.y[i] + this._jsPic[0].height * 0.75, this._seed.x[j], this._seed.y[j]);
+                const l1 = Toolkit.calLength2(this._js.x[i] + this._jsPicWidth * 0.5, this._js.y[i] + this._jsPicHeight * 0.25, this._seed.x[j], this._seed.y[j]);
+                const l2 = Toolkit.calLength2(this._js.x[i] + this._jsPicWidth * 0.5, this._js.y[i] + this._jsPicHeight * 0.75, this._seed.x[j], this._seed.y[j]);
                 if ((l1 < 900 || l2 < 900) && this._seed.alive[j] && this._js.alive[i]) {
                     this._seed.alive[j] = false;
                     this._js.blood[i] -= this._seed.dps;
                     if (this._js.blood[i] <= 0) {
                         this._js.alive[i] = false;
                         this._js.limit--;
-                        if (!this._gameover) {
+                        if (!this._game.gameover) {
                             this._score += 10;
                         }
                         const row1 = Math.random();
@@ -258,18 +266,18 @@ export default class Data {
 
     arm() {
         for (let i = 0; i < this._ypr.num; i++) {
-            const lypr1 = Toolkit.calLength2(this._sr.x + this._srPicl[0].width * 0.5, this._sr.y + this._srPicl[0].height * 0.25, this._ypr.x[i], this._ypr.y[i]);
-            const lypr2 = Toolkit.calLength2(this._sr.x + this._srPicl[0].width * 0.5, this._sr.y + this._srPicl[0].height * 0.75, this._ypr.x[i], this._ypr.y[i]);
-            const lzb1 = Toolkit.calLength2(this._sr.x + this._srPicl[0].width * 0.5, this._sr.y + this._srPicl[0].height * 0.25, this._zb.x[i], this._zb.y[i]);
-            const lzb2 = Toolkit.calLength2(this._sr.x + this._srPicl[0].width * 0.5, this._sr.y + this._srPicl[0].height * 0.75, this._zb.x[i], this._zb.y[i]);
-            const lfz1 = Toolkit.calLength2(this._sr.x + this._srPicl[0].width * 0.5, this._sr.y + this._srPicl[0].height * 0.25, this._fz.x[i], this._fz.y[i]);
-            const lfz2 = Toolkit.calLength2(this._sr.x + this._srPicl[0].width * 0.5, this._sr.y + this._srPicl[0].height * 0.75, this._fz.x[i], this._fz.y[i]);
-            const lxz1 = Toolkit.calLength2(this._sr.x + this._srPicl[0].width * 0.5, this._sr.y + this._srPicl[0].height * 0.25, this._xz.x[i], this._xz.y[i]);
-            const lxz2 = Toolkit.calLength2(this._sr.x + this._srPicl[0].width * 0.5, this._sr.y + this._srPicl[0].height * 0.75, this._xz.x[i], this._xz.y[i]);
-            const lsz1 = Toolkit.calLength2(this._sr.x + this._srPicl[0].width * 0.5, this._sr.y + this._srPicl[0].height * 0.25, this._sz.x[i], this._sz.y[i]);
-            const lsz2 = Toolkit.calLength2(this._sr.x + this._srPicl[0].width * 0.5, this._sr.y + this._srPicl[0].height * 0.75, this._sz.x[i], this._sz.y[i]);
-            const lypy1 = Toolkit.calLength2(this._sr.x + this._srPicl[0].width * 0.5, this._sr.y + this._srPicl[0].height * 0.25, this._ypy.x[i], this._ypy.y[i]);
-            const lypy2 = Toolkit.calLength2(this._sr.x + this._srPicl[0].width * 0.5, this._sr.y + this._srPicl[0].height * 0.75, this._ypy.x[i], this._ypy.y[i]);
+            const lypr1 = Toolkit.calLength2(this._sr.x + this._srPiclWidth * 0.5, this._sr.y + this._srPiclHeight * 0.25, this._ypr.x[i], this._ypr.y[i]);
+            const lypr2 = Toolkit.calLength2(this._sr.x + this._srPiclWidth * 0.5, this._sr.y + this._srPiclHeight * 0.75, this._ypr.x[i], this._ypr.y[i]);
+            const lzb1 = Toolkit.calLength2(this._sr.x + this._srPiclWidth * 0.5, this._sr.y + this._srPiclHeight * 0.25, this._zb.x[i], this._zb.y[i]);
+            const lzb2 = Toolkit.calLength2(this._sr.x + this._srPiclWidth * 0.5, this._sr.y + this._srPiclHeight * 0.75, this._zb.x[i], this._zb.y[i]);
+            const lfz1 = Toolkit.calLength2(this._sr.x + this._srPiclWidth * 0.5, this._sr.y + this._srPiclHeight * 0.25, this._fz.x[i], this._fz.y[i]);
+            const lfz2 = Toolkit.calLength2(this._sr.x + this._srPiclWidth * 0.5, this._sr.y + this._srPiclHeight * 0.75, this._fz.x[i], this._fz.y[i]);
+            const lxz1 = Toolkit.calLength2(this._sr.x + this._srPiclWidth * 0.5, this._sr.y + this._srPiclHeight * 0.25, this._xz.x[i], this._xz.y[i]);
+            const lxz2 = Toolkit.calLength2(this._sr.x + this._srPiclWidth * 0.5, this._sr.y + this._srPiclHeight * 0.75, this._xz.x[i], this._xz.y[i]);
+            const lsz1 = Toolkit.calLength2(this._sr.x + this._srPiclWidth * 0.5, this._sr.y + this._srPiclHeight * 0.25, this._sz.x[i], this._sz.y[i]);
+            const lsz2 = Toolkit.calLength2(this._sr.x + this._srPiclWidth * 0.5, this._sr.y + this._srPiclHeight * 0.75, this._sz.x[i], this._sz.y[i]);
+            const lypy1 = Toolkit.calLength2(this._sr.x + this._srPiclWidth * 0.5, this._sr.y + this._srPiclHeight * 0.25, this._ypy.x[i], this._ypy.y[i]);
+            const lypy2 = Toolkit.calLength2(this._sr.x + this._srPiclWidth * 0.5, this._sr.y + this._srPiclHeight * 0.75, this._ypy.x[i], this._ypy.y[i]);
 
             if ((lypr1 < 900 || lypr2 < 900) && this._ypr.alive[i]) {
                 this._ypr.alive[i] = false;
@@ -307,32 +315,32 @@ export default class Data {
 
     hurt() {
         for (let i = 0; i < this._js.num; i++) {
-            const l1 = Toolkit.calLength2(this._sr.x + this._srPicl[0].width * 0.5, this._sr.y + this._srPicl[0].height * 0.5, this._js.x[i] + this._jsPic[0].width * 0.5, this._js.y[i] + this._jsPic[0].height * 0.5);
+            const l1 = Toolkit.calLength2(this._sr.x + this._srPiclWidth * 0.5, this._sr.y + this._srPiclHeight * 0.5, this._js.x[i] + this._jsPicWidth * 0.5, this._js.y[i] + this._jsPicHeight * 0.5);
             if (l1 < 1500 && this._js.alive[i] && !this._sr.wd) {
                 this._life--;
                 if (this._life <= 0) {
                     this._life = 0;
-                    this._gameover = true;
+                    this._game.gameover = true;
                 }
             }
         }
         for (let i = 0; i < this._seed1.num; i++) {
-            const l1 = Toolkit.calLength2(this._sr.x + this._srPicl[0].width * 0.5, this._sr.y + this._srPicl[0].height * 0.5, this._seed1.x[i], this._seed1.y[i]);
+            const l1 = Toolkit.calLength2(this._sr.x + this._srPiclWidth * 0.5, this._sr.y + this._srPiclHeight * 0.5, this._seed1.x[i], this._seed1.y[i]);
             if (l1 < 5000 && this._boss2.alive[i] && !this._sr.wd) {
                 this._life--;
                 if (this._life <= 0) {
                     this._life = 0;
-                    this._gameover = true;
+                    this._game.gameover = true;
                 }
             }
         }
         for (let i = 0; i < this._boss1.num; i++) {
-            const l2 = Toolkit.calLength2(this._sr.x + this._srPicl[0].width * 0.5, this._sr.y + this._srPicl[0].height * 0.5, this._boss1.x[i] + this._boss1lPic[0].width * 0.5, this._boss1.y[i] + this._boss1lPic[0].height * 0.5);
+            const l2 = Toolkit.calLength2(this._sr.x + this._srPiclWidth * 0.5, this._sr.y + this._srPiclHeight * 0.5, this._boss1.x[i] + this._boss1lPicWidth * 0.5, this._boss1.y[i] + this._boss1lPicHeight * 0.5);
             if (l2 < 5000 && this._boss1.alive[i] && !this._sr.wd) {
                 this._life--;
                 if (this._life <= 0) {
                     this._life = 0;
-                    this._gameover = true;
+                    this._game.gameover = true;
                 }
             }
         }

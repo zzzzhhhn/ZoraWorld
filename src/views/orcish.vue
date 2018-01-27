@@ -1,13 +1,13 @@
 <template>
     <div class="orcish">
         <div class="content">
-            <canvas id="canvas1" width="1200px" height="800px"></canvas>
-            <canvas id="canvas2" width="1200px" height="800px"></canvas>
+            <canvas id="canvas1" width="1000px" height="600px"></canvas>
+            <canvas id="canvas2" width="1000px" height="600px"></canvas>
         </div>
-        <div style="position: relative;width: 100%">
-            <button class="btn btn-warning btn-lg" id="btn">重新开始</button>
+        <div style="position: relative;width: 100%" class="text-center">
+            <button class="btn btn-warning btn-lg btn-orcish" @click="start">重新开始</button>
         </div>
-        <div class="rule">
+        <div class="rule" @mouseenter="showRule" @mouseleave="hideRule">
             <p>1、方向键操作： 方向键控制移动，空格键发射魔法飞弹；</p>
             <p>2、被僵尸碰到生命值会下降，所以你的走位要比僵尸更骚；</p>
             <p>3、Boss倒计时结束会出现强大的Boss；</p>
@@ -20,30 +20,58 @@
             <p><img src="../assets/img/orcish/ypy.png" width="30px" height="50px">   获得5秒钟伤害免疫</p>
             <p>5、兽人生命值为零或僵尸数量增长到50则游戏结束；</p>
         </div>
-
     </div>
 </template>
 
 <script lang="ts">
     import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
-    import SudokuGame from '../gameClasses/sudoku/index.ts';
+    import OrcishGame from '../gameClasses/srjs/main';
 
     @Component
-    export default class MyComponent extends Vue {
+    export default class Orcish extends Vue {
+
+        private _orcish: OrcishGame;
 
         mounted() {
-            const sudokuGame = new SudokuGame();
-            sudokuGame.start();
+            this._orcish = new OrcishGame();
+            this.start();
+            setTimeout(() => {
+                $('.rule').addClass('hide-rule');
+            }, 3000);
+        }
+
+        start() {
+            this._orcish.start();
+            $(".btn-orcish").blur();
+        }
+
+        end() {
+            this._orcish.end();
+        }
+
+        showRule() {
+            $('.rule').removeClass('hide-rule');
+        }
+
+        hideRule() {
+            $('.rule').addClass('hide-rule');
+        }
+
+        destroyed() {
+            this.end()
         }
     }
 </script>
 
 <style lang="less">
+    .orcish {
+        position: relative;
+    }
    .content {
-           width: 1200px;
-           height: 800px;
-           position: relative;
-           margin: 10px auto;
+       width: 1000px;
+       height: 600px;
+       position: relative;
+       margin: 0 auto;
        }
        #canvas1,#canvas2 {
            position: absolute;
@@ -54,20 +82,22 @@
        #canvas2 {
            z-index: 1;
        }
-       #btn {
-           display: block;
-           margin:20px auto;
-       }
        .rule {
            position: absolute;
-           left: 10px;
-           top: 55px;
-           width: 300px;
-           height: 800px;
+           left: 0;
+           top: 0;
+           width: 250px;
+           height: auto;
+           min-height: 600px;
            background-color: yellow;
            padding: 10px 10px;
-           font-size: 20px;
+           font-size: 16px;
            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
            color: #67b168;
+           transition: left 0.3s ease;
+
+           &.hide-rule {
+               left: -240px;
+           }
        }
 </style>

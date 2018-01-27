@@ -6,16 +6,16 @@ import Sr from "./sr";
 import Toolkit from "../common/commonFunctions";
 
 export default class Seed {
-    private _x: number[];
-    private _y: number[];
-    private _X: number[];
-    private _Y: number[];
+    private _x: number[] = [];
+    private _y: number[] = [];
+    private _X: number[] = [];
+    private _Y: number[] = [];
     private _s: number;
-    private _r: number[];
+    private _r: number[] = [];
     private _num: number;
-    private _alive: boolean[];
-    private _growing: boolean[];
-    private _dir: string[];
+    private _alive: boolean[] = [];
+    private _growing: boolean[] = [];
+    private _dir: string[] = [];
     private _sp1: number;
     private _sp2: number;
     private _dps: number;
@@ -23,7 +23,6 @@ export default class Seed {
     private _shadow: number;
     private _sr: Sr;
     private _ctx2: any;
-    private _srPicl: HTMLImageElement[];
 
     get x() {
         return this._x;
@@ -37,13 +36,18 @@ export default class Seed {
         return this._num;
     }
 
-    set alive(val: boolean[]) {
-        this._alive = val;
+    get alive() {
+        return this._alive;
     }
 
     get dps() {
         return this._dps;
     }
+
+    set alive(val: boolean[]) {
+        this._alive = val;
+    }
+
 
     set dpsup(val: boolean) {
         this._dpsup = val;
@@ -65,7 +69,8 @@ export default class Seed {
         this._s = val;
     }
 
-    constructor(ctx2: any, sr: Sr, srPicl: HTMLImageElement[]) {
+    constructor(ctx2: any, sr: Sr) {
+        this._ctx2 = ctx2;
         this._num = 50;
         this._s = 10;
         this._sp1 = 0.03;
@@ -74,7 +79,6 @@ export default class Seed {
         this._dpsup= false;
         this._shadow=5;
         this._sr = sr;
-        this._srPicl = srPicl;
         for (let i=0;i<this._num;i++) {
             this._x[i] = this._sr.x;
             this._y[i] = this._sr.y;
@@ -101,7 +105,7 @@ export default class Seed {
         this._r[i]     = 0;
     }
 
-    draw(W: number, H: number, deltaTime: number) {
+    draw(W: number, H: number, deltaTime: number, srPiclWidth: number) {
         this._ctx2.save();
         this._ctx2.lineWidth = 2;
         for (let i=0;i<this._num;i++) {
@@ -109,7 +113,7 @@ export default class Seed {
                 if(this._sr.dir=="left"){
                     this._x[i] =this._sr.x;
                 }else{
-                    this._x[i] =this._sr.x + this._srPicl[0].width;
+                    this._x[i] =this._sr.x + srPiclWidth;
                 }
                 this._r[i] += deltaTime*this._sp1;
                 this._growing[i] = true;
@@ -131,9 +135,9 @@ export default class Seed {
                 this._ctx2.fillStyle = "blue";
                 if(this._dpsup){
                     this._ctx2.shadowBlur = 20;
-                    this._ctx2.shadowColor = Toolkit.randomColor() + "1)";
-                    this._ctx2.strokeStyle = Toolkit.randomColor() + "1)";
-                    this._ctx2.fillStyle = Toolkit.randomColor() + "0.6)";
+                    this._ctx2.shadowColor = Toolkit.randomColor(1);
+                    this._ctx2.strokeStyle = Toolkit.randomColor(1);
+                    this._ctx2.fillStyle = Toolkit.randomColor(1);
 
                 }
                 this._ctx2.fill();

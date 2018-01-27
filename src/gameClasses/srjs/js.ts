@@ -4,28 +4,29 @@
  */
 import Toolkit from '../common/commonFunctions';
 import Data from "./data";
+import Game from "./game";
 
 export default class Js {
-    private _x: number[];
-    private _y: number[];
-    private _bodyCount: number[];
+    private _x: number[] = [];
+    private _y: number[] = [];
+    private _bodyCount: number[] = [];
     private _num: number;
-    private _bodyTimer: number[];
-    private _X: number[];
-    private _Y: number[];
-    private _tx: number[];
-    private _ampx: number[];
-    private _spx: number[];
-    private _al: number[];
-    private _ty: number[];
-    private _ampy: number[];
-    private _spy: number[];
-    private _alive: boolean[];
+    private _bodyTimer: number[] = [];
+    private _X: number[] = [];
+    private _Y: number[] = [];
+    private _tx: number[] = [];
+    private _ampx: number[] = [];
+    private _spx: number[] = [];
+    private _al: number[] = [];
+    private _ty: number[] = [];
+    private _ampy: number[] = [];
+    private _spy: number[] = [];
+    private _alive: boolean[] = [];
     private _limit: number;
-    private _blood: number[];
+    private _blood: number[] = [];
     private _ctx2: any;
-    private _data: Data;
-    private _jsPic: HTMLImageElement[];
+    private _game: Game;
+    private _jsPic: HTMLImageElement[] = [];
 
     get x() {
         return this._x;
@@ -43,6 +44,13 @@ export default class Js {
         return this._limit;
     }
 
+    get alive() {
+        return this._alive;
+    }
+
+    get blood() {
+        return this._blood;
+    }
     set limit(val: number) {
         this._limit = val;
     }
@@ -55,11 +63,12 @@ export default class Js {
         this._alive = val;
     }
 
-    constructor(ctx2: any, W: number, H: number, data: Data, jsPic: HTMLImageElement[]) {
+    constructor(ctx2: any, W: number, H: number, game: Game, jsPic: HTMLImageElement[]) {
         this._num = 50;
         this._ctx2 = ctx2;
-        this._data = data;
+        this._game = game;
         this._jsPic = jsPic;
+        this._limit = 5;
         for (let i = 0; i < this._num; i++) {
             this._x[i] = W * Math.random();
             this._y[i] = H * 0.6 + Math.random() * 300;
@@ -84,7 +93,7 @@ export default class Js {
         for (let i = 0; i < this._num; i++) {
             if (this._limit >= this._num) {
                 this._limit = this._num;
-                this._data.gameover = true;
+                this._game.gameover = true;
             }
             this._tx[i] += deltaTime * Math.random() * 0.001;
             this._X[i] = W * 0.5 + Math.sin(this._tx[i]) * this._ampx[i];
