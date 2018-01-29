@@ -15,7 +15,7 @@ import Zb from './zb';
 import Fz from './fz';
 import Ypy from './ypy';
 import Sz from './sz';
-import Game from './game';
+import Game from '../common/game';
 
 export default class orcishGame {
     private _can1: HTMLCanvasElement;

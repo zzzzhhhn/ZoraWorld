@@ -16,7 +16,7 @@ import Boss1 from "./boss1";
 import Boss2 from "./boss2";
 import Sr from "./sr";
 import Seed1 from "./seed1";
-import Game from "./game";
+import Game from "../common/game";
 
 export default class Data {
     private _score: number;

@@ -1,10 +1,10 @@
 <template>
-    <div class="orcish">
+    <div class="games-contain">
         <div class="content">
             <canvas id="canvas1" width="1000px" height="600px"></canvas>
             <canvas id="canvas2" width="1000px" height="600px"></canvas>
         </div>
-        <div style="position: relative;width: 100%" class="text-center">
+        <div class="text-center mt10">
             <button class="btn btn-warning btn-lg btn-orcish" @click="start">重新开始</button>
         </div>
         <div class="rule" @mouseenter="showRule" @mouseleave="hideRule">
@@ -64,7 +64,7 @@
 </script>
 
 <style lang="less">
-    .orcish {
+    .games-contain {
         position: relative;
     }
    .content {

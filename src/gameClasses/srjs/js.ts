@@ -4,7 +4,7 @@
  */
 import Toolkit from '../common/commonFunctions';
 import Data from "./data";
-import Game from "./game";
+import Game from "../common/game";
 
 export default class Js {
     private _x: number[] = [];
