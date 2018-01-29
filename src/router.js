@@ -23,6 +23,13 @@ const routers = [{
                 },
                 component: (resolve) => require(['./views/tetris.vue'], resolve),
             },
+            {
+                path: 'orcish',
+                meta: {
+                    title: '兽人大战僵尸'
+                },
+                component: (resolve) => require(['./views/orcish.vue'], resolve),
+            },
         ]
     }];
 export default routers;
