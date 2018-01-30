@@ -1,7 +1,7 @@
 /**
  * Created by Zora on 2017/6/2.
  */
-import Bg from 'bg';
+import Bg from './bg';
 
 export default class Tree {
     private _x: number[];
@@ -15,6 +15,38 @@ export default class Tree {
     private _ctx1: any;
     private _bg: Bg;
     private _treePic: HTMLImageElement;
+
+    get x() {
+        return this._x;
+    }
+
+    get y() {
+        return this._y;
+    }
+
+    get num() {
+        return this._num;
+    }
+
+    get alive() {
+        return this._alive;
+    }
+
+    get collected() {
+        return this._collected;
+    }
+
+    get limit() {
+        return this._limit;
+    }
+
+    set limit(val: number) {
+        this._limit = val;
+    }
+
+    set collected(val: boolean[]) {
+        this._collected = val;
+    }
 
     constructor(ctx1: any, bg: Bg, treePic: HTMLImageElement) {
         this._num = bg.num;
@@ -42,7 +74,7 @@ export default class Tree {
 
         for (let i = 0; i < this._num; i++) {
             if (this._alive[i]) {
-                ctx1.drawImage(this._treePic, this._x[i], this._y[i], this._treePic.width, this._treePic.height);
+                this._ctx1.drawImage(this._treePic, this._x[i], this._y[i], this._treePic.width, this._treePic.height);
             }
 
         }

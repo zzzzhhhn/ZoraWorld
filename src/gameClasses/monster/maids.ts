@@ -34,6 +34,11 @@ export default class Maid {
     private _data: Data;
     private _game: Game
 
+    set num(val: number) {
+        this._num = val;
+    }
+
+
     constructor(ctx2: any, W: number, H: number, maidF: HTMLImageElement[], maidB: HTMLImageElement[], maidL: HTMLImageElement[], maidR: HTMLImageElement[], sj: Sj, house: House, housePic: HTMLImageElement[], data: Data, game: Game) {
         this._num = 2;
         this._Pic = maidF;
@@ -65,9 +70,9 @@ export default class Maid {
 
     draw(deltaTime: number, W: number, H: number, bgX: number, bgY: number) {
         for (let i = 0; i < this._num; i++) {
-            const houseX1 = bg.x[41];
+            const houseX1 = bgX;
             const houseX2 = houseX1 + 90;
-            const houseY1 = bg.y[41];
+            const houseY1 = bgY;
             const houseY2 = houseY1 + 90;
             if (this._x[i] > houseX1 && this._x[i] < houseX2 && this._y[i] > houseY1 && this._y[i] < houseY2) {
                 this._show[i] = false;
@@ -174,15 +179,15 @@ export default class Maid {
 
 
             if (this._alive[i] && this._show[i]) {
-                ctx2.save();
-                ctx2.drawImage(this._Pic[this._PicCount[i]], this._x[i], this._y[i]);
-                ctx2.restore();
+                this._ctx2.save();
+                this._ctx2.drawImage(this._Pic[this._PicCount[i]], this._x[i], this._y[i]);
+                this._ctx2.restore();
             }
 
         }
     }
 
-    born(i) {
+    born(i: number) {
         this._x[i] = 550;
         this._y[i] = 350;
         this._alive[i] = true;

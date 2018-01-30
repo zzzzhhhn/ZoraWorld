@@ -15,6 +15,7 @@ import Fish from "./fish";
 import Sj from "./sj";
 import Data from "./data";
 import Tree from "./tree";
+import Game from "../common/game";
 
 export default class MonsterGame {
     private _can1: HTMLCanvasElement;
@@ -80,11 +81,12 @@ export default class MonsterGame {
     private _data: Data;
     private _treePic: HTMLImageElement;
     private _tree: Tree;
-    private _wl: HTMLImageElement;
+    private _wlPic: HTMLImageElement;
+    private _game: Game;
 
     constructor() {
-        this._can1 = document.getElementById('canvas1');
-        this._can2 = document.getElementById('canvas2');
+        this._can1 = <HTMLCanvasElement>document.getElementById('canvas1');
+        this._can2 = <HTMLCanvasElement>document.getElementById('canvas2');
         this._ctx1 = this._can1.getContext('2d');
         this._ctx2 = this._can2.getContext('2d');
         this._mx = 0;
@@ -95,138 +97,139 @@ export default class MonsterGame {
         this._H = this._can2.height;
 
         this._bgPic = new Image();
-        this._bgPic.src = './img/ground.png';
-        this._wl = new Image();
-        this._wl.src = "./img/wl.png";
+        this._bgPic.src = '/src/assets/img/monster/ground.png';
+        this._wlPic = new Image();
+        this._wlPic.src = "/src/assets/img/monster/wl.png";
         this._grassPic = new Image();
-        this._grassPic.src = './img/grass.png';
+        this._grassPic.src = '/src/assets/img/monster/grass.png';
         this._treePic = new Image();
-        this._treePic.src = './img/tree.png';
+        this._treePic.src = '/src/assets/img/monster/tree.png';
         for (let i = 0; i < 4; i++) {
             this._farmerF[i] = new Image();
-            this._farmerF[i].src = "./img/farmers/font" + i + ".png";
+            this._farmerF[i].src = "/src/assets/img/monster/farmers/font" + i + ".png";
         }
         for (let i = 0; i < 4; i++) {
             this._farmerB[i] = new Image();
-            this._farmerB[i].src = "./img/farmers/back" + i + ".png";
+            this._farmerB[i].src = "/src/assets/img/monster/farmers/back" + i + ".png";
         }
         for (let i = 0; i < 4; i++) {
             this._farmerL[i] = new Image();
-            this._farmerL[i].src = "./img/farmers/left" + i + ".png";
+            this._farmerL[i].src = "/src/assets/img/monster/farmers/left" + i + ".png";
         }
         for (let i = 0; i < 4; i++) {
             this._farmerR[i] = new Image();
-            this._farmerR[i].src = "./img/farmers/right" + i + ".png";
+            this._farmerR[i].src = "/src/assets/img/monster/farmers/right" + i + ".png";
         }
         for (let i = 0; i < 4; i++) {
             this._maidF[i] = new Image();
-            this._maidF[i].src = "./img/maids/front" + i + ".png";
+            this._maidF[i].src = "/src/assets/img/monster/maids/front" + i + ".png";
         }
         for (let i = 0; i < 4; i++) {
             this._maidB[i] = new Image();
-            this._maidB[i].src = "./img/maids/back" + i + ".png";
+            this._maidB[i].src = "/src/assets/img/monster/maids/back" + i + ".png";
         }
         for (let i = 0; i < 4; i++) {
             this._maidL[i] = new Image();
-            this._maidL[i].src = "./img/maids/left" + i + ".png";
+            this._maidL[i].src = "/src/assets/img/monster/maids/left" + i + ".png";
         }
         for (let i = 0; i < 4; i++) {
             this._maidR[i] = new Image();
-            this._maidR[i].src = "./img/maids/right" + i + ".png";
+            this._maidR[i].src = "/src/assets/img/monster/maids/right" + i + ".png";
         }
         for (let i = 0; i < 4; i++) {
             this._knightF[i] = new Image();
-            this._knightF[i].src = "./img/knight/knightf" + i + ".png";
+            this._knightF[i].src = "/src/assets/img/monster/knight/knightf" + i + ".png";
         }
         for (let i = 0; i < 4; i++) {
             this._knightB[i] = new Image();
-            this._knightB[i].src = "./img/knight/knightb" + i + ".png";
+            this._knightB[i].src = "/src/assets/img/monster/knight/knightb" + i + ".png";
         }
         for (let i = 0; i < 4; i++) {
             this._knightL[i] = new Image();
-            this._knightL[i].src = "./img/knight/knightl" + i + ".png";
+            this._knightL[i].src = "/src/assets/img/monster/knight/knightl" + i + ".png";
         }
         for (let i = 0; i < 4; i++) {
             this._knightR[i] = new Image();
-            this._knightR[i].src = "./img/knight/knightr" + i + ".png";
+            this._knightR[i].src = "/src/assets/img/monster/knight/knightr" + i + ".png";
         }
         for (let i = 1; i <= 5; i++) {
             this._housePic[i] = new Image();
-            this._housePic[i].src = "./img/house/house" + i + ".png";
+            this._housePic[i].src = "/src/assets/img/monster/house/house" + i + ".png";
         }
         this._dragonLogo = new Image();
-        this._dragonLogo.src = "./img/logo/dragon.jpg";
+        this._dragonLogo.src = "/src/assets/img/monster/logo/dragon.jpg";
         this._fishLogo = new Image();
-        this._fishLogo.src = "./img/logo/fish.jpg";
+        this._fishLogo.src = "/src/assets/img/monster/logo/fish.jpg";
         this._slmLogo = new Image();
-        this._slmLogo.src = "./img/logo/slm.jpg";
+        this._slmLogo.src = "/src/assets/img/monster/logo/slm.jpg";
         this._moguLogo = new Image();
-        this._moguLogo.src = "./img/logo/mogu.jpg";
+        this._moguLogo.src = "/src/assets/img/monster/logo/mogu.jpg";
         for (let i = 0; i < 4; i++) {
             this._dragonPicl[i] = new Image();
-            this._dragonPicl[i].src = "./img/dragon/dragonl" + i + ".png";
+            this._dragonPicl[i].src = "/src/assets/img/monster/dragon/dragonl" + i + ".png";
         }
         for (let i = 0; i < 4; i++) {
             this._dragonPicr[i] = new Image();
-            this._dragonPicr[i].src = "./img/dragon/dragonr" + i + ".png";
+            this._dragonPicr[i].src = "/src/assets/img/monster/dragon/dragonr" + i + ".png";
         }
         for (let i = 0; i < 6; i++) {
             this._moguPicl[i] = new Image();
-            this._moguPicl[i].src = "./img/mogu/mogul" + i + ".png";
+            this._moguPicl[i].src = "/src/assets/img/monster/mogu/mogul" + i + ".png";
         }
         for (let i = 0; i < 6; i++) {
             this._moguPicr[i] = new Image();
-            this._moguPicr[i].src = "./img/mogu/mogur" + i + ".png";
+            this._moguPicr[i].src = "/src/assets/img/monster/mogu/mogur" + i + ".png";
         }
         for (let i = 0; i < 29; i++) {
             this._slmPicl[i] = new Image();
-            this._slmPicl[i].src = "./img/slm/slml" + i + ".png";
+            this._slmPicl[i].src = "/src/assets/img/monster/slm/slml" + i + ".png";
         }
         for (let i = 0; i < 29; i++) {
             this._slmPicr[i] = new Image();
-            this._slmPicr[i].src = "./img/slm/slmr" + i + ".png";
+            this._slmPicr[i].src = "/src/assets/img/monster/slm/slmr" + i + ".png";
         }
         for (let i = 0; i < 8; i++) {
             this._fishPicl[i] = new Image();
-            this._fishPicl[i].src = "./img/fish/fishl" + i + ".png";
+            this._fishPicl[i].src = "/src/assets/img/monster/fish/fishl" + i + ".png";
         }
         for (let i = 0; i < 8; i++) {
             this._fishPicr[i] = new Image();
-            this._fishPicr[i].src = "./img/fish/fishr" + i + ".png";
+            this._fishPicr[i].src = "/src/assets/img/monster/fish/fishr" + i + ".png";
         }
         this._dragonEgg = new Image();
-        this._dragonEgg.src = "./img/egg/dragonEgg.png";
+        this._dragonEgg.src = "/src/assets/img/monster/egg/dragonEgg.png";
         this._fishEgg = new Image();
-        this._fishEgg.src = "./img/egg/fishEgg.png";
+        this._fishEgg.src = "/src/assets/img/monster/egg/fishEgg.png";
         this._moguEgg = new Image();
-        this._moguEgg.src = "./img/egg/moguEgg.png";
+        this._moguEgg.src = "/src/assets/img/monster/egg/moguEgg.png";
         this._slmEgg = new Image();
-        this._slmEgg.src = "./img/egg/slmEgg.png";
+        this._slmEgg.src = "/src/assets/img/monster/egg/slmEgg.png";
         this._dragonPlan = new Image();
-        this._dragonPlan.src = "./img/plan/dragonPlan.png";
+        this._dragonPlan.src = "/src/assets/img/monster/plan/dragonPlan.png";
         this._fishPlan = new Image();
-        this._fishPlan.src = "./img/plan/fishPlan.png";
+        this._fishPlan.src = "/src/assets/img/monster/plan/fishPlan.png";
         this._moguPlan = new Image();
-        this._moguPlan.src = "./img/plan/moguPlan.png";
+        this._moguPlan.src = "/src/assets/img/monster/plan/moguPlan.png";
         this._slmPlan = new Image();
-        this._slmPlan.src = "./img/plan/slmPlan.png";
+        this._slmPlan.src = "/src/assets/img/monster/plan/slmPlan.png";
         this._sjPic = new Image();
-        this._sjPic.src = "./img/sj.png";
+        this._sjPic.src = "/src/assets/img/monster/sj.png";
 
-        this._house = new House();
-        this._knight = new Knight();
-        this._maid = new Maid();
-        this._farmer = new Farmer();
-        this._grass = new Grass();
-        this._tree = new Tree();
-        this._bg = new BG();
-        this._dragon = new Dragon();
-        this._mogu = new Mogu();
-        this._slm = new Slm();
-        this._fish = new Fish();
-        this._panel = new Panel();
-        this._sj = new Sj();
-        this._data = new Data();
+        this._game = new Game();
+        this._house = new House(this._ctx2, this._bg.x[41], this._bg.y[41], this._housePic, this._farmer, this._maid, this._grass);
+        this._knight = new Knight(this._ctx2, this._bg.x[89], this._bg.y[89], this._knightF, this._knightB, this._knightL, this._knightR, this._slm, this._mogu, this._dragon, this._fish, this._house, this._housePic, this._data, this._game);
+        this._maid = new Maid(this._ctx2, this._W, this._H, this._maidF, this._maidB, this._maidL, this._maidR, this._sj, this._house, this._housePic, this._data, this._game);
+        this._farmer = new Farmer(this._ctx2, this._bg, this._data, this._grass, this._tree, this._house, this._game, this._farmerF, this._farmerB, this._farmerL, this._farmerR, this._housePic);
+        this._grass = new Grass(this._ctx1, this._bg, this._grassPic);
+        this._tree = new Tree(this._ctx1, this._bg, this._treePic);
+        this._bg = new BG(this._ctx1, this._W, this._H, this._bgPic, this._wlPic);
+        this._dragon = new Dragon(this._ctx1, this._ctx2, this._dragonPicl, this._dragonPicr, this._sj, this._knight, this._bg, this._data, this._dragonPlan, this._dragonEgg);
+        this._mogu = new Mogu(this._ctx1, this._ctx2, this._moguPicl, this._moguPicr, this._sj, this._knight, this._bg, this._data, this._moguPlan, this._moguEgg);
+        this._slm = new Slm(this._ctx1, this._ctx2, this._slmPicl, this._slmPicr, this._sj, this._knight, this._bg, this._data, this._slmPlan, this._slmEgg, this._cx, this._cy);
+        this._fish = new Fish(this._ctx1, this._ctx2, this._fishPicl, this._fishPicr, this._sj, this._knight, this._bg, this._data, this._fishPlan, this._fishEgg);
+        this._panel = new Panel(this._ctx2, this._cx, this._cy, this._bg, this._data, this._house, this._dragon, this._fish, this._slm, this._mogu, this._fishLogo, this._moguLogo, this._slmLogo, this._dragonLogo);
+        this._sj = new Sj(this._ctx1, this._sjPic);
+        this._data = new Data(this._ctx2, this._knight);
         this._lasttime = Date.now();
         this._deltaTime = 0;
 
@@ -234,7 +237,7 @@ export default class MonsterGame {
     }
 
     gameLoop() {
-        window.requestAnimationFrame(gameLoop);
+        window.requestAnimationFrame(this.gameLoop);
         this._deltaTime = Date.now() - this._lasttime;
         if (this._deltaTime >= 40) {
             this._deltaTime = 40;
@@ -242,33 +245,33 @@ export default class MonsterGame {
         this._lasttime = Date.now();
         this._ctx2.clearRect(0, 0, this._W, this._H);
         this._bg.draw();
-        this._grass.draw();
+        this._grass.draw(this._deltaTime);
 
-        this._grassControl();
-        this._treeControl();
-        this._tree.draw();
-        this._farmerControl();
-        this._farmer.draw();
-        this._maidControl();
-        this._maid.draw();
-        this._knightControl();
-        this._knight.draw();
+        this._grass.grassControl();
+        this._tree.treeControl();
+        this._tree.draw(this._deltaTime);
+        this._farmer.farmerControl();
+        this._farmer.draw(this._deltaTime, this._W, this._H);
+        this._maid.maidControl();
+        this._maid.draw(this._deltaTime, this._W, this._H, this._bg.x[41], this._bg.y[41]);
+        this._knight.knightControl();
+        this._knight.draw(this._deltaTime);
         this._house.draw();
-        this._dragonControl();
-        this._dragon.draw();
-        this._moguControl();
-        this._mogu.draw();
-        this._fishControl();
-        this._fish.draw();
-        this._slmControl();
-        this._slm.draw();
+        this._dragon.dragonControl();
+        this._dragon.draw(this._deltaTime);
+        this._mogu.moguControl();
+        this._mogu.draw(this._deltaTime);
+        this._fish.fishControl();
+        this._fish.draw(this._deltaTime);
+        this._slm.slmControl();
+        this._slm.draw(this._deltaTime);
         this._sj.draw();
-        this._data.draw();
+        this._data.draw(this._deltaTime, this._W, this._H, this._game.gameover, this._house.life);
         this._panel.draw();
-        this._attact();
+        this._data.attact(this._deltaTime);
     }
 
-    build(e) {
+    build(e: any) {
         if (e.offsetX || e.layerX) {
             this._mx = e.offsetX == undefined ? e.layerX : e.offsetX;
             this._my = e.offsetY == undefined ? e.layerY : e.offsetY;
@@ -344,7 +347,6 @@ export default class MonsterGame {
                         this._data.sjCount = this._data.sjCount -this._house.sjCost;
                         return;
                     }
-                    ;
                     return;
                 }
                 if (this._mx >= this._panel.x && this._mx <= this._panel.x + 100 && this._my >= ( this._panel.y + 100) && this._my < this._panel.y + 200) {

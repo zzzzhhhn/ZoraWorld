@@ -3,10 +3,10 @@
  * 龙
  */
 import Toolkit from '../common/commonFunctions';
-import Sj from 'sj';
-import Knight from 'knight';
-import Bg from 'bg';
-import Data from 'data';
+import Sj from './sj';
+import Knight from './knight';
+import Bg from './bg';
+import Data from './data';
 
 export default class Dragon {
     private _x: number[];
@@ -42,9 +42,47 @@ export default class Dragon {
     private _dragonEgg: HTMLImageElement;
     private _bg: Bg;
     private _data: Data;
+    private _cx: number;
+    private _cy: number;
+
+    get x() {
+        return this._x;
+    }
+
+    get y() {
+        return this._y;
+    }
 
 
-    constructor(ctx1: any, ctx2: any, dragonPicl: HTMLImageElement[], dragonPicr: HTMLImageElement[], sj: Sj, knight: Knight, bg: Bg, data: Data, dragonPlan: HTMLImageElement, dragonEgg: HTMLImageElement) {
+    get num() {
+        return this._num;
+    }
+
+
+    get grassCost() {
+        return this._grassCost;
+    }
+
+    get sjCost() {
+        return this._sjCost;
+    }
+
+    get alive() {
+        return this._alive;
+    }
+
+
+    set life(val: number[]) {
+        this._life = val;
+    }
+
+
+    set limit(val: number) {
+        this._limit = val;
+    }
+
+
+    constructor(ctx1: any, ctx2: any, dragonPicl: HTMLImageElement[], dragonPicr: HTMLImageElement[], sj: Sj, knight: Knight, bg: Bg, data: Data, dragonPlan: HTMLImageElement, dragonEgg: HTMLImageElement, cx: number, cy: number) {
         this._grassCost = 100;
         this._sjCost = 50;
         this._sjDelTime = 10 * 1000;
@@ -61,6 +99,8 @@ export default class Dragon {
         this._dragonEgg = dragonEgg;
         this._bg = bg;
         this._data = data;
+        this._cx = cx;
+        this._cy = cy;
         for (let i = 0; i < this._num; i++) {
             this._x[i] = 0;
             this._y[i] = 0;
@@ -224,16 +264,16 @@ export default class Dragon {
     }
 
     born(i: number) {
-        this._x[i] = cx;
-        this._y[i] = cy;
+        this._x[i] = this._cx;
+        this._y[i] = this._cy;
         this._alive[i] = true;
         this._front[i] = 'front';
         this._Pic = this._dragonPicl;
         this._PicCount[i] = 0;
         this._delta[i] = 0;
         this._full[i] = false;
-        this._planX[i] = cx;
-        this._planY[i] = cy;
+        this._planX[i] = this._cx;
+        this._planY[i] = this._cy;
         this._bg.over[this._bg.cbg] = 'dragon';
         this._data.limit++;
         this._fight[i] = false;

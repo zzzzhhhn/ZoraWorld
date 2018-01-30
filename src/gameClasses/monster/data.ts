@@ -24,6 +24,30 @@ export default class Data {
         this._knight = knight;
     }
 
+    get sjCount() {
+        return this._sjCount;
+    }
+
+    get grassCount() {
+        return this._grassCount;
+    }
+
+    get limit() {
+        return this._limit;
+    }
+
+    set grassCount(val: number) {
+        this._grassCount = val;
+    }
+
+    set sjCount(val: number) {
+        this._sjCount = val;
+    }
+
+    set limit(val: number) {
+        this._limit = val;
+    }
+
     draw(deltaTime: number, W: number, H: number, isGameOver: boolean, houseLife: number,) {
         this._ctx2.save();
         this._ctx2.shadowBlur = 10;

@@ -2,10 +2,10 @@
  * Created by Zora on 2017/6/10.
  */
 import Toolkit from '../common/commonFunctions';
-import Sj from 'sj';
-import Knight from 'knight';
-import Bg from 'bg';
-import Data from 'data';
+import Sj from './sj';
+import Knight from './knight';
+import Bg from './bg';
+import Data from './data';
 export default class Fish {
     private _x: number[];
     private _y: number[];
@@ -40,8 +40,44 @@ export default class Fish {
     private _fishEgg: HTMLImageElement;
     private _bg: Bg;
     private _data: Data;
+    private _cx: number;
+    private _cy: number;
 
-    constructor(ctx1: any, ctx2: any, fishPicl: HTMLImageElement[], fishPicr: HTMLImageElement[], sj: Sj, knight: Knight, bg: Bg, data: Data, fishPlan: HTMLImageElement, fishEgg: HTMLImageElement) {
+    get x() {
+        return this._x;
+    }
+
+    get y() {
+        return this._y;
+    }
+
+
+    get num() {
+        return this._num;
+    }
+
+    get grassCost() {
+        return this._grassCost;
+    }
+
+    get sjCost() {
+        return this._sjCost;
+    }
+
+    get alive() {
+        return this._alive;
+    }
+
+
+    set life(val: number[]) {
+        this._life = val;
+    }
+
+    set limit(val: number) {
+        this._limit = val;
+    }
+
+    constructor(ctx1: any, ctx2: any, fishPicl: HTMLImageElement[], fishPicr: HTMLImageElement[], sj: Sj, knight: Knight, bg: Bg, data: Data, fishPlan: HTMLImageElement, fishEgg: HTMLImageElement, cx: number, cy: number) {
         this._num = 10;
         this._limit = 0;
         this._grassCost = 50;
@@ -58,6 +94,8 @@ export default class Fish {
         this._fishEgg = fishEgg;
         this._bg = bg;
         this._data = data;
+        this._cx = cx;
+        this._cy = cy;
         for (let i = 0; i < this._num; i++) {
             this._x[i] = 0;
             this._y[i] = 0;
@@ -163,26 +201,26 @@ export default class Fish {
                 }
 
                 if (this._alive[i]) {
-                    ctx2.save();
-                    ctx1.drawImage(this._fishPlan, this._planX[i], this._planY[i], 100, 100);
-                    ctx2.drawImage(this._Pic[this._PicCount[i]], this._x[i], this._y[i], 100, 100);
-                    ctx2.restore();
-                    ctx2.save();
-                    ctx2.strokeStyle = "blue";
-                    ctx2.globalAlpha = 0.7;
-                    ctx2.lineWidth = 10;
-                    ctx2.lineCap = "round";
-                    ctx2.shadowBlur = 10;
-                    ctx2.shadowColor = "white";
-                    ctx2.font = "20px Verdana";
-                    ctx2.fillStyle = "white";
-                    ctx2.textAlign = "center";
-                    ctx2.beginPath();
-                    ctx2.moveTo(this._x[i], this._y[i] - 20);
-                    ctx2.lineTo(this._x[i] + 120 * this._life[i] / 5000, this._y[i] - 20);
-                    ctx2.closePath();
-                    ctx2.stroke();
-                    ctx2.restore();
+                    this._ctx2.save();
+                    this._ctx1.drawImage(this._fishPlan, this._planX[i], this._planY[i], 100, 100);
+                    this._ctx2.drawImage(this._Pic[this._PicCount[i]], this._x[i], this._y[i], 100, 100);
+                    this._ctx2.restore();
+                    this._ctx2.save();
+                    this._ctx2.strokeStyle = "blue";
+                    this._ctx2.globalAlpha = 0.7;
+                    this._ctx2.lineWidth = 10;
+                    this._ctx2.lineCap = "round";
+                    this._ctx2.shadowBlur = 10;
+                    this._ctx2.shadowColor = "white";
+                    this._ctx2.font = "20px Verdana";
+                    this._ctx2.fillStyle = "white";
+                    this._ctx2.textAlign = "center";
+                    this._ctx2.beginPath();
+                    this._ctx2.moveTo(this._x[i], this._y[i] - 20);
+                    this._ctx2.lineTo(this._x[i] + 120 * this._life[i] / 5000, this._y[i] - 20);
+                    this._ctx2.closePath();
+                    this._ctx2.stroke();
+                    this._ctx2.restore();
                 }
 
             }
@@ -193,40 +231,40 @@ export default class Fish {
                     this._delta[i] = 0;
                     this._life[i] = 5000;
                 }
-                ctx2.save();
-                ctx2.drawImage(this._fishEgg, this._x[i], this._y[i], 100, 100);
-                ctx2.restore();
-                ctx2.save();
-                ctx2.strokeStyle = "blue";
-                ctx2.globalAlpha = 0.7;
-                ctx2.lineWidth = 10;
-                ctx2.lineCap = "round";
-                ctx2.shadowBlur = 10;
-                ctx2.shadowColor = "white";
-                ctx2.font = "20px Verdana";
-                ctx2.fillStyle = "white";
-                ctx2.textAlign = "center";
-                ctx2.beginPath();
-                ctx2.moveTo(this._x[i] + 40, this._y[i] - 20);
-                ctx2.lineTo(this._x[i] + 40 + 20 * this._life[i] / 200, this._y[i] - 20);
-                ctx2.closePath();
-                ctx2.stroke();
-                ctx2.restore();
+                this._ctx2.save();
+                this._ctx2.drawImage(this._fishEgg, this._x[i], this._y[i], 100, 100);
+                this._ctx2.restore();
+                this._ctx2.save();
+                this._ctx2.strokeStyle = "blue";
+                this._ctx2.globalAlpha = 0.7;
+                this._ctx2.lineWidth = 10;
+                this._ctx2.lineCap = "round";
+                this._ctx2.shadowBlur = 10;
+                this._ctx2.shadowColor = "white";
+                this._ctx2.font = "20px Verdana";
+                this._ctx2.fillStyle = "white";
+                this._ctx2.textAlign = "center";
+                this._ctx2.beginPath();
+                this._ctx2.moveTo(this._x[i] + 40, this._y[i] - 20);
+                this._ctx2.lineTo(this._x[i] + 40 + 20 * this._life[i] / 200, this._y[i] - 20);
+                this._ctx2.closePath();
+                this._ctx2.stroke();
+                this._ctx2.restore();
             }
         }
     }
 
     born(i: number) {
-        this._x[i] = cx;
-        this._y[i] = cy;
+        this._x[i] = this._cx;
+        this._y[i] = this._cy;
         this._alive[i] = true;
         this._front[i] = 'front';
         this._Pic = this._fishPicl;
         this._PicCount[i] = 0;
         this._delta[i] = 0;
         this._full[i] = false;
-        this._planX[i] = cx;
-        this._planY[i] = cy;
+        this._planX[i] = this._cx;
+        this._planY[i] = this._cy;
         this._bg.over[this._bg.cbg] = 'fish';
         this._data.limit++;
         this._fight[i] = false;

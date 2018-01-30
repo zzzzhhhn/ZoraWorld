@@ -20,10 +20,46 @@ export default class House {
     private _maid: Maid;
     private _grass: Grass;
 
+    get x() {
+        return this._x;
+    }
+
+    get y() {
+        return this._y;
+    }
+
+    get life() {
+        return this._life;
+    }
+
+    get limit() {
+        return this._limit;
+    }
+
+    get sjCost() {
+        return this._sjCost;
+    }
+
+    get grassCost() {
+        return this._grassCost;
+    }
+
+    set life(val: number) {
+        this._life = val;
+    }
+
+    set level(val: number) {
+        this._level = val;
+    }
+
+    set alive(val: boolean) {
+        this._alive = val;
+    }
+
     constructor(ctx2: any, bgX: number, bgY: number, housePic: HTMLImageElement[], farmer: Farmer, maid: Maid, grass: Grass) {
         this._level = 1;
-        this._x = bg.x[41];
-        this._y = bg.y[41];
+        this._x = bgX;
+        this._y = bgY;
         this._grassCost = 50;
         this._sjCost = 10;
         this._limit = 10;

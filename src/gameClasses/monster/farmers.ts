@@ -3,11 +3,11 @@
  * 农民
  */
 import Toolkit from '../common/commonFunctions';
-import Bg from 'bg';
-import Data from 'data';
-import Grass from 'grass';
-import Tree from 'tree';
-import House from 'house';
+import Bg from './bg';
+import Data from './data';
+import Grass from './grass';
+import Tree from './tree';
+import House from './house';
 import Game from '../common/game';
 
 export default class Farmer {
@@ -41,6 +41,14 @@ export default class Farmer {
     private _game: Game;
     private _tree: Tree;
     private _grass: Grass;
+
+    get num() {
+        return this._num;
+    }
+
+    set num(val: number) {
+        this._num = val;
+    }
 
     constructor(ctx2: any, bg: Bg, data: Data, grass: Grass, tree: Tree, house: House, game: Game, farmerF: HTMLImageElement[], farmerB: HTMLImageElement[], farmerL: HTMLImageElement[], farmerR: HTMLImageElement[], housePic: HTMLImageElement[]) {
         this._ctx2 = ctx2;
@@ -226,9 +234,9 @@ export default class Farmer {
 
 
             if (this._alive[i] && this._show[i]) {
-                ctx2.save();
-                ctx2.drawImage(this._Pic[this._PicCount[i]], this._x[i], this._y[i]);
-                ctx2.restore();
+                this._ctx2.save();
+                this._ctx2.drawImage(this._Pic[this._PicCount[i]], this._x[i], this._y[i]);
+                this._ctx2.restore();
             }
 
         }

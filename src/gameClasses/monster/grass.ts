@@ -1,7 +1,7 @@
 /**
  * Created by Zora on 2017/6/2.
  */
-import Bg from 'bg';
+import Bg from './bg';
 
 export default class Grass {
     private _x: number[];
@@ -15,6 +15,42 @@ export default class Grass {
     private _ctx1: any;
     private _bg: Bg;
     private _grassPic: HTMLImageElement;
+
+    get x() {
+        return this._x;
+    }
+
+    get y() {
+        return this._y;
+    }
+
+    get num() {
+        return this._num;
+    }
+
+    get alive() {
+        return this._alive;
+    }
+
+    get collected() {
+        return this._collected;
+    }
+
+    get limit() {
+        return this._limit;
+    }
+
+    set limit(val: number) {
+        this._limit = val;
+    }
+
+    set collected(val: boolean[]) {
+        this._collected = val;
+    }
+
+    set growDel(val: number) {
+        this._growDel = val;
+    }
 
     constructor(ctx1: any, bg: Bg, grassPic: HTMLImageElement) {
         this._num = bg.num;

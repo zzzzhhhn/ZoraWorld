@@ -18,6 +18,38 @@ export default class BG {
     private _bgPic: HTMLImageElement;
     private _ctx1: any;
 
+    get x() {
+        return this._x;
+    }
+
+    get y() {
+        return this._y;
+    }
+
+    get num() {
+        return this._num;
+    }
+
+    get x2() {
+        return this._x2;
+    }
+
+    get y2() {
+        return this._y2;
+    }
+
+    get occupied() {
+        return this._occupied;
+    }
+
+    set cbg(val: number) {
+        this._cbg = val;
+    }
+
+    set over(val: string[]) {
+        this.over = val;
+    }
+
     constructor(ctx1: any, W: number, H: number, bgPic: HTMLImageElement, wlPic: HTMLImageElement) {
         this._ctx1 = ctx1;
         this._bgPic = bgPic;

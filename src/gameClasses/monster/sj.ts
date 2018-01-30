@@ -11,6 +11,30 @@ export default class Sj {
     private _sjPic: HTMLImageElement;
     private _ctx1: any;
 
+    get x() {
+        return this._x;
+    }
+
+    get y() {
+        return this._y;
+    }
+
+
+    get num() {
+        return this._num;
+    }
+
+
+    get collected() {
+        return this._collected;
+    }
+
+
+    get alive() {
+        return this._alive;
+    }
+
+
     constructor(ctx1: any, sjPic: HTMLImageElement) {
         this._num = 200;
         this._del = 20 * 1000;
@@ -27,7 +51,7 @@ export default class Sj {
     draw() {
         for (let i = 0; i < this._num; i++) {
             if (this._alive[i]) {
-                ctx1.drawImage(this._sjPic, this._x[i], this._y[i], 15, 30);
+                this._ctx1.drawImage(this._sjPic, this._x[i], this._y[i], 15, 30);
             }
         }
     }

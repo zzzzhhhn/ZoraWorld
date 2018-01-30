@@ -44,7 +44,31 @@ export default class Knight {
     private _house: House;
     private _data: Data;
     private _game: Game;
-    
+
+    get x() {
+        return this._x;
+    }
+
+    get y() {
+        return this._y;
+    }
+
+    get num() {
+        return this._num;
+    }
+
+    get alive() {
+        return this._alive;
+    }
+
+    set life(val: number[]) {
+        this._life = val;
+    }
+
+    set num(val: number) {
+        this._num = val;
+    }
+
     constructor(ctx2: any, bgX: number, bgY: number, knightF: HTMLImageElement[], knightB: HTMLImageElement[], knightL: HTMLImageElement[], knightR: HTMLImageElement[],
                 slm: Slm, mogu: Mogu, dragon: Dragon, fish: Fish, house: House, housePic: HTMLImageElement[], data: Data, game: Game) {
         this._num = 0;
@@ -64,8 +88,8 @@ export default class Knight {
         this._game =game;
 
         for (let i = 0; i < this._num; i++) {
-            this._x[i] = bg.x[89] + Math.random() * 200;
-            this._y[i] = bg.y[89] + 100;
+            this._x[i] = bgX + Math.random() * 200;
+            this._y[i] = bgY + 100;
             this._alive[i] = false;
             this._front[i] = 'front';
             this._PicCount[i] = 0;
@@ -258,25 +282,25 @@ draw(deltaTime: number) {
 
 
         if(this._alive[i]) {
-            ctx2.save();
-            ctx2.drawImage(this._Pic[this._PicCount[i]],this._x[i],this._y[i]);
-            ctx2.restore();
-            ctx2.save();
-            ctx2.strokeStyle = "red";
-            ctx2.globalAlpha = 0.7;
-            ctx2.lineWidth = 10;
-            ctx2.lineCap = "round";
-            ctx2.shadowBlur = 10;
-            ctx2.shadowColor = "white";
-            ctx2.font = "20px Verdana";
-            ctx2.fillStyle = "white";
-            ctx2.textAlign = "center";
-            ctx2.beginPath();
-            ctx2.moveTo(this._x[i],this._y[i]-20);
-            ctx2.lineTo(this._x[i]+30*this._life[i]/100,this._y[i]-20);
-            ctx2.closePath();
-            ctx2.stroke();
-            ctx2.restore();
+            this._ctx2.save();
+            this._ctx2.drawImage(this._Pic[this._PicCount[i]],this._x[i],this._y[i]);
+            this._ctx2.restore();
+            this._ctx2.save();
+            this._ctx2.strokeStyle = "red";
+            this._ctx2.globalAlpha = 0.7;
+            this._ctx2.lineWidth = 10;
+            this._ctx2.lineCap = "round";
+            this._ctx2.shadowBlur = 10;
+            this._ctx2.shadowColor = "white";
+            this._ctx2.font = "20px Verdana";
+            this._ctx2.fillStyle = "white";
+            this._ctx2.textAlign = "center";
+            this._ctx2.beginPath();
+            this._ctx2.moveTo(this._x[i],this._y[i]-20);
+            this._ctx2.lineTo(this._x[i]+30*this._life[i]/100,this._y[i]-20);
+            this._ctx2.closePath();
+            this._ctx2.stroke();
+            this._ctx2.restore();
         }
 
     }

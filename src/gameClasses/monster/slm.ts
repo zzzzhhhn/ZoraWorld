@@ -2,10 +2,10 @@
  * Created by Zora on 2017/6/10.
  */
 import Toolkit from '../common/commonFunctions';
-import Sj from 'sj';
-import Knight from 'knight';
-import Bg from 'bg';
-import Data from 'data';
+import Sj from './sj';
+import Knight from './knight';
+import Bg from './bg';
+import Data from './data';
 
 export default class Slm {
     private _x: number[];
@@ -41,8 +41,45 @@ export default class Slm {
     private _slmEgg: HTMLImageElement;
     private _bg: Bg;
     private _data: Data;
+    private _cx: number;
+    private _cy: number;
 
-    constructor(ctx1: any, ctx2: any, slmPicl: HTMLImageElement[], slmPicr: HTMLImageElement[], sj: Sj, knight: Knight, bg: Bg, data: Data, slmPlan: HTMLImageElement, slmEgg: HTMLImageElement) {
+    get x() {
+        return this._x;
+    }
+
+    get y() {
+        return this._y;
+    }
+
+
+    get num() {
+        return this._num;
+    }
+
+    get grassCost() {
+        return this._grassCost;
+    }
+
+    get sjCost() {
+        return this._sjCost;
+    }
+
+    get alive() {
+        return this._alive;
+    }
+
+    set life(val: number[]) {
+        this._life = val;
+    }
+
+
+    set limit(val: number) {
+        this._limit = val;
+    }
+
+
+    constructor(ctx1: any, ctx2: any, slmPicl: HTMLImageElement[], slmPicr: HTMLImageElement[], sj: Sj, knight: Knight, bg: Bg, data: Data, slmPlan: HTMLImageElement, slmEgg: HTMLImageElement, cx: number, cy: number) {
         this._num = 10;
         this._limit = 0;
         this._grassCost = 10;
@@ -58,6 +95,8 @@ export default class Slm {
         this._slmEgg = slmEgg;
         this._bg = bg;
         this._data = data;
+        this._cx = cx;
+        this._cy = cy;
         for (let i = 0; i < this._num; i++) {
             this._x[i] = 0;
             this._y[i] = 0;
@@ -163,7 +202,7 @@ export default class Slm {
 
                 if (this._alive[i]) {
                     this._ctx2.save();
-                    ctx1.drawImage(this._slmPlan, this._planX[i], this._planY[i], 100, 100);
+                    this._ctx1.drawImage(this._slmPlan, this._planX[i], this._planY[i], 100, 100);
                     this._ctx2.drawImage(this._Pic[this._PicCount[i]], this._x[i], this._y[i], 60, 60);
                     this._ctx2.restore();
                     this._ctx2.save();
@@ -216,16 +255,16 @@ export default class Slm {
     }
 
     born(i: number) {
-        this._x[i] = cx;
-        this._y[i] = cy;
+        this._x[i] = this._cx;
+        this._y[i] = this._cy;
         this._alive[i] = true;
         this._front[i] = 'front';
         this._Pic = this._slmPicl;
         this._PicCount[i] = 0;
         this._delta[i] = 0;
         this._full[i] = false;
-        this._planX[i] = cx;
-        this._planY[i] = cy;
+        this._planX[i] = this._cx;
+        this._planY[i] = this._cy;
         this._bg.over[this._bg.cbg] = 'slm';
         this._data.limit++;
         this._fight[i] = false;

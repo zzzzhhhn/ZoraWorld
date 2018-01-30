@@ -13,7 +13,7 @@ export default class Panel {
     private _x: number;
     private _y: number;
     private _show: boolean;
-    private ctx2: any;
+    private _ctx2: any;
     private _bg: Bg;
     private _data: Data;
     private _house: House;
@@ -25,13 +25,47 @@ export default class Panel {
     private _moguLogo: HTMLImageElement;
     private _slmLogo: HTMLImageElement;
     private _dragonLogo: HTMLImageElement;
-    private _ctx2: any;
+
     constructor(ctx2: any, cx: number, cy: number, bg: Bg, data: Data, house: House, dragon: Dragon, fish: Fish, slm: Slm, mogu: Mogu, fishLogo: HTMLImageElement, moguLogo: HTMLImageElement, slmLogo: HTMLImageElement, dragonLogo: HTMLImageElement) {
         this._x = cx;
         this._y = cy;
         this._show = false;
         this._ctx2 = ctx2;
-        // this._cbg = 0;
+        this._bg = bg;
+        this._data = data;
+        this._house = house;
+        this._dragon = dragon;
+        this._fish = fish;
+        this._slm = slm;
+        this._mogu = mogu;
+        this._fishLogo = fishLogo;
+        this._moguLogo = moguLogo;
+        this._slmLogo = slmLogo;
+        this._dragonLogo = dragonLogo;
+    }
+
+    get x() {
+        return this._x;
+    }
+
+    get y() {
+        return this._y;
+    }
+
+    get show() {
+        return this._show;
+    }
+
+    set show(val: boolean) {
+        this._show = val;
+    }
+
+    set x(val: number) {
+        this._x = val;
+    }
+
+    set y(val: number) {
+        this._y = val;
     }
 
     draw() {
