@@ -4,7 +4,7 @@ import Game from "../common/game";
  * Created by Zora on 2017/6/10.
  * 背景
  */
-export default class BackGround {
+export default class BG {
     private _num: number;
     private _x: number[];               //左上角坐标
     private _y: number[];
@@ -61,7 +61,6 @@ export default class BackGround {
                 this._ctx1.drawImage(this._wlPic, this._x[i], this._y[i]);
             }
         }
-
 
     }
 }

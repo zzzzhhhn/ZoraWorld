@@ -3,7 +3,6 @@
  * 僵尸
  */
 import Toolkit from '../common/commonFunctions';
-import Data from "./data";
 import Game from "../common/game";
 
 export default class Js {
@@ -51,6 +50,7 @@ export default class Js {
     get blood() {
         return this._blood;
     }
+
     set limit(val: number) {
         this._limit = val;
     }

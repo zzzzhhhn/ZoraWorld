@@ -1,76 +1,88 @@
 /**
  * Created by Zora on 2017/6/2.
  */
-var treeObj = function () {
-    this.x = [];
-    this.y = [];
-    this.num;
-    this.limit;
-    this.del;
-    this.alive = [];
-    this.collected = [];
-    this.growDel;
-}
+import Bg from 'bg';
 
-treeObj.prototype.init = function () {
-    this.num = bg.num;
-    this.limit = 3;
-    this.del = 0;
-    this.growDel = 1000*10 + Math.random()*5000;
-    for (var i=0;i<this.num;i++) {
-        this.x[i] = 0;
-        this.y[i] = 0;
-        this.alive[i] = false;
-        this.collected[i] = false;
-    }
-}
+export default class Tree {
+    private _x: number[];
+    private _y: number[];
+    private _num: number;
+    private _limit: number;
+    private _del: number;
+    private _alive: boolean[];
+    private _collected: boolean[];
+    private _growDel: number;
+    private _ctx1: any;
+    private _bg: Bg;
+    private _treePic: HTMLImageElement;
 
-treeObj.prototype.draw = function () {
-    this.del += deltaTime;
-
-    if(this.del > this.growDel) {
-        tree.limit++;
-        this.del %= this.growDel;
-    }
-
-    for (var i=0;i<this.num;i++) {
-        if(this.alive[i]) {
-            ctx1.drawImage(treePic,this.x[i],this.y[i],treePic.width,treePic.height);
-        }
-
-    }
-}
-
-treeObj.prototype.grow = function (i) {
-    if(!bg.occupied[i]) {
-        this.x[i] =bg.x[i] + Math.random()*50;
-        this.y[i] = bg.y[i] + Math.random()*50;
-        bg.occupied[i] = true;
-        this.alive[i] = true;
-        this.collected[i] = false;
-        bg.over[i] = 'tree';
-    }
-}
-
-treeObj.prototype.clean = function (i) {
-    this.alive[i] = false;
-    bg.occupied[i] = false;
-}
-
-function treeControl() {
-    var count = 0;
-    for (var i=0;i<tree.num;i++) {
-        if(tree.alive[i]) {
-            count++;
+    constructor(ctx1: any, bg: Bg, treePic: HTMLImageElement) {
+        this._num = bg.num;
+        this._limit = 3;
+        this._del = 0;
+        this._ctx1 = ctx1;
+        this._bg = bg;
+        this._treePic = treePic;
+        this._growDel = 1000 * 10 + Math.random() * 5000;
+        for (let i = 0; i < this._num; i++) {
+            this._x[i] = 0;
+            this._y[i] = 0;
+            this._alive[i] = false;
+            this._collected[i] = false;
         }
     }
-    if(count < tree.limit) {
-        var i = Math.floor(Math.random()*bg.num);
-        if(!tree.alive[i] && !bg.occupied[i]) {
-            tree.grow(i);
-            return;
+
+    draw(deltaTime: number) {
+        this._del += deltaTime;
+
+        if (this._del > this._growDel) {
+            this._limit++;
+            this._del %= this._growDel;
         }
 
+        for (let i = 0; i < this._num; i++) {
+            if (this._alive[i]) {
+                ctx1.drawImage(this._treePic, this._x[i], this._y[i], this._treePic.width, this._treePic.height);
+            }
+
+        }
+    }
+
+    grow(i: number) {
+        if (!this._bg.occupied[i]) {
+            this._x[i] = this._bg.x[i] + Math.random() * 50;
+            this._y[i] = this._bg.y[i] + Math.random() * 50;
+            this._bg.occupied[i] = true;
+            this._alive[i] = true;
+            this._collected[i] = false;
+            this._bg.over[i] = 'tree';
+        }
+    }
+
+    clean(i: number) {
+        this._alive[i] = false;
+        this._bg.occupied[i] = false;
+    }
+
+    treeControl() {
+        let count = 0;
+        for (let i = 0; i < this._num; i++) {
+            if (this._alive[i]) {
+                count++;
+            }
+        }
+        if (count < this._limit) {
+            let i = Math.floor(Math.random() * this._bg.num);
+            if (!this._alive[i] && !this._bg.occupied[i]) {
+                this.grow(i);
+                return;
+            }
+
+        }
     }
 }
+
+
+
+
 

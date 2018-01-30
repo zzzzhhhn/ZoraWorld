@@ -1,153 +1,209 @@
 /**
  * Created by Zora on 2017/6/10.
  */
-var moguObj = function () {
-    this.x = [];
-    this.y = [];
-    this.planX = [];
-    this.planY = [];
-    this.alive = [];
-    this.Pic = [];
-    this.num;
-    this.limit;
-    this.front = [];
-    this.PicCount = [];
-    this.delta = [];
-    this.frontDel = [];
-    this.full = [];
-    this.sjDel = [];
-    this.grassCost;
-    this.sjCost;
-    this.sjDelTime;
-    this.fight = [];
-    this.life = [];
-    this.bg = [];
-    this.aim = [];
-    this.aimX = [];
-    this.aimY = [];
-    this.cd = [];
-    this.cdDel = [];
-}
+import Toolkit from '../common/commonFunctions';
+import Sj from 'sj';
+import Knight from 'knight';
+import Bg from 'bg';
+import Data from 'data';
 
-moguObj.prototype.init = function () {
-    this.num = 10;
-    this.limit = 0;
-    for (var i=0;i<this.num;i++) {
-        this.x[i] = 0;
-        this.y[i] = 0;
-        this.alive[i] = false;
-        this.front[i] = "left";
-        this.Pic[i] = moguPicl;
-        this.PicCount[i] = 0;
-        this.delta[i] = 0;
-        this.frontDel[i] = 0;
-        this.full[i] = false;
-        this.planX[i] = 0;
-        this.planY[i] = 0;
-        this.sjDel[i] = 0;
-        this.grassCost = 25;
-        this.sjCost = 10;
-        this.sjDelTime = 20*1000;
-        this.fight[i] = false;
-        this.life[i] = 200;
-        this.bg[i] = 0;
-        this.aim[i] = '';
-        this.aimX[i] = 0;
-        this.aimY[i] = 0;
-        this.cd[i] = true;
-        this.cdDel[i] = 0;
+export default class Mogu {
+    private _x: number[];
+    private _y: number[];
+    private _planX: number[];
+    private _planY: number[];
+    private _alive: boolean[];
+    private _Pic: HTMLImageElement[];
+    private _num: number;
+    private _limit: number;
+    private _front: string[];
+    private _PicCount: number[];
+    private _delta: number[];
+    private _frontDel: number[];
+    private _full: boolean[];
+    private _sjDel: number[];
+    private _grassCost: number;
+    private _sjCost: number;
+    private _sjDelTime: number;
+    private _fight: boolean[];
+    private _life: number[];
+    private _bgIndex: number[];
+    private _aim: number[];
+    private _aimX: number[];
+    private _aimY: number[];
+    private _cd: boolean[];
+    private _cdDel: number[];
+    private _ctx1: any;
+    private _ctx2: any;
+    private _sj: Sj;
+    private _moguPicl: HTMLImageElement[];
+    private _moguPicr: HTMLImageElement[];
+    private _knight: Knight;
+    private _moguPlan: HTMLImageElement;
+    private _moguEgg: HTMLImageElement;
+    private _bg: Bg;
+    private _data: Data;
+
+    constructor(ctx1: any, ctx2: any, moguPicl: HTMLImageElement[], moguPicr: HTMLImageElement[], sj: Sj, knight: Knight, bg: Bg, data: Data, moguPlan: HTMLImageElement, moguEgg: HTMLImageElement) {
+        this._num = 10;
+        this._limit = 0;
+        this._grassCost = 25;
+        this._sjCost = 10;
+        this._sjDelTime = 20 * 1000;
+        this._moguPicl = moguPicl;
+        this._moguPicr = moguPicr;
+        this._Pic = moguPicl;
+        this._ctx1 = ctx1;
+        this._ctx2 = ctx2;
+        this._sj = sj;
+        this._knight = knight;
+        this._moguPlan = moguPlan;
+        this._moguEgg = moguEgg;
+        this._bg = bg;
+        this._data = data;
+        for (let i = 0; i < this._num; i++) {
+            this._x[i] = 0;
+            this._y[i] = 0;
+            this._alive[i] = false;
+            this._front[i] = "left";
+            this._PicCount[i] = 0;
+            this._delta[i] = 0;
+            this._frontDel[i] = 0;
+            this._full[i] = false;
+            this._planX[i] = 0;
+            this._planY[i] = 0;
+            this._sjDel[i] = 0;
+            this._fight[i] = false;
+            this._life[i] = 200;
+            this._bgIndex[i] = 0;
+            this._aim[i] = -1;
+            this._aimX[i] = 0;
+            this._aimY[i] = 0;
+            this._cd[i] = true;
+            this._cdDel[i] = 0;
+        }
+
     }
-}
 
-moguObj.prototype.draw = function () {
-    for (var i=0;i<this.num;i++) {
-        if(this.full[i]) {
-            this.delta[i] += deltaTime;
-            if(this.delta[i] > 50) {
-                this.PicCount[i] = (this.PicCount[i] + 1)%6;
-                this.delta[i] %= 50;
-            }
-            this.sjDel[i] += deltaTime;
-            if(this.sjDel[i]>this.sjDelTime) {
-                for(var j=0;j<sj.num;j++) {
-                    if(!sj.alive[j] && this.alive[i]) {
-                        sj.born(j,this.planX[i]+Math.random()*100,this.planY[i]+70);
-                        break;
+    draw(deltaTime: number) {
+        for (let i = 0; i < this._num; i++) {
+            if (this._full[i]) {
+                this._delta[i] += deltaTime;
+                if (this._delta[i] > 50) {
+                    this._PicCount[i] = (this._PicCount[i] + 1) % 6;
+                    this._delta[i] %= 50;
+                }
+                this._sjDel[i] += deltaTime;
+                if (this._sjDel[i] > this._sjDelTime) {
+                    for (let j = 0; j < this._sj.num; j++) {
+                        if (!this._sj.alive[j] && this._alive[i]) {
+                            this._sj.born(j, this._planX[i] + Math.random() * 100, this._planY[i] + 70);
+                            break;
+                        }
+                    }
+                    this._sjDel[i] %= this._sjDelTime;
+
+                }
+                const limit = 2000 + Math.random() * 2000;
+                this._frontDel[i] += deltaTime;
+                if (this._frontDel[i] > limit) {
+                    const m = Math.random();
+                    if (m < 0.25) {
+                        this._front[i] = 'front';
+                    } else if (m >= 0.25 && m < 0.5) {
+                        this._front[i] = 'back';
+                    } else if (m >= 0.5 && m < 0.75) {
+                        this._front[i] = 'left';
+                    } else if (m >= 0.75) {
+                        this._front[i] = 'right';
+                    }
+                    this._frontDel[i] %= limit;
+                }
+                if (this._front[i] == 'front') {
+                    this._y[i]++;
+                } else if (this._front[i] == 'back') {
+                    this._y[i]--;
+                } else if (this._front[i] == 'left') {
+                    this._x[i]--;
+                    this._Pic = this._moguPicl;
+                } else if (this._front[i] == 'right') {
+                    this._x[i]++;
+                    this._Pic = this._moguPicr;
+                }
+                if (this._x[i] < (this._planX[i] - 100)) {
+                    this._front[i] = 'right';
+                }
+                if (this._x[i] > (this._planX[i] + 100)) {
+                    this._front[i] = 'left';
+                }
+                if (this._y[i] < (this._planY[i] - 100)) {
+                    this._front[i] = 'front';
+                }
+                if (this._y[i] > (this._planY[i] + 100)) {
+                    this._front[i] = 'back';
+                }
+                for (let j = 0; j < this._knight.num; j++) {
+                    if (!this._fight[i] && (this._knight.x[j] >= this._planX[i] - 200) && (this._knight.x[j] <= this._planX[i] + 300) && (this._knight.y[j] >= this._planY[i] - 200) && (this._knight.y[j] <= this._planY[i] + 300) && this._knight.alive[j]) {
+                        this._aim[i] = j;
+                        this._fight[i] = true;
                     }
                 }
-                this.sjDel[i] %= this.sjDelTime;
+                if (this._aim[i] !== -1) {
+                    this._aimX[i] = this._knight.x[this._aim[i]];
+                    this._aimY[i] = this._knight.y[this._aim[i]];
+                }
+                if (!this._cd[i]) {
+                    this._cdDel[i] += deltaTime;
+                    if (this._cdDel[i] >= 10000) {
+                        this._cdDel[i] = 0;
+                        this._cd[i] = true;
+                    }
+                }
+                if (this._fight[i]) {
+                    this._x[i] = Toolkit.lerpDistance(this._aimX[i], this._x[i], 0.995);
+                    this._y[i] = Toolkit.lerpDistance(this._aimY[i], this._y[i], 0.995);
+                    const l = Toolkit.calLength2(this._aimX[i], this._aimY[i], this._x[i] + 50, this._y[i] + 50);
+                    if (l <= 900 && this._cd[i]) {
+                        this._knight.die(this._aim[i]);
+                        this._fight[i] = false;
+                        this._cd[i] = false;
+                        this._aim[i] = -1;
+                    }
+                }
+
+                if (this._alive[i]) {
+                    ctx2.save();
+                    ctx1.drawImage(this._moguPlan, this._planX[i], this._planY[i], 100, 100);
+                    ctx2.drawImage(this._Pic[this._PicCount[i]], this._x[i], this._y[i], 65, 100);
+                    ctx2.restore();
+                    ctx2.save();
+                    ctx2.strokeStyle = "blue";
+                    ctx2.globalAlpha = 0.7;
+                    ctx2.lineWidth = 10;
+                    ctx2.lineCap = "round";
+                    ctx2.shadowBlur = 10;
+                    ctx2.shadowColor = "white";
+                    ctx2.font = "20px Verdana";
+                    ctx2.fillStyle = "white";
+                    ctx2.textAlign = "center";
+                    ctx2.beginPath();
+                    ctx2.moveTo(this._x[i], this._y[i] - 20);
+                    ctx2.lineTo(this._x[i] + 100 * this._life[i] / 2000, this._y[i] - 20);
+                    ctx2.closePath();
+                    ctx2.stroke();
+                    ctx2.restore();
+                }
 
             }
-            var limit = 2000 + Math.random()*2000;
-            this.frontDel[i] += deltaTime;
-            if(this.frontDel[i] > limit) {
-                var m = Math.random();
-                if(m<0.25) {
-                    this.front[i] = 'front';
-                }else if(m>=0.25 && m<0.5) {
-                    this.front[i] = 'back';
-                }else if(m>=0.5 && m<0.75) {
-                    this.front[i] = 'left';
-                }else if(m>=0.75) {
-                    this.front[i] = 'right';
+            if (!this._full[i] && this._alive[i]) {
+                this._delta[i] += deltaTime;
+                if (this._delta[i] > 5000) {
+                    this._full[i] = true;
+                    this._delta[i] = 0;
+                    this._life[i] = 2000;
                 }
-                this.frontDel[i] %= limit;
-            }
-            if(this.front[i] == 'front') {
-                this.y[i] ++;
-            }else if(this.front[i] == 'back') {
-                this.y[i] --;
-            }else if(this.front[i] == 'left') {
-                this.x[i] --;
-                this.Pic = moguPicl;
-            }else if(this.front[i] == 'right') {
-                this.x[i] ++;
-                this.Pic = moguPicr;
-            }
-            if(this.x[i] < (this.planX[i]-100)) {
-                this.front[i] = 'right';
-            }
-            if(this.x[i] > (this.planX[i]+100)) {
-                this.front[i] = 'left';
-            }
-            if(this.y[i] < (this.planY[i]-100)) {
-                this.front[i] = 'front';
-            }
-            if(this.y[i] > (this.planY[i]+100)) {
-                this.front[i] = 'back';
-            }
-            for(var j=0;j<knight.num;j++) {
-                if(!this.fight[i] &&(knight.x[j]>=this.planX[i]-200) &&(knight.x[j]<=this.planX[i]+300)&&(knight.y[j]>=this.planY[i]-200)&&(knight.y[j]<=this.planY[i]+300)&&knight.alive[j]) {
-                    this.aim[i] = j;
-                    this.fight[i] = true;
-                }
-            }
-            if(this.aim[i]!=='') {
-                this.aimX[i] = knight.x[this.aim[i]];
-                this.aimY[i] = knight.y[this.aim[i]];
-            }
-            if(!this.cd[i]) {
-                this.cdDel[i] += deltaTime;
-                if(this.cdDel[i]>=10000) {
-                    this.cdDel[i] = 0;
-                    this.cd[i] = true;
-                }
-            }
-            if(this.fight[i] ) {
-                this.x[i] = lerpDistance(this.aimX[i],this.x[i],0.995);
-                this.y[i] = lerpDistance(this.aimY[i],this.y[i],0.995);
-                const l = calLength2(this.aimX[i],this.aimY[i],this.x[i]+50,this.y[i]+50);
-                if(l<=900 && this.cd[i]) {
-                    knight.die(this.aim[i]);
-                    this.fight[i] = false;
-                    this.cd[i] = false;
-                }
-            }
-
-            if(this.alive[i]) {
                 ctx2.save();
-                ctx1.drawImage(moguPlan,this.planX[i],this.planY[i],100,100);
-                ctx2.drawImage(this.Pic[this.PicCount[i]],this.x[i],this.y[i],65,100);
+                ctx2.drawImage(this._moguEgg, this._x[i], this._y[i], 100, 100);
                 ctx2.restore();
                 ctx2.save();
                 ctx2.strokeStyle = "blue";
@@ -160,87 +216,65 @@ moguObj.prototype.draw = function () {
                 ctx2.fillStyle = "white";
                 ctx2.textAlign = "center";
                 ctx2.beginPath();
-                ctx2.moveTo(this.x[i],this.y[i]-20);
-                ctx2.lineTo(this.x[i]+100*this.life[i]/2000,this.y[i]-20);
+                ctx2.moveTo(this._x[i] + 40, this._y[i] - 20);
+                ctx2.lineTo(this._x[i] + 40 + 20 * this._life[i] / 200, this._y[i] - 20);
                 ctx2.closePath();
                 ctx2.stroke();
                 ctx2.restore();
             }
-
         }
-        if(!this.full[i] && this.alive[i]) {
-            this.delta[i] += deltaTime;
-            if(this.delta[i] > 5000) {
-                this.full[i] = true;
-                this.delta[i] = 0;
-                this.life[i] = 2000;
+    }
+
+    born(i: number) {
+        this._x[i] = cx;
+        this._y[i] = cy;
+        this._alive[i] = true;
+        this._front[i] = 'front';
+        this._Pic = this._moguPicl;
+        this._PicCount[i] = 0;
+        this._delta[i] = 0;
+        this._full[i] = false;
+        this._planX[i] = cx;
+        this._planY[i] = cy;
+        this._bg.over[this._bg.cbg] = 'mogu';
+        this._data.limit++;
+        this._fight[i] = false;
+        this._life[i] = 200;
+        this._bgIndex[i] = this._bg.cbg;
+        this._aim[i] = -1;
+    }
+
+    die(i: number) {
+        this._alive[i] = false;
+        this._data.limit--;
+        this._fight[i] = false;
+        this._bg.over[this._bg.cbg] = '';
+        this._bg.occupied[this._bgIndex[i]] = false;
+        this._limit--;
+    }
+
+    moguControl() {
+        let count = 0;
+        for (let i = 0; i < this._num; i++) {
+            if (this._alive[i]) {
+                count++;
             }
-            ctx2.save();
-            ctx2.drawImage(moguEgg,this.x[i],this.y[i],100,100);
-            ctx2.restore();
-            ctx2.save();
-            ctx2.strokeStyle = "blue";
-            ctx2.globalAlpha = 0.7;
-            ctx2.lineWidth = 10;
-            ctx2.lineCap = "round";
-            ctx2.shadowBlur = 10;
-            ctx2.shadowColor = "white";
-            ctx2.font = "20px Verdana";
-            ctx2.fillStyle = "white";
-            ctx2.textAlign = "center";
-            ctx2.beginPath();
-            ctx2.moveTo(this.x[i]+40,this.y[i]-20);
-            ctx2.lineTo(this.x[i]+40+20*this.life[i]/200,this.y[i]-20);
-            ctx2.closePath();
-            ctx2.stroke();
-            ctx2.restore();
+        }
+        if (count < this._limit) {
+            this.moguBorn();
+        }
+    }
+
+    moguBorn() {
+        for (let i = 0; i < this._num; i++) {
+            if (!this._alive[i]) {
+                this.born(i);
+                return;
+            }
         }
     }
 }
 
-moguObj.prototype.born = function(i) {
-    this.x[i] = cx;
-    this.y[i] = cy;
-    this.alive[i] = true;
-    this.front[i] = 'front';
-    this.Pic = moguPicl;
-    this.PicCount[i] = 0;
-    this.delta[i] = 0;
-    this.full[i] = false;
-    this.planX[i] = cx;
-    this.planY[i] = cy;
-    bg.over[bg.cbg] = 'mogu';
-    data.limit++;
-    this.fight[i] = false;
-    this.life[i] = 200;
-    this.bg[i] = bg.cbg;
-}
-moguObj.prototype.die = function (i) {
-    this.alive[i] = false;
-    data.limit--;
-    this.fight[i] = false;
-    bg.over[bg.cbg] = '';
-    bg.occupied[this.bg[i]] = false;
-    this.limit--;
-}
 
-function moguControl() {
-    var count = 0;
-    for(var i=0;i<mogu.num;i++) {
-        if(mogu.alive[i]) {
-            count ++;
-        }
-    }
-    if(count<mogu.limit) {
-        moguBorn();
-    }
-}
 
-function moguBorn() {
-    for(var i=0; i<mogu.num;i++) {
-        if(!mogu.alive[i]) {
-            mogu.born(i);
-            return;
-        }
-    }
-}
+

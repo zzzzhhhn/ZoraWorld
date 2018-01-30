@@ -1,224 +1,265 @@
 /**
  * Created by Zora on 2017/6/4.
  */
-var knightObj = function () {
-    this.Pic;
-    this.PicCount = [];
-    this.x   = [];
-    this.y   = [];
-    this.front = [];//方向
-    this.alive = [];
-    this.delta = [];
-    this.aim = [];
-    this.dragon = [];
-    this.fish = [];
-    this.slm = [];
-    this.mogu = [];
-    this.fight = [];
-    this.life = [];
-    this.aimX = [];
-    this.aimY = [];
-    this.lx = [];
-    this.ly = [];
-}
+import Slm from "./slm";
+import Mogu from "./mogu";
+import Dragon from "./dragon";
+import Fish from "./fish";
+import House from "./house";
+import Toolkit from '../common/commonFunctions';
+import Game from "../common/game";
+import Data from './data';
 
-knightObj.prototype.init = function () {
-    this.num = 0;
-    for (var i=0;i<this.num;i++) {
-        this.x[i] = bg.x[89] + Math.random()*200;
-        this.y[i] = bg.y[89] + 100;
-        this.alive[i] = false;
-        this.front[i] = 'front';
-        this.Pic = knightF;
-        this.PicCount[i] = 0;
-        this.delta[i] = 0;
-        this.aim[i] = '';
-        this.dragon[i] = 0;
-        this.fish[i] = 0;
-        this.slm[i] = 0;
-        this.mogu[i] = 0;
-        this.fight[i] = false;
-        this.life[i] = 100;
-        this.aimX[i] = 0;
-        this.aimY[i] = 0;
-        this.lx[i] = 0;
-        this.ly[i] = 0;
+
+export default class Knight {
+    private _Pic: HTMLImageElement[];
+    private _PicCount: number[];
+    private _x: number[];
+    private _y: number[];
+    private _front: string[];//方向
+    private _alive: boolean[];
+    private _delta: number[];
+    private _aim: string[];     //目标种类
+    private _dragonIndex: number[];
+    private _fishIndex: number[];
+    private _slmIndex: number[];
+    private _moguIndex: number[];
+    private _fight: boolean[];
+    private _life: number[];
+    private _aimX: number[];
+    private _aimY: number[];
+    private _lx: number[];      //错位
+    private _ly: number[];
+    private _num: number;
+    private _ctx2: any;
+    private _knightF: HTMLImageElement[];
+    private _knightB: HTMLImageElement[];
+    private _knightL: HTMLImageElement[];
+    private _knightR: HTMLImageElement[];
+    private _housePic: HTMLImageElement[];
+    private _slm: Slm;
+    private _mogu: Mogu;
+    private _dragon: Dragon;
+    private _fish: Fish;
+    private _house: House;
+    private _data: Data;
+    private _game: Game;
+    
+    constructor(ctx2: any, bgX: number, bgY: number, knightF: HTMLImageElement[], knightB: HTMLImageElement[], knightL: HTMLImageElement[], knightR: HTMLImageElement[],
+                slm: Slm, mogu: Mogu, dragon: Dragon, fish: Fish, house: House, housePic: HTMLImageElement[], data: Data, game: Game) {
+        this._num = 0;
+        this._Pic = knightF;
+        this._ctx2 = ctx2;
+        this._knightF = knightF;
+        this._knightB = knightB;
+        this._knightL = knightL;
+        this._knightR = knightR;
+        this._slm = slm;
+        this._mogu = mogu;
+        this._dragon = dragon;
+        this._fish = fish;
+        this._house = house;
+        this._housePic = housePic;
+        this._data = data;
+        this._game =game;
+
+        for (let i = 0; i < this._num; i++) {
+            this._x[i] = bg.x[89] + Math.random() * 200;
+            this._y[i] = bg.y[89] + 100;
+            this._alive[i] = false;
+            this._front[i] = 'front';
+            this._PicCount[i] = 0;
+            this._delta[i] = 0;
+            this._aim[i] = '';
+            this._dragonIndex[i] = 0;
+            this._fishIndex[i] = 0;
+            this._slmIndex[i] = 0;
+            this._moguIndex[i] = 0;
+            this._fight[i] = false;
+            this._life[i] = 100;
+            this._aimX[i] = 0;
+            this._aimY[i] = 0;
+            this._lx[i] = 0;
+            this._ly[i] = 0;
+        }
     }
-}
 
-knightObj.prototype.draw = function () {
-    for (var i=0;i<this.num;i++) {
-        this.delta[i] += deltaTime;
-        if(this.delta[i] > 50) {
-            this.PicCount[i] = (this.PicCount[i] + 1)%4;
-            this.delta[i] %= 50;
+   
+
+
+draw(deltaTime: number) {
+    for (let i=0;i<this._num;i++) {
+        this._delta[i] += deltaTime;
+        if(this._delta[i] > 50) {
+            this._PicCount[i] = (this._PicCount[i] + 1)%4;
+            this._delta[i] %= 50;
         }
-        if(this.front[i] == 'front') {
-            this.y[i] ++;
-            this.Pic = knightF;
-            this.ly[i] = -100*Math.random();
-            this.lx[i] = 50*Math.random();
-        }else if(this.front[i] == 'back') {
-            this.y[i] --;
-            this.Pic = knightB;
-            this.ly[i] = 100*Math.random();
-            this.lx[i] = 50*Math.random();
-        }else if(this.front[i] == 'left') {
-            this.x[i] --;
-            this.Pic = knightL;
-            this.lx[i] = -100*Math.random();
-            this.ly[i] = 50*Math.random();
-        }else if(this.front[i] == 'right') {
-            this.x[i] ++;
-            this.Pic = knightR;
-            this.lx[i] = 100*Math.random();
-            this.ly[i] = 50*Math.random();
+        if(this._front[i] == 'front') {
+            this._y[i] ++;
+            this._Pic = this._knightF;
+            this._ly[i] = -100*Math.random();
+            this._lx[i] = 50*Math.random();
+        }else if(this._front[i] == 'back') {
+            this._y[i] --;
+            this._Pic = this._knightB;
+            this._ly[i] = 100*Math.random();
+            this._lx[i] = 50*Math.random();
+        }else if(this._front[i] == 'left') {
+            this._x[i] --;
+            this._Pic = this._knightL;
+            this._lx[i] = -100*Math.random();
+            this._ly[i] = 50*Math.random();
+        }else if(this._front[i] == 'right') {
+            this._x[i] ++;
+            this._Pic = this._knightR;
+            this._lx[i] = 100*Math.random();
+            this._ly[i] = 50*Math.random();
         }
 
-        for(var j=0;j<slm.num;j++) {
-            if(slm.alive[j] && !this.fight[i]) {
-                this.fight[i] = true;
-                this.aimX[i] = slm.x[j];
-                this.aimY[i] = slm.y[j];
-                this.slm[i] = j;
-                this.aim[i] = 'slm';
+        for(let j=0;j<this._slm.num;j++) {
+            if(this._slm.alive[j] && !this._fight[i]) {
+                this._fight[i] = true;
+                this._aimX[i] = this._slm.x[j];
+                this._aimY[i] = this._slm.y[j];
+                this._slmIndex[i] = j;
+                this._aim[i] = 'this._slm';
                 break;
             }
         }
-        for(var j=0;j<mogu.num;j++) {
-            if(mogu.alive[j] && !this.fight[i]) {
-                this.fight[i] = true;
-                this.aimX[i] = mogu.x[j];
-                this.aimY[i] = mogu.y[j];
-                this.mogu[i] = j;
-                this.aim[i] = 'mogu';
+        for(let j=0;j<this._mogu.num;j++) {
+            if(this._mogu.alive[j] && !this._fight[i]) {
+                this._fight[i] = true;
+                this._aimX[i] = this._mogu.x[j];
+                this._aimY[i] = this._mogu.y[j];
+                this._moguIndex[i] = j;
+                this._aim[i] = 'this._mogu';
                 break;
             }
         }
-        for(var j=0;j<fish.num;j++) {
-            if(fish.alive[j] && !this.fight[i]) {
-                this.fight[i] = true;
-                this.aimX[i] = fish.x[j]+20;
-                this.aimY[i] = fish.y[j]+50;
-                this.fish[i] = j;
-                this.aim[i] = 'fish';
+        for(let j=0;j<this._fish.num;j++) {
+            if(this._fish.alive[j] && !this._fight[i]) {
+                this._fight[i] = true;
+                this._aimX[i] = this._fish.x[j]+20;
+                this._aimY[i] = this._fish.y[j]+50;
+                this._fishIndex[i] = j;
+                this._aim[i] = 'this._fish';
                 break;
             }
         }
-        for(var j=0;j<dragon.num;j++) {
-            if(dragon.alive[j] && !this.fight[i]) {
-                this.fight[i] = true;
-                this.aimX[i] = dragon.x[j];
-                this.aimY[i] = dragon.y[j];
-                this.dragon[i] = j;
-                this.aim[i] = 'dragon';
+        for(let j=0;j<this._dragon.num;j++) {
+            if(this._dragon.alive[j] && !this._fight[i]) {
+                this._fight[i] = true;
+                this._aimX[i] = this._dragon.x[j];
+                this._aimY[i] = this._dragon.y[j];
+                this._dragonIndex[i] = j;
+                this._aim[i] = 'this._dragon';
                 break;
             }
         }
-        if(this.aim[i]==='slm') {
-            this.aimX[i] = slm.x[this.slm[i]] + 100*Math.random();
-            this.aimY[i] = slm.y[this.slm[i]] + 100*Math.random();
-            if(!slm.alive[this.slm[i]]) {
-                this.fight[i] = false;
-                this.aim[i] = '';
+        if(this._aim[i]==='this._slm') {
+            this._aimX[i] = this._slm.x[this._slmIndex[i]] + 100*Math.random();
+            this._aimY[i] = this._slm.y[this._slmIndex[i]] + 100*Math.random();
+            if(!this._slm.alive[this._slmIndex[i]]) {
+                this._fight[i] = false;
+                this._aim[i] = '';
             }
-        }else if(this.aim[i]==='mogu') {
-            this.aimX[i] = mogu.x[this.mogu[i]] + this.lx[i];
-            this.aimY[i] = mogu.y[this.mogu[i]] + this.ly[i];
-            if(!mogu.alive[this.mogu[i]]) {
-                this.fight[i] = false;
-                this.aim[i] = '';
+        }else if(this._aim[i]==='this._mogu') {
+            this._aimX[i] = this._mogu.x[this._moguIndex[i]] + this._lx[i];
+            this._aimY[i] = this._mogu.y[this._moguIndex[i]] + this._ly[i];
+            if(!this._mogu.alive[this._moguIndex[i]]) {
+                this._fight[i] = false;
+                this._aim[i] = '';
             }
-        }else if(this.aim[i]==='fish') {
-            this.aimX[i] = fish.x[this.fish[i]] + this.lx[i];
-            this.aimY[i] = fish.y[this.fish[i]] + this.ly[i];
-            if(!fish.alive[this.fish[i]]) {
-                this.fight[i] = false;
-                this.aim[i] = '';
+        }else if(this._aim[i]==='this._fish') {
+            this._aimX[i] = this._fish.x[this._fishIndex[i]] + this._lx[i];
+            this._aimY[i] = this._fish.y[this._fishIndex[i]] + this._ly[i];
+            if(!this._fish.alive[this._fishIndex[i]]) {
+                this._fight[i] = false;
+                this._aim[i] = '';
             }
-        }else if(this.aim[i]==='dragon') {
-            this.aimX[i] = dragon.x[this.dragon[i]] + this.lx[i];
-            this.aimY[i] = dragon.y[this.dragon[i]] + this.ly[i];
-            if(!dragon.alive[this.dragon[i]]) {
-                this.fight[i] = false;
-                this.aim[i] = '';
+        }else if(this._aim[i]==='this._dragon') {
+            this._aimX[i] = this._dragon.x[this._dragonIndex[i]] + this._lx[i];
+            this._aimY[i] = this._dragon.y[this._dragonIndex[i]] + this._ly[i];
+            if(!this._dragon.alive[this._dragonIndex[i]]) {
+                this._fight[i] = false;
+                this._aim[i] = '';
             }
         }else {
-            this.aim[i] = 'house';
-            this.fight[i] = true;
-            this.aimX[i] = house.x+housePic[house.level].width*0.5;
-            this.aimY[i] = house.y+housePic[house.level].height*0.5;
+            this._aim[i] = 'house';
+            this._fight[i] = true;
+            this._aimX[i] = this._house.x+this._housePic[this._house.level].width*0.5;
+            this._aimY[i] = this._house.y+this._housePic[this._house.level].height*0.5;
         }
 
-        if(this.fight[i] ) {
-            this.x[i] = lerpDistance(this.aimX[i],this.x[i],0.995);
-            this.y[i] = lerpDistance(this.aimY[i],this.y[i],0.995);
-            const l = calLength2(this.aimX[i],this.aimY[i],this.x[i],this.y[i]);
+        if(this._fight[i] ) {
+            this._x[i] = Toolkit.lerpDistance(this._aimX[i],this._x[i],0.995);
+            this._y[i] = Toolkit.lerpDistance(this._aimY[i],this._y[i],0.995);
+            const l = Toolkit.calLength2(this._aimX[i],this._aimY[i],this._x[i],this._y[i]);
             if(l<=900) {
 
-                if(this.aim[i] === 'slm'&& slm.alive[this.slm[i]]  && this.alive[i]) {
-                   slm.life[this.slm[i]]--;
-                   if(slm.life[this.slm[i]]<=0  && this.life[i] >=0) {
-                       slm.die(this.slm[i]);
-                       this.fight[i] = false;
-                   }
-                }
-
-
-                if(this.aim[i] === 'mogu' && this.alive[i] && mogu.alive[this.mogu[i]]) {
-                    mogu.life[this.mogu[i]]--;
-                    if(mogu.life[this.mogu[i]]<=0 && this.life[i] >=0 ) {
-                        mogu.die(this.mogu[i]);
-                        this.fight[i] = false;
+                if(this._aim[i] === 'this._slm'&& this._slm.alive[this._slmIndex[i]]  && this._alive[i]) {
+                    this._slm.life[this._slmIndex[i]]--;
+                    if(this._slm.life[this._slmIndex[i]]<=0  && this._life[i] >=0) {
+                        this._slm.die(this._slmIndex[i]);
+                        this._fight[i] = false;
                     }
                 }
 
-                if(this.aim[i] === 'fish' && this.alive[i] && fish.alive[this.fish[i]]) {
-                    fish.life[this.fish[i]]--;
-                    if(fish.life[this.fish[i]]<=0  && this.life[i] >=0) {
-                        fish.die(this.fish[i]);
-                        this.fight[i] = false;
+
+                if(this._aim[i] === 'this._mogu' && this._alive[i] && this._mogu.alive[this._moguIndex[i]]) {
+                    this._mogu.life[this._moguIndex[i]]--;
+                    if(this._mogu.life[this._moguIndex[i]]<=0 && this._life[i] >=0 ) {
+                        this._mogu.die(this._moguIndex[i]);
+                        this._fight[i] = false;
                     }
                 }
-                if(this.aim[i] === 'dragon'&& this.alive[i] && dragon.alive[this.dragon[i]] ) {
-                    dragon.life[this.dragon[i]]--;
-                    if(dragon.life[this.dragon[i]]<=0 && this.life[i] >=0 ) {
-                        dragon.die(this.dragon[i]);
-                        this.fight[i] = false;
+
+                if(this._aim[i] === 'this._fish' && this._alive[i] && this._fish.alive[this._fishIndex[i]]) {
+                    this._fish.life[this._fishIndex[i]]--;
+                    if(this._fish.life[this._fishIndex[i]]<=0  && this._life[i] >=0) {
+                        this._fish.die(this._fishIndex[i]);
+                        this._fight[i] = false;
                     }
                 }
-                if(this.aim[i]==='house') {
-                    house.life--;
-                    if(house.life<=0) {
-                        house.life = 0;
-                        house.alive = false;
-                        data.gameover = true;
+                if(this._aim[i] === 'this._dragon'&& this._alive[i] && this._dragon.alive[this._dragonIndex[i]] ) {
+                    this._dragon.life[this._dragonIndex[i]]--;
+                    if(this._dragon.life[this._dragonIndex[i]]<=0 && this._life[i] >=0 ) {
+                        this._dragon.die(this._dragonIndex[i]);
+                        this._fight[i] = false;
+                    }
+                }
+                if(this._aim[i]==='house') {
+                    this._house.life--;
+                    if(this._house.life<=0) {
+                        this._house.life = 0;
+                        this._house.alive = false;
+                        this._game.gameover = true;
                     }
                 }
 
 
             }
 
-            if(this.aimX[i] - this.x[i] >=50) {
-                this.front[i] = 'right';
+            if(this._aimX[i] - this._x[i] >=50) {
+                this._front[i] = 'right';
             }
-            if(this.x[i] - this.aimX[i] >=50) {
-                this.front[i] = 'left';
+            if(this._x[i] - this._aimX[i] >=50) {
+                this._front[i] = 'left';
             }
-            if(this.aimY[i] - this.y[i] >=50) {
-                this.front[i] = 'front';
+            if(this._aimY[i] - this._y[i] >=50) {
+                this._front[i] = 'front';
             }
-            if(this.y[i] - this.aimY[i] >=50) {
-                this.front[i] = 'back';
+            if(this._y[i] - this._aimY[i] >=50) {
+                this._front[i] = 'back';
             }
 
         }
 
 
 
-        if(this.alive[i]) {
+        if(this._alive[i]) {
             ctx2.save();
-            ctx2.drawImage(this.Pic[this.PicCount[i]],this.x[i],this.y[i]);
+            ctx2.drawImage(this._Pic[this._PicCount[i]],this._x[i],this._y[i]);
             ctx2.restore();
             ctx2.save();
             ctx2.strokeStyle = "red";
@@ -231,8 +272,8 @@ knightObj.prototype.draw = function () {
             ctx2.fillStyle = "white";
             ctx2.textAlign = "center";
             ctx2.beginPath();
-            ctx2.moveTo(this.x[i],this.y[i]-20);
-            ctx2.lineTo(this.x[i]+30*this.life[i]/100,this.y[i]-20);
+            ctx2.moveTo(this._x[i],this._y[i]-20);
+            ctx2.lineTo(this._x[i]+30*this._life[i]/100,this._y[i]-20);
             ctx2.closePath();
             ctx2.stroke();
             ctx2.restore();
@@ -241,44 +282,49 @@ knightObj.prototype.draw = function () {
     }
 }
 
-knightObj.prototype.born = function(i) {
-    this.x[i] = 500 + Math.random()*200;
-    this.y[i] = 800;
-    this.alive[i] = true;
-    this.front[i] = 'back';
-    this.Pic = knightF;
-    this.PicCount[i] = 0;
-    this.delta[i] = 0;
-    this.fight[i]  =false;
-    this.life[i] = 100;
+born(i: number) {
+    this._x[i] = 500 + Math.random()*200;
+    this._y[i] = 800;
+    this._alive[i] = true;
+    this._front[i] = 'back';
+    this._Pic = this._knightF;
+    this._PicCount[i] = 0;
+    this._delta[i] = 0;
+    this._fight[i]  =false;
+    this._life[i] = 100;
 }
-knightObj.prototype.die = function (i) {
-    this.life[i] = 0;
-    this.alive[i] = false;
-    this.fight[i] = false;
-    this.num--;
+die(i: number) {
+    this._life[i] = 0;
+    this._alive[i] = false;
+    this._fight[i] = false;
+    this._num--;
 }
 
-function knightControl() {
-    if(data.attact) {
-        var count = 0;
-        for(var i=0;i<knight.num;i++) {
-            if(knight.alive[i]) {
+knightControl() {
+    if(this._data.attact) {
+        let count = 0;
+        for(let i=0;i<this._num;i++) {
+            if(this._alive[i]) {
                 count ++;
             }
         }
-        if(count<knight.num) {
-            knightBorn();
+        if(count<this._num) {
+            this.knightBorn();
         }
     }
 
 }
 
-function knightBorn() {
-    for(var i=0; i<knight.num;i++) {
-        if(!knight.alive[i]) {
-            knight.born(i);
+knightBorn() {
+    for(let i=0; i<this._num;i++) {
+        if(!this._alive[i]) {
+            this.born(i);
             return;
         }
     }
 }
+}
+
+
+
+

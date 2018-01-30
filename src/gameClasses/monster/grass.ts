@@ -1,76 +1,90 @@
 /**
  * Created by Zora on 2017/6/2.
  */
-var grassObj = function () {
-    this.x = [];
-    this.y = [];
-    this.num;
-    this.limit;
-    this.del;
-    this.alive = [];
-    this.collected = [];
-    this.growDel;
-}
+import Bg from 'bg';
 
-grassObj.prototype.init = function () {
-    this.num = bg.num;
-    this.limit = 10;
-    this.del = 0;
-    this.growDel = 1000*5 + Math.random()*1000;
-    for (var i=0;i<this.num;i++) {
-        this.x[i] = 0;
-        this.y[i] = 0;
-        this.alive[i] = false;
-        this.collected[i] = false;
-    }
-}
+export default class Grass {
+    private _x: number[];
+    private _y: number[];
+    private _num: number;
+    private _limit: number;
+    private _del: number;
+    private _alive: boolean[];
+    private _collected: boolean[];
+    private _growDel: number;
+    private _ctx1: any;
+    private _bg: Bg;
+    private _grassPic: HTMLImageElement;
 
-grassObj.prototype.draw = function () {
-    this.del += deltaTime;
-
-    if(this.del > this.growDel) {
-        grass.limit++;
-        this.del %= this.growDel;
-    }
-
-    for (var i=0;i<this.num;i++) {
-        if(this.alive[i]) {
-            ctx1.drawImage(grassPic,this.x[i],this.y[i],grassPic.width,grassPic.height);
-        }
-
-    }
-}
-
-grassObj.prototype.grow = function (i) {
-    if(!bg.occupied[i]) {
-        this.x[i] =bg.x[i] + Math.random()*50;
-        this.y[i] = bg.y[i] + Math.random()*50;
-        bg.occupied[i] = true;
-        this.alive[i] = true;
-        this.collected[i] = false;
-        bg.over[i] = 'grass';
-    }
-}
-
-grassObj.prototype.clean = function (i) {
-    this.alive[i] = false;
-    bg.occupied[i] = false;
-}
-
-function grassControl() {
-    var count = 0;
-    for (var i=0;i<grass.num;i++) {
-        if(grass.alive[i]) {
-            count++;
+    constructor(ctx1: any, bg: Bg, grassPic: HTMLImageElement) {
+        this._num = bg.num;
+        this._limit = 10;
+        this._del = 0;
+        this._ctx1 = ctx1;
+        this._bg = bg;
+        this._growDel = 1000 * 5 + Math.random() * 1000;
+        this._grassPic = grassPic;
+        for (let i = 0; i < this._num; i++) {
+            this._x[i] = 0;
+            this._y[i] = 0;
+            this._alive[i] = false;
+            this._collected[i] = false;
         }
     }
-    if(count < grass.limit) {
-        var i = Math.floor(Math.random()*bg.num);
-        if(!grass.alive[i] && !bg.occupied[i]) {
-            grass.grow(i);
-            return;
+
+    draw(deltaTime: number) {
+        this._del += deltaTime;
+
+        if (this._del > this._growDel) {
+            this._limit++;
+            this._del %= this._growDel;
         }
 
+        for (let i = 0; i < this._num; i++) {
+            if (this._alive[i]) {
+                this._ctx1.drawImage(this._grassPic, this._x[i], this._y[i], this._grassPic.width, this._grassPic.height);
+            }
+
+        }
+    }
+
+    grow(i: number) {
+        if (!this._bg.occupied[i]) {
+            this._x[i] = this._bg.x[i] + Math.random() * 50;
+            this._y[i] = this._bg.y[i] + Math.random() * 50;
+            this._bg.occupied[i] = true;
+            this._alive[i] = true;
+            this._collected[i] = false;
+            this._bg.over[i] = 'grass';
+        }
+    }
+
+    clean(i: number) {
+        this._alive[i] = false;
+        this._bg.occupied[i] = false;
+    }
+
+    grassControl() {
+        let count = 0;
+        for (let i = 0; i < this._num; i++) {
+            if (this._alive[i]) {
+                count++;
+            }
+        }
+        if (count < this._limit) {
+            let i = Math.floor(Math.random() * this._bg.num);
+            if (!this._alive[i] && !this._bg.occupied[i]) {
+                this.grow(i);
+                return;
+            }
+
+        }
     }
 }
+
+
+
+
+
+
 
