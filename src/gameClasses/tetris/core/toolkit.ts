@@ -20,9 +20,11 @@ const MatrixToolkit = {
      * @returns {number[]}
      */
     makeRow(v: number = 0, l: number = 10): number[] {
-        const arr = new Array(l);
-        arr.fill(v);
-        return arr;
+        let array = [];
+        for (let i = 0; i < l; i++) {
+            array[i] = v;
+        }
+        return array;
     },
     /**
      * 生成二位数组矩阵工具
@@ -32,10 +34,11 @@ const MatrixToolkit = {
      * @returns {number[][]}
      */
     makeMatrix(v: number = 0, l1: number = 10, l2: number = 20): number[][] {
-        // const arr = new Array(l2);
-        // arr.map(value => this.makeRow(v,l1));
-        const arr = Array.from({length: l2}, () => this.makeRow(v,l1));
-        return arr;
+        let array = [];
+        for (let i = 0; i < l2; i++) {
+            array[i] = this.makeRow(v,l1);
+        }
+        return array;
     },
 
     /**

@@ -15,6 +15,9 @@
             <!--游戏区-->
             <div class="panel-game" id="panel-local"></div>
         </div>
+        <div class="text-center mt10">
+            <button class="btn btn-warning btn-lg btn-tetris" @click="reStart">重新开始</button>
+        </div>
         <h5><a href="https://github.com/zzzzhhhn/tetris.git">基于nodeJS + socket.io + typescript + gulp + webpack 的联机版俄罗斯方块在这里！</a></h5>
     </div>
 </template>
@@ -24,9 +27,16 @@
     import TetrisGame from '../gameClasses/tetris/index.ts';
 
     @Component
-    export default class MyComponent extends Vue {
+    export default class Tetris extends Vue {
+        private _tetrisGame: TetrisGame;
         mounted() {
-            const tetrisGame = new TetrisGame();
+            this._tetrisGame = new TetrisGame();
+            this._tetrisGame.start();
+        }
+
+        reStart() {
+            this._tetrisGame.reStart();
+            $(".btn-tetris").blur();
         }
 
     }

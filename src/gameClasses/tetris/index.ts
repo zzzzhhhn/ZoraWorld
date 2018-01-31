@@ -6,9 +6,17 @@ export default class TetrisGame {
     constructor() {
         this._game = new Game('local');
         this.bindEvent();
+    }
+
+    start() {
         this._game.init();
         this._game.loop();
         this._game.start = true;
+    }
+
+    reStart() {
+        this._game.stop();
+        this.start();
     }
     /**
      * 绑定键盘事件

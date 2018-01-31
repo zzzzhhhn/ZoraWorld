@@ -49,16 +49,22 @@ const boxToolkit = {
 class MatrixTollkit {
     static makeRow(): number[];
     static makeRow<T>(v: T): T[];
-    static makeRow(v: any = 0): any[]{
-        const array = new Array(9);
-        array.fill(v);
+    static makeRow(v: any = 0): any[] {
+        let array = [];
+        for (let i = 0; i < 9; i++) {
+            array[i] = v;
+        }
         return array;
     }
 
     static makeMatrix(): number[][];
     static makeMatrix<T>(v: T): T[][];
     static makeMatrix(v: any = 0): any[][] {
-        return Array.from({length: 9}, () => this.makeRow(v));
+        let array = [];
+        for (let i = 0; i < 9; i++) {
+            array[i] = this.makeRow(v);
+        }
+        return array;
     }
 
     /**

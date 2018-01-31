@@ -1,7 +1,7 @@
 import SquareFactory from './squareFactory';
 import Toolkit, {matrixObj} from '../core/toolkit';
 import Square from '../core/square';
-import construct = Reflect.construct;
+
 
 /**
  * 生成游戏解决方案
@@ -318,8 +318,12 @@ export class Game {
     disturb(count: number) {
         for(let i = 0; i < count; i++) {
             this._gameMatrix.shift();
-            const arr = Array.from({length: 10}, () => Math.random() > 0.5 ? 0 : 2);
-            this._gameMatrix.push(arr);
+
+            let array = [];
+            for (let i = 0; i < 10; i++) {
+                array[i] = Math.random() > 0.5 ? 0 : 2;
+            }
+            this._gameMatrix.push(array);
         }
     }
 
@@ -337,6 +341,9 @@ export class Game {
     }
 
 
+    stop() {
+        clearInterval(this._timer);
+    }
 }
 
 
