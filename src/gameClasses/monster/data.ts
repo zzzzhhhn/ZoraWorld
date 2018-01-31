@@ -13,7 +13,7 @@ export default class Data {
     private _ctx2: any;
     private _knight: Knight;
 
-    constructor(ctx2: any, knight: Knight) {
+    constructor(ctx2: any) {
         this._sjCount = 0;
         this._grassCount = 0;
         this._limit = 0;
@@ -21,6 +21,9 @@ export default class Data {
         this._attactDel = 120000;
         this._al = 0;
         this._ctx2 = ctx2;
+    }
+
+    init(knight: Knight) {
         this._knight = knight;
     }
 

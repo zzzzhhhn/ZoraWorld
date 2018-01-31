@@ -30,6 +30,13 @@ const routers = [{
                 },
                 component: (resolve) => require(['./views/orcish.vue'], resolve),
             },
+            {
+                path: 'monster',
+                meta: {
+                    title: '怪物农场'
+                },
+                component: (resolve) => require(['./views/monster.vue'], resolve),
+            },
         ]
     }];
 export default routers;

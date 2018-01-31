@@ -26,11 +26,18 @@ export default class Panel {
     private _slmLogo: HTMLImageElement;
     private _dragonLogo: HTMLImageElement;
 
-    constructor(ctx2: any, cx: number, cy: number, bg: Bg, data: Data, house: House, dragon: Dragon, fish: Fish, slm: Slm, mogu: Mogu, fishLogo: HTMLImageElement, moguLogo: HTMLImageElement, slmLogo: HTMLImageElement, dragonLogo: HTMLImageElement) {
+    constructor(ctx2: any, cx: number, cy: number, fishLogo: HTMLImageElement, moguLogo: HTMLImageElement, slmLogo: HTMLImageElement, dragonLogo: HTMLImageElement) {
         this._x = cx;
         this._y = cy;
         this._show = false;
         this._ctx2 = ctx2;
+        this._fishLogo = fishLogo;
+        this._moguLogo = moguLogo;
+        this._slmLogo = slmLogo;
+        this._dragonLogo = dragonLogo;
+    }
+
+    init( bg: Bg, data: Data, house: House, dragon: Dragon, fish: Fish, slm: Slm, mogu: Mogu) {
         this._bg = bg;
         this._data = data;
         this._house = house;
@@ -38,10 +45,6 @@ export default class Panel {
         this._fish = fish;
         this._slm = slm;
         this._mogu = mogu;
-        this._fishLogo = fishLogo;
-        this._moguLogo = moguLogo;
-        this._slmLogo = slmLogo;
-        this._dragonLogo = dragonLogo;
     }
 
     get x() {

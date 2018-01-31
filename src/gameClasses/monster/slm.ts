@@ -8,34 +8,34 @@ import Bg from './bg';
 import Data from './data';
 
 export default class Slm {
-    private _x: number[];
-    private _y: number[];
-    private _planX: number[];
-    private _planY: number[];
-    private _alive: boolean[];
-    private _Pic: HTMLImageElement[];
+    private _x: number[] = [];
+    private _y: number[] = [];
+    private _planX: number[] = [];
+    private _planY: number[] = [];
+    private _alive: boolean[] = [];
+    private _Pic: HTMLImageElement[] = [];
     private _num: number;
     private _limit: number;
-    private _front: string[];
-    private _PicCount: number[];
-    private _delta: number[];
-    private _frontDel: number[];
-    private _full: boolean[];
-    private _sjDel: number[];
+    private _front: string[] = [];
+    private _PicCount: number[] = [];
+    private _delta: number[] = [];
+    private _frontDel: number[] = [];
+    private _full: boolean[] = [];
+    private _sjDel: number[] = [];
     private _grassCost: number;
     private _sjCost: number;
     private _sjDelTime: number;
-    private _fight: boolean[];
-    private _life: number[];
-    private _bgIndex: number[];
-    private _aim: number[];
-    private _aimX: number[];
-    private _aimY: number[];
+    private _fight: boolean[] = [];
+    private _life: number[] = [];
+    private _bgIndex: number[] = [];
+    private _aim: number[] = [];
+    private _aimX: number[] = [];
+    private _aimY: number[] = [];
     private _ctx1: any;
     private _ctx2: any;
     private _sj: Sj;
-    private _slmPicl: HTMLImageElement[];
-    private _slmPicr: HTMLImageElement[];
+    private _slmPicl: HTMLImageElement[] = [];
+    private _slmPicr: HTMLImageElement[] = [];
     private _knight: Knight;
     private _slmPlan: HTMLImageElement;
     private _slmEgg: HTMLImageElement;
@@ -43,6 +43,47 @@ export default class Slm {
     private _data: Data;
     private _cx: number;
     private _cy: number;
+
+    constructor(ctx1: any, ctx2: any, slmPicl: HTMLImageElement[], slmPicr: HTMLImageElement[], slmPlan: HTMLImageElement, slmEgg: HTMLImageElement) {
+        this._num = 10;
+        this._limit = 0;
+        this._grassCost = 10;
+        this._sjDelTime = 30 * 1000;
+        this._slmPicl = slmPicl;
+        this._slmPicr = slmPicr;
+        this._Pic = slmPicl;
+        this._ctx1 = ctx1;
+        this._ctx2 = ctx2;
+        this._slmPlan = slmPlan;
+        this._slmEgg = slmEgg;
+
+        for (let i = 0; i < this._num; i++) {
+            this._x[i] = 0;
+            this._y[i] = 0;
+            this._alive[i] = false;
+            this._front[i] = "left";
+            this._PicCount[i] = 0;
+            this._delta[i] = 0;
+            this._frontDel[i] = 0;
+            this._full[i] = false;
+            this._planX[i] = 0;
+            this._planY[i] = 0;
+            this._sjDel[i] = 0;
+            this._fight[i] = false;
+            this._life[i] = 200;
+            this._bgIndex[i] = 0;
+            this._aim[i] = -1;
+            this._aimX[i] = 0;
+            this._aimY[i] = 0;
+        }
+    }
+
+    init(sj: Sj, knight: Knight, bg: Bg, data: Data) {
+        this._sj = sj;
+        this._knight = knight;
+        this._bg = bg;
+        this._data = data;
+    }
 
     get x() {
         return this._x;
@@ -52,6 +93,13 @@ export default class Slm {
         return this._y;
     }
 
+    get limit() {
+        return this._limit;
+    }
+
+    get life() {
+        return this._life;
+    }
 
     get num() {
         return this._num;
@@ -76,46 +124,6 @@ export default class Slm {
 
     set limit(val: number) {
         this._limit = val;
-    }
-
-
-    constructor(ctx1: any, ctx2: any, slmPicl: HTMLImageElement[], slmPicr: HTMLImageElement[], sj: Sj, knight: Knight, bg: Bg, data: Data, slmPlan: HTMLImageElement, slmEgg: HTMLImageElement, cx: number, cy: number) {
-        this._num = 10;
-        this._limit = 0;
-        this._grassCost = 10;
-        this._sjDelTime = 30 * 1000;
-        this._slmPicl = slmPicl;
-        this._slmPicr = slmPicr;
-        this._Pic = slmPicl;
-        this._ctx1 = ctx1;
-        this._ctx2 = ctx2;
-        this._sj = sj;
-        this._knight = knight;
-        this._slmPlan = slmPlan;
-        this._slmEgg = slmEgg;
-        this._bg = bg;
-        this._data = data;
-        this._cx = cx;
-        this._cy = cy;
-        for (let i = 0; i < this._num; i++) {
-            this._x[i] = 0;
-            this._y[i] = 0;
-            this._alive[i] = false;
-            this._front[i] = "left";
-            this._PicCount[i] = 0;
-            this._delta[i] = 0;
-            this._frontDel[i] = 0;
-            this._full[i] = false;
-            this._planX[i] = 0;
-            this._planY[i] = 0;
-            this._sjDel[i] = 0;
-            this._fight[i] = false;
-            this._life[i] = 200;
-            this._bgIndex[i] = 0;
-            this._aim[i] = -1;
-            this._aimX[i] = 0;
-            this._aimY[i] = 0;
-        }
     }
 
     draw(deltaTime: number) {
@@ -283,7 +291,9 @@ export default class Slm {
         this._limit--;
     }
 
-    slmControl() {
+    slmControl(cx: number, cy: number) {
+        this._cx = cx;
+        this._cy = cy;
         let count = 0;
         for (let i = 0; i < this._num; i++) {
             if (this._alive[i]) {

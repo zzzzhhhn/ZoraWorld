@@ -14,20 +14,23 @@ module.exports = {
         rules: [{
                 test: /.vue$/,
                 use: [{
-                        loader: 'vue-loader',
-                        options: {
-                            loaders: {
-                                less: ExtractTextPlugin.extract({
-                                    use: ['css-loader?minimize', 'autoprefixer-loader', 'less-loader'],
-                                    fallback: 'vue-style-loader'
-                                }),
-                                css: ExtractTextPlugin.extract({
-                                    use: ['css-loader', 'autoprefixer-loader', 'less-loader'],
-                                    fallback: 'vue-style-loader'
-                                })
-                            }
+                    loader: 'vue-loader',
+                    options: {
+                        loaders: {
+                            less: ExtractTextPlugin.extract({
+                                use: ['css-loader?minimize', 'autoprefixer-loader', 'less-loader'],
+                                fallback: 'vue-style-loader'
+                            }),
+                            css: ExtractTextPlugin.extract({
+                                use: ['css-loader', 'autoprefixer-loader', 'less-loader'],
+                                fallback: 'vue-style-loader'
+                            })
+                        },
+                        transformToRequire: {
+                            "audio": "src"
                         }
-                    },
+                    }
+                },
                     {
                         loader: 'iview-loader',
                         options: {
@@ -87,6 +90,13 @@ module.exports = {
                     appendTsSuffixTo: [/\.vue$/],
                 }
             },
+            {
+                test: /\.mp3(\?.*)?$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 10000,
+                }
+            }
         ]
     },
     resolve: {

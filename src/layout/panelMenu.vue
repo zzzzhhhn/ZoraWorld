@@ -343,10 +343,10 @@
 
         .top-title {
             width: 50%;
-            height: 15%;
+            height: 10%;
             position: absolute;
             left: 25%;
-            top: -14%;
+            top: -9%;
             transition: top .5s ease-out;
             background: lightgray;
             background-size: cover;
@@ -354,7 +354,7 @@
             border-radius: 10px;
             padding: 1%;
             font-size: 30px;
-            line-height: 250%;
+            line-height: 180%;
             text-align: center;
             color: lightsalmon;
 
@@ -367,10 +367,10 @@
                 }
 
                 .index-msg {
-                    height: 5%;
-                    font-size: 20px;
-                    line-height: 200%;
-                    color: lightyellow;
+                    height: 3%;
+                    font-size: 15px;
+                    line-height: 34%;
+                    color: #ffffe0;
                 }
             }
 
@@ -385,11 +385,11 @@
         }
 
         .main {
-            width: 80%;
-            height: 82%;
+            width: 90%;
+            height: 89%;
             position: absolute;
-            left: 10%;
-            bottom: -81%;
+            left: 5%;
+            bottom: -88%;
             transition: all .5s ease-out;
             overflow-y: auto;
 

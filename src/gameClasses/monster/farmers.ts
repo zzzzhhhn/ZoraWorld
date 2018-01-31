@@ -11,29 +11,29 @@ import House from './house';
 import Game from '../common/game';
 
 export default class Farmer {
-    private _Pic: HTMLImageElement[];
-    private _PicCount: number[];
-    private _x: number[];
-    private _y: number[];
-    private _front: string[];//方向
-    private _alive: boolean[];
-    private _delta: number[];
-    private _frontDel: number[];
-    private _working: boolean[];
-    private _holding: boolean[];
-    private _aimX: number[];
-    private _aimY: number[];
-    private _grassIndex: number[];
-    private _colletDel: number[];
-    private _show: boolean[];
-    private _treeIndex: number[];
-    private _colleted: string[];
+    private _Pic: HTMLImageElement[] = [];
+    private _PicCount: number[] = [];
+    private _x: number[] = [];
+    private _y: number[] = [];
+    private _front: string[] = [];//方向
+    private _alive: boolean[] = [];
+    private _delta: number[] = [];
+    private _frontDel: number[] = [];
+    private _working: boolean[] = [];
+    private _holding: boolean[] = [];
+    private _aimX: number[] = [];
+    private _aimY: number[] = [];
+    private _grassIndex: number[] = [];
+    private _colletDel: number[] = [];
+    private _show: boolean[] = [];
+    private _treeIndex: number[] = [];
+    private _colleted: string[] = [];
     private _num: number;
-    private _farmerF: HTMLImageElement[];
-    private _farmerB: HTMLImageElement[];
-    private _farmerL: HTMLImageElement[];
-    private _farmerR: HTMLImageElement[];
-    private _housePic: HTMLImageElement[];
+    private _farmerF: HTMLImageElement[] = [];
+    private _farmerB: HTMLImageElement[] = [];
+    private _farmerL: HTMLImageElement[] = [];
+    private _farmerR: HTMLImageElement[] = [];
+    private _housePic: HTMLImageElement[] = [];
     private _ctx2: any;
     private _bg: Bg;
     private _data: Data;
@@ -42,22 +42,8 @@ export default class Farmer {
     private _tree: Tree;
     private _grass: Grass;
 
-    get num() {
-        return this._num;
-    }
-
-    set num(val: number) {
-        this._num = val;
-    }
-
-    constructor(ctx2: any, bg: Bg, data: Data, grass: Grass, tree: Tree, house: House, game: Game, farmerF: HTMLImageElement[], farmerB: HTMLImageElement[], farmerL: HTMLImageElement[], farmerR: HTMLImageElement[], housePic: HTMLImageElement[]) {
+    constructor(ctx2: any, farmerF: HTMLImageElement[], farmerB: HTMLImageElement[], farmerL: HTMLImageElement[], farmerR: HTMLImageElement[], housePic: HTMLImageElement[]) {
         this._ctx2 = ctx2;
-        this._bg = bg;
-        this._data = data;
-        this._house = house;
-        this._game = game;
-        this._tree = tree;
-        this._grass = grass;
         this._num = 2;
         this._housePic = housePic;
         this._farmerF = farmerF;
@@ -84,6 +70,23 @@ export default class Farmer {
             this._colleted[i] = '';
         }
 
+    }
+
+    init(bg: Bg, data: Data, grass: Grass, tree: Tree, house: House, game: Game) {
+        this._bg = bg;
+        this._data = data;
+        this._house = house;
+        this._game = game;
+        this._tree = tree;
+        this._grass = grass;
+    }
+
+    get num() {
+        return this._num;
+    }
+
+    set num(val: number) {
+        this._num = val;
     }
 
     draw(deltaTime: number, W: number, H: number,) {

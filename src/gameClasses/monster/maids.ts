@@ -8,38 +8,33 @@ import Game from "../common/game";
 import Data from './data';
 
 export default class Maid {
-    private _Pic: HTMLImageElement[];
-    private _PicCount: number[];
-    private _x: number[];
-    private _y: number[];
-    private _front: string[];//方向
-    private _alive: boolean[];
-    private _delta: number[];
-    private _frontDel: number[];
-    private _working: boolean[];
-    private _holding: boolean[];
-    private _aimX: number[];
-    private _aimY: number[];
-    private _sjIndex: number[];
-    private _show: boolean[];
+    private _Pic: HTMLImageElement[] = [];
+    private _PicCount: number[] = [];
+    private _x: number[] = [];
+    private _y: number[] = [];
+    private _front: string[] = [];//方向
+    private _alive: boolean[] = [];
+    private _delta: number[] = [];
+    private _frontDel: number[] = [];
+    private _working: boolean[] = [];
+    private _holding: boolean[] = [];
+    private _aimX: number[] = [];
+    private _aimY: number[] = [];
+    private _sjIndex: number[] = [];
+    private _show: boolean[] = [];
     private _num: number;
     private _ctx2: any;
-    private _maidF: HTMLImageElement[];
-    private _maidB: HTMLImageElement[];
-    private _maidL: HTMLImageElement[];
-    private _maidR: HTMLImageElement[];
+    private _maidF: HTMLImageElement[] = [];
+    private _maidB: HTMLImageElement[] = [];
+    private _maidL: HTMLImageElement[] = [];
+    private _maidR: HTMLImageElement[] = [];
     private _sj: Sj;
     private _house: House;
-    private _housePic: HTMLImageElement[];
+    private _housePic: HTMLImageElement[] = [];
     private _data: Data;
-    private _game: Game
+    private _game: Game;
 
-    set num(val: number) {
-        this._num = val;
-    }
-
-
-    constructor(ctx2: any, W: number, H: number, maidF: HTMLImageElement[], maidB: HTMLImageElement[], maidL: HTMLImageElement[], maidR: HTMLImageElement[], sj: Sj, house: House, housePic: HTMLImageElement[], data: Data, game: Game) {
+    constructor(ctx2: any, W: number, H: number, maidF: HTMLImageElement[], maidB: HTMLImageElement[], maidL: HTMLImageElement[], maidR: HTMLImageElement[],  housePic: HTMLImageElement[]) {
         this._num = 2;
         this._Pic = maidF;
         this._ctx2 = ctx2;
@@ -47,10 +42,8 @@ export default class Maid {
         this._maidB = maidB;
         this._maidL = maidL;
         this._maidR = maidR;
-        this._house = house;
         this._housePic = housePic;
-        this._data = data;
-        this._game = game;
+
         for (let i = 0; i < this._num; i++) {
             this._x[i] = Math.random() * W;
             this._y[i] = Math.random() * H;
@@ -66,6 +59,17 @@ export default class Maid {
             this._sjIndex[i] = 0;
             this._show[i] = false;
         }
+    }
+
+    init(sj: Sj, house: House,data: Data, game: Game) {
+        this._house = house;
+        this._data = data;
+        this._game = game;
+        this._sj = sj;
+    }
+
+    set num(val: number) {
+        this._num = val;
     }
 
     draw(deltaTime: number, W: number, H: number, bgX: number, bgY: number) {

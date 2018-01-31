@@ -4,17 +4,33 @@
 import Bg from './bg';
 
 export default class Grass {
-    private _x: number[];
-    private _y: number[];
+    private _x: number[] = [];
+    private _y: number[] = [];
     private _num: number;
     private _limit: number;
     private _del: number;
-    private _alive: boolean[];
-    private _collected: boolean[];
+    private _alive: boolean[] = [];
+    private _collected: boolean[] = [];
     private _growDel: number;
     private _ctx1: any;
     private _bg: Bg;
     private _grassPic: HTMLImageElement;
+
+    constructor(ctx1: any, bg: Bg, grassPic: HTMLImageElement) {
+        this._num = bg.num;
+        this._limit = 10;
+        this._del = 0;
+        this._ctx1 = ctx1;
+        this._bg = bg;
+        this._growDel = 1000 * 5 + Math.random() * 1000;
+        this._grassPic = grassPic;
+        for (let i = 0; i < this._num; i++) {
+            this._x[i] = 0;
+            this._y[i] = 0;
+            this._alive[i] = false;
+            this._collected[i] = false;
+        }
+    }
 
     get x() {
         return this._x;
@@ -50,22 +66,6 @@ export default class Grass {
 
     set growDel(val: number) {
         this._growDel = val;
-    }
-
-    constructor(ctx1: any, bg: Bg, grassPic: HTMLImageElement) {
-        this._num = bg.num;
-        this._limit = 10;
-        this._del = 0;
-        this._ctx1 = ctx1;
-        this._bg = bg;
-        this._growDel = 1000 * 5 + Math.random() * 1000;
-        this._grassPic = grassPic;
-        for (let i = 0; i < this._num; i++) {
-            this._x[i] = 0;
-            this._y[i] = 0;
-            this._alive[i] = false;
-            this._collected[i] = false;
-        }
     }
 
     draw(deltaTime: number) {

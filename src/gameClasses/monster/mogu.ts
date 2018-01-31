@@ -8,36 +8,36 @@ import Bg from './bg';
 import Data from './data';
 
 export default class Mogu {
-    private _x: number[];
-    private _y: number[];
-    private _planX: number[];
-    private _planY: number[];
-    private _alive: boolean[];
-    private _Pic: HTMLImageElement[];
+    private _x: number[] = [];
+    private _y: number[] = [];
+    private _planX: number[] = [];
+    private _planY: number[] = [];
+    private _alive: boolean[] = [];
+    private _Pic: HTMLImageElement[] = [];
     private _num: number;
     private _limit: number;
-    private _front: string[];
-    private _PicCount: number[];
-    private _delta: number[];
-    private _frontDel: number[];
-    private _full: boolean[];
-    private _sjDel: number[];
+    private _front: string[] = [];
+    private _PicCount: number[] = [];
+    private _delta: number[] = [];
+    private _frontDel: number[] = [];
+    private _full: boolean[] = [];
+    private _sjDel: number[] = [];
     private _grassCost: number;
     private _sjCost: number;
     private _sjDelTime: number;
-    private _fight: boolean[];
-    private _life: number[];
-    private _bgIndex: number[];
-    private _aim: number[];
-    private _aimX: number[];
-    private _aimY: number[];
-    private _cd: boolean[];
-    private _cdDel: number[];
+    private _fight: boolean[] = [];
+    private _life: number[] = [];
+    private _bgIndex: number[] = [];
+    private _aim: number[] = [];
+    private _aimX: number[] = [];
+    private _aimY: number[] = [];
+    private _cd: boolean[] = [];
+    private _cdDel: number[] = [];
     private _ctx1: any;
     private _ctx2: any;
     private _sj: Sj;
-    private _moguPicl: HTMLImageElement[];
-    private _moguPicr: HTMLImageElement[];
+    private _moguPicl: HTMLImageElement[] = [];
+    private _moguPicr: HTMLImageElement[] = [];
     private _knight: Knight;
     private _moguPlan: HTMLImageElement;
     private _moguEgg: HTMLImageElement;
@@ -46,6 +46,50 @@ export default class Mogu {
     private _cx: number;
     private _cy: number;
 
+    constructor(ctx1: any, ctx2: any, moguPicl: HTMLImageElement[], moguPicr: HTMLImageElement[], moguPlan: HTMLImageElement, moguEgg: HTMLImageElement) {
+        this._num = 10;
+        this._limit = 0;
+        this._grassCost = 25;
+        this._sjCost = 10;
+        this._sjDelTime = 20 * 1000;
+        this._moguPicl = moguPicl;
+        this._moguPicr = moguPicr;
+        this._Pic = moguPicl;
+        this._ctx1 = ctx1;
+        this._ctx2 = ctx2;
+        this._moguPlan = moguPlan;
+        this._moguEgg = moguEgg;
+
+        for (let i = 0; i < this._num; i++) {
+            this._x[i] = 0;
+            this._y[i] = 0;
+            this._alive[i] = false;
+            this._front[i] = "left";
+            this._PicCount[i] = 0;
+            this._delta[i] = 0;
+            this._frontDel[i] = 0;
+            this._full[i] = false;
+            this._planX[i] = 0;
+            this._planY[i] = 0;
+            this._sjDel[i] = 0;
+            this._fight[i] = false;
+            this._life[i] = 200;
+            this._bgIndex[i] = 0;
+            this._aim[i] = -1;
+            this._aimX[i] = 0;
+            this._aimY[i] = 0;
+            this._cd[i] = true;
+            this._cdDel[i] = 0;
+        }
+    }
+
+    init(sj: Sj, knight: Knight, bg: Bg, data: Data) {
+        this._sj = sj;
+        this._knight = knight;
+        this._bg = bg;
+        this._data = data;
+    }
+
     get x() {
         return this._x;
     }
@@ -53,6 +97,15 @@ export default class Mogu {
     get y() {
         return this._y;
     }
+
+    get life() {
+        return this._life;
+    }
+
+    get limit() {
+        return this._limit;
+    }
+
 
 
     get num() {
@@ -80,50 +133,6 @@ export default class Mogu {
 
     set limit(val: number) {
         this._limit = val;
-    }
-
-
-    constructor(ctx1: any, ctx2: any, moguPicl: HTMLImageElement[], moguPicr: HTMLImageElement[], sj: Sj, knight: Knight, bg: Bg, data: Data, moguPlan: HTMLImageElement, moguEgg: HTMLImageElement, cx: number, cy: number) {
-        this._num = 10;
-        this._limit = 0;
-        this._grassCost = 25;
-        this._sjCost = 10;
-        this._sjDelTime = 20 * 1000;
-        this._moguPicl = moguPicl;
-        this._moguPicr = moguPicr;
-        this._Pic = moguPicl;
-        this._ctx1 = ctx1;
-        this._ctx2 = ctx2;
-        this._sj = sj;
-        this._knight = knight;
-        this._moguPlan = moguPlan;
-        this._moguEgg = moguEgg;
-        this._bg = bg;
-        this._data = data;
-        this._cx = cx;
-        this._cy = cy;
-        for (let i = 0; i < this._num; i++) {
-            this._x[i] = 0;
-            this._y[i] = 0;
-            this._alive[i] = false;
-            this._front[i] = "left";
-            this._PicCount[i] = 0;
-            this._delta[i] = 0;
-            this._frontDel[i] = 0;
-            this._full[i] = false;
-            this._planX[i] = 0;
-            this._planY[i] = 0;
-            this._sjDel[i] = 0;
-            this._fight[i] = false;
-            this._life[i] = 200;
-            this._bgIndex[i] = 0;
-            this._aim[i] = -1;
-            this._aimX[i] = 0;
-            this._aimY[i] = 0;
-            this._cd[i] = true;
-            this._cdDel[i] = 0;
-        }
-
     }
 
     draw(deltaTime: number) {
@@ -294,7 +303,9 @@ export default class Mogu {
         this._limit--;
     }
 
-    moguControl() {
+    moguControl(cx: number, cy: number) {
+        this._cx = cx;
+        this._cy = cy;
         let count = 0;
         for (let i = 0; i < this._num; i++) {
             if (this._alive[i]) {

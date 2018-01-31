@@ -15,10 +15,29 @@ export default class House {
     private _life: number;
     private _alive: boolean;
     private _ctx2: any;
-    private _housePic: HTMLImageElement[];
+    private _housePic: HTMLImageElement[] = [];
     private _farmer: Farmer;
     private _maid: Maid;
     private _grass: Grass;
+
+    constructor(ctx2: any, bgX: number, bgY: number, housePic: HTMLImageElement[]) {
+        this._level = 1;
+        this._x = bgX;
+        this._y = bgY;
+        this._grassCost = 50;
+        this._sjCost = 10;
+        this._limit = 10;
+        this._life = 10000;
+        this._alive = true;
+        this._ctx2 = ctx2;
+        this._housePic = housePic;
+    }
+
+    init(farmer: Farmer, maid: Maid, grass: Grass) {
+        this._farmer = farmer;
+        this._maid = maid;
+        this._grass = grass;
+    }
 
     get x() {
         return this._x;
@@ -40,6 +59,10 @@ export default class House {
         return this._sjCost;
     }
 
+    get level() {
+        return this._level;
+    }
+
     get grassCost() {
         return this._grassCost;
     }
@@ -54,22 +77,6 @@ export default class House {
 
     set alive(val: boolean) {
         this._alive = val;
-    }
-
-    constructor(ctx2: any, bgX: number, bgY: number, housePic: HTMLImageElement[], farmer: Farmer, maid: Maid, grass: Grass) {
-        this._level = 1;
-        this._x = bgX;
-        this._y = bgY;
-        this._grassCost = 50;
-        this._sjCost = 10;
-        this._limit = 10;
-        this._life = 10000;
-        this._alive = true;
-        this._ctx2 = ctx2;
-        this._housePic = housePic;
-        this._farmer = farmer;
-        this._maid = maid;
-        this._grass = grass;
     }
 
     draw() {

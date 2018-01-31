@@ -4,17 +4,33 @@
 import Bg from './bg';
 
 export default class Tree {
-    private _x: number[];
-    private _y: number[];
+    private _x: number[] = [];
+    private _y: number[] = [];
     private _num: number;
     private _limit: number;
     private _del: number;
-    private _alive: boolean[];
-    private _collected: boolean[];
+    private _alive: boolean[] = [];
+    private _collected: boolean[] = [];
     private _growDel: number;
     private _ctx1: any;
     private _bg: Bg;
     private _treePic: HTMLImageElement;
+
+    constructor(ctx1: any, bg: Bg, treePic: HTMLImageElement) {
+        this._num = bg.num;
+        this._limit = 3;
+        this._del = 0;
+        this._ctx1 = ctx1;
+        this._bg = bg;
+        this._treePic = treePic;
+        this._growDel = 1000 * 10 + Math.random() * 5000;
+        for (let i = 0; i < this._num; i++) {
+            this._x[i] = 0;
+            this._y[i] = 0;
+            this._alive[i] = false;
+            this._collected[i] = false;
+        }
+    }
 
     get x() {
         return this._x;
@@ -46,22 +62,6 @@ export default class Tree {
 
     set collected(val: boolean[]) {
         this._collected = val;
-    }
-
-    constructor(ctx1: any, bg: Bg, treePic: HTMLImageElement) {
-        this._num = bg.num;
-        this._limit = 3;
-        this._del = 0;
-        this._ctx1 = ctx1;
-        this._bg = bg;
-        this._treePic = treePic;
-        this._growDel = 1000 * 10 + Math.random() * 5000;
-        for (let i = 0; i < this._num; i++) {
-            this._x[i] = 0;
-            this._y[i] = 0;
-            this._alive[i] = false;
-            this._collected[i] = false;
-        }
     }
 
     draw(deltaTime: number) {

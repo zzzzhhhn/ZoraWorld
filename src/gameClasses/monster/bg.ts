@@ -6,49 +6,17 @@ import Game from "../common/game";
  */
 export default class BG {
     private _num: number;
-    private _x: number[];               //左上角坐标
-    private _y: number[];
-    private _x2: number[];              //右下角
-    private _y2: number[];
-    private _occupied: boolean[];       //当前地块上是否已被其他物品覆盖
+    private _x: number[] = [];               //左上角坐标
+    private _y: number[] = [];
+    private _x2: number[] = [];              //右下角
+    private _y2: number[] = [];
+    private _occupied: boolean[] = [];       //当前地块上是否已被其他物品覆盖
     private _cbg: number;               //当前点击地块索引
-    private _over: string[];            //当前地块覆盖物名称
-    private _wl: boolean[];             //是否显示围栏
+    private _over: string[] = [];            //当前地块覆盖物名称
+    private _wl: boolean[] = [];             //是否显示围栏
     private _wlPic: HTMLImageElement;
     private _bgPic: HTMLImageElement;
     private _ctx1: any;
-
-    get x() {
-        return this._x;
-    }
-
-    get y() {
-        return this._y;
-    }
-
-    get num() {
-        return this._num;
-    }
-
-    get x2() {
-        return this._x2;
-    }
-
-    get y2() {
-        return this._y2;
-    }
-
-    get occupied() {
-        return this._occupied;
-    }
-
-    set cbg(val: number) {
-        this._cbg = val;
-    }
-
-    set over(val: string[]) {
-        this.over = val;
-    }
 
     constructor(ctx1: any, W: number, H: number, bgPic: HTMLImageElement, wlPic: HTMLImageElement) {
         this._ctx1 = ctx1;
@@ -84,6 +52,50 @@ export default class BG {
         this._occupied[41] = true;
         this._over[41] = 'house';
 
+    }
+
+    get x() {
+        return this._x;
+    }
+
+    get y() {
+        return this._y;
+    }
+
+    get cbg() {
+        return this._cbg;
+    }
+
+    get num() {
+        return this._num;
+    }
+
+    get over() {
+        return this._over;
+    }
+
+    get x2() {
+        return this._x2;
+    }
+
+    get y2() {
+        return this._y2;
+    }
+
+    get occupied() {
+        return this._occupied;
+    }
+
+    set cbg(val: number) {
+        this._cbg = val;
+    }
+
+    set occupied(val: boolean[]) {
+        this._occupied = val;
+    }
+
+    set over(val: string[]) {
+        this._over = val;
     }
 
     draw() {

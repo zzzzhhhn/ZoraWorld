@@ -30,22 +30,22 @@ export default class MonsterGame {
     private _H: number;
     private _grassPic: HTMLImageElement;
     private _grass: Grass;
-    private _farmerF: HTMLImageElement[];
-    private _farmerB: HTMLImageElement[];
-    private _farmerL: HTMLImageElement[];
-    private _farmerR: HTMLImageElement[];
+    private _farmerF: HTMLImageElement[] = [];
+    private _farmerB: HTMLImageElement[] = [];
+    private _farmerL: HTMLImageElement[] = [];
+    private _farmerR: HTMLImageElement[] = [];
     private _farmer: Farmer;
-    private _maidF: HTMLImageElement[];
-    private _maidB: HTMLImageElement[];
-    private _maidL: HTMLImageElement[];
-    private _maidR: HTMLImageElement[];
+    private _maidF: HTMLImageElement[] = [];
+    private _maidB: HTMLImageElement[] = [];
+    private _maidL: HTMLImageElement[] = [];
+    private _maidR: HTMLImageElement[] = [];
     private _maid: Maid;
-    private _knightF: HTMLImageElement[];
-    private _knightB: HTMLImageElement[];
-    private _knightL: HTMLImageElement[];
-    private _knightR: HTMLImageElement[];
+    private _knightF: HTMLImageElement[] = [];
+    private _knightB: HTMLImageElement[] = [];
+    private _knightL: HTMLImageElement[] = [];
+    private _knightR: HTMLImageElement[] = [];
     private _knight: Knight;
-    private _housePic: HTMLImageElement[];
+    private _housePic: HTMLImageElement[] = [];
     private _house: House;
     private _mx: number;
     private _my: number;
@@ -56,11 +56,11 @@ export default class MonsterGame {
     private _moguLogo: HTMLImageElement;
     private _slmLogo: HTMLImageElement;
     private _panel: Panel;
-    private _dragonPicl: HTMLImageElement[];
-    private _dragonPicr: HTMLImageElement[];
+    private _dragonPicl: HTMLImageElement[] = [];
+    private _dragonPicr: HTMLImageElement[] = [];
     private _dragon: Dragon;
-    private _moguPicl: HTMLImageElement[];
-    private _moguPicr: HTMLImageElement[];
+    private _moguPicl: HTMLImageElement[] = [];
+    private _moguPicr: HTMLImageElement[] = [];
     private _mogu: Mogu;
     private _dragonEgg: HTMLImageElement;
     private _fishEgg: HTMLImageElement;
@@ -70,11 +70,11 @@ export default class MonsterGame {
     private _fishPlan: HTMLImageElement;
     private _moguPlan: HTMLImageElement;
     private _slmPlan: HTMLImageElement;
-    private _slmPicl: HTMLImageElement[];
-    private _slmPicr: HTMLImageElement[];
+    private _slmPicl: HTMLImageElement[] = [];
+    private _slmPicr: HTMLImageElement[] = [];
     private _slm: Slm;
-    private _fishPicl: HTMLImageElement[];
-    private _fishPicr: HTMLImageElement[];
+    private _fishPicl: HTMLImageElement[] = [];
+    private _fishPicr: HTMLImageElement[] = [];
     private _fish: Fish;
     private _sjPic: HTMLImageElement;
     private _sj: Sj;
@@ -83,6 +83,7 @@ export default class MonsterGame {
     private _tree: Tree;
     private _wlPic: HTMLImageElement;
     private _game: Game;
+    private _timer: any;
 
     constructor() {
         this._can1 = <HTMLCanvasElement>document.getElementById('canvas1');
@@ -215,29 +216,50 @@ export default class MonsterGame {
         this._sjPic = new Image();
         this._sjPic.src = "/src/assets/img/monster/sj.png";
 
+    }
+
+    start() {
         this._game = new Game();
-        this._house = new House(this._ctx2, this._bg.x[41], this._bg.y[41], this._housePic, this._farmer, this._maid, this._grass);
-        this._knight = new Knight(this._ctx2, this._bg.x[89], this._bg.y[89], this._knightF, this._knightB, this._knightL, this._knightR, this._slm, this._mogu, this._dragon, this._fish, this._house, this._housePic, this._data, this._game);
-        this._maid = new Maid(this._ctx2, this._W, this._H, this._maidF, this._maidB, this._maidL, this._maidR, this._sj, this._house, this._housePic, this._data, this._game);
-        this._farmer = new Farmer(this._ctx2, this._bg, this._data, this._grass, this._tree, this._house, this._game, this._farmerF, this._farmerB, this._farmerL, this._farmerR, this._housePic);
+        this._bg = new BG(this._ctx1, this._W, this._H, this._bgPic, this._wlPic);
         this._grass = new Grass(this._ctx1, this._bg, this._grassPic);
         this._tree = new Tree(this._ctx1, this._bg, this._treePic);
-        this._bg = new BG(this._ctx1, this._W, this._H, this._bgPic, this._wlPic);
-        this._dragon = new Dragon(this._ctx1, this._ctx2, this._dragonPicl, this._dragonPicr, this._sj, this._knight, this._bg, this._data, this._dragonPlan, this._dragonEgg);
-        this._mogu = new Mogu(this._ctx1, this._ctx2, this._moguPicl, this._moguPicr, this._sj, this._knight, this._bg, this._data, this._moguPlan, this._moguEgg);
-        this._slm = new Slm(this._ctx1, this._ctx2, this._slmPicl, this._slmPicr, this._sj, this._knight, this._bg, this._data, this._slmPlan, this._slmEgg, this._cx, this._cy);
-        this._fish = new Fish(this._ctx1, this._ctx2, this._fishPicl, this._fishPicr, this._sj, this._knight, this._bg, this._data, this._fishPlan, this._fishEgg);
-        this._panel = new Panel(this._ctx2, this._cx, this._cy, this._bg, this._data, this._house, this._dragon, this._fish, this._slm, this._mogu, this._fishLogo, this._moguLogo, this._slmLogo, this._dragonLogo);
         this._sj = new Sj(this._ctx1, this._sjPic);
-        this._data = new Data(this._ctx2, this._knight);
+        this._maid = new Maid(this._ctx2, this._W, this._H, this._maidF, this._maidB, this._maidL, this._maidR, this._housePic);
+        this._farmer = new Farmer(this._ctx2, this._farmerF, this._farmerB, this._farmerL, this._farmerR, this._housePic);
+        this._house = new House(this._ctx2, this._bg.x[41], this._bg.y[41], this._housePic);
+        this._dragon = new Dragon(this._ctx1, this._ctx2, this._dragonPicl, this._dragonPicr, this._dragonPlan, this._dragonEgg);
+        this._mogu = new Mogu(this._ctx1, this._ctx2, this._moguPicl, this._moguPicr, this._moguPlan, this._moguEgg);
+        this._slm = new Slm(this._ctx1, this._ctx2, this._slmPicl, this._slmPicr, this._slmPlan, this._slmEgg);
+        this._fish = new Fish(this._ctx1, this._ctx2, this._fishPicl, this._fishPicr, this._fishPlan, this._fishEgg);
+        this._knight = new Knight(this._ctx2, this._bg.x[89], this._bg.y[89], this._knightF, this._knightB, this._knightL, this._knightR, this._housePic);
+        this._panel = new Panel(this._ctx2, this._cx, this._cy, this._fishLogo, this._moguLogo, this._slmLogo, this._dragonLogo);
+        this._data = new Data(this._ctx2);
+
+        this._maid.init(this._sj, this._house, this._data, this._game);
+        this._farmer.init(this._bg, this._data, this._grass, this._tree, this._house, this._game);
+        this._house.init(this._farmer, this._maid, this._grass);
+        this._dragon.init(this._sj, this._knight, this._bg, this._data);
+        this._mogu.init(this._sj, this._knight, this._bg, this._data);
+        this._slm.init(this._sj, this._knight, this._bg, this._data);
+        this._fish.init(this._sj, this._knight, this._bg, this._data);
+        this._knight.init(this._slm, this._mogu, this._dragon, this._fish, this._house, this._data, this._game);
+        this._panel.init(this._bg, this._data, this._house, this._dragon, this._fish, this._slm, this._mogu);
+        this._data.init(this._knight);
+
+        this._can2.addEventListener('click', this.build.bind(this), false);
+
         this._lasttime = Date.now();
         this._deltaTime = 0;
 
-        this._can2.addEventListener('click', this.build, false);
+        this.gameLoop();
+    }
+
+    end() {
+        cancelAnimationFrame(this._timer);
     }
 
     gameLoop() {
-        window.requestAnimationFrame(this.gameLoop);
+        this._timer = window.requestAnimationFrame(this.gameLoop.bind(this));
         this._deltaTime = Date.now() - this._lasttime;
         if (this._deltaTime >= 40) {
             this._deltaTime = 40;
@@ -257,13 +279,13 @@ export default class MonsterGame {
         this._knight.knightControl();
         this._knight.draw(this._deltaTime);
         this._house.draw();
-        this._dragon.dragonControl();
+        this._dragon.dragonControl(this._cx, this._cy);
         this._dragon.draw(this._deltaTime);
-        this._mogu.moguControl();
+        this._mogu.moguControl(this._cx, this._cy);
         this._mogu.draw(this._deltaTime);
-        this._fish.fishControl();
+        this._fish.fishControl(this._cx, this._cy);
         this._fish.draw(this._deltaTime);
-        this._slm.slmControl();
+        this._slm.slmControl(this._cx, this._cy);
         this._slm.draw(this._deltaTime);
         this._sj.draw();
         this._data.draw(this._deltaTime, this._W, this._H, this._game.gameover, this._house.life);
@@ -293,74 +315,70 @@ export default class MonsterGame {
 
 
             }
-            if (this._panel.show && !this._bg.occupied[this._bg.cbg]) {
-                if (this._mx >= this._panel.x && this._mx <= this._panel.x + 100 && this._my >= (this._panel.y - 100) && this._my < this._panel.y) {
-                    if (this._data.grassCount >= this._fish.grassCost && this._data.sjCount >= this._fish.sjCost && this._data.limit < this._house.limit) {
-                        this._bg.occupied[this._bg.cbg] = true;
-                        this._fish.limit++;
-                        this._panel.show = false;
-                        this._data.grassCount = this._data.grassCount - this._fish.grassCost;
-                        this._data.sjCount = this._data.sjCount - this._fish.sjCost;
-                        return;
-                    }
-                }
-                if (this._mx >= this._panel.x && this._mx <= this._panel.x + 100 && this._my >= (this._panel.y + 100) && this._my < this._panel.y + 200) {
-                    if (this._data.grassCount >= this._mogu.grassCost && this._data.sjCount >= this._mogu.sjCost && this._data.limit < this._house.limit) {
-                        this._bg.occupied[this._bg.cbg] = true;
-                        this._mogu.limit++;
-                        this._panel.show = false;
-                        this._data.grassCount = this._data.grassCount - this._mogu.grassCost;
-                        this._data.sjCount = this._data.sjCount - this._mogu.sjCost;
-                        return;
-                    }
-                }
-                if (this._mx >= this._panel.x - 100 && this._mx <= this._panel.x && this._my >= this._panel.y && this._my < this._panel.y + 100) {
-                    if (this._data.grassCount >= this._slm.grassCost && this._data.limit <this._house.limit) {
-                        this._bg.occupied[this._bg.cbg] = true;
-                        this._slm.limit++;
-                        this._panel.show = false;
-                        this._data.grassCount = this._data.grassCount - this._slm.grassCost;
-                        return;
-                    }
-                }
-                if (this._mx >= this._panel.x + 100 && this._mx <= this._panel.x + 200 && this._my >= this._panel.y && this._my < this._panel.y + 100) {
-                    if ( this._data.grassCount >=this._dragon.grassCost &&  this._data.sjCount >=this._dragon.sjCost &&  this._data.limit <this._house.limit) {
-                        this._bg.occupied[this._bg.cbg] = true;
-                        this._dragon.limit++;
-                        this._panel.show = false;
-                        this._data.grassCount =  this._data.grassCount -this._dragon.grassCost;
-                        this._data.sjCount = this._data.sjCount -this._dragon.sjCost;
-                        return;
-                    }
-                }
-                if (this._mx >= this._panel.x && this._mx <= this._panel.x + 100 && this._my >= this._panel.y && this._my < this._panel.y + 100) {
-                    this._panel.show = false;
-                    return;
-                }
-            }
-            if (  this._panel.show && this._bg.occupied[this._bg.cbg]) {
-                if (this._mx >= this._panel.x && this._mx <= this._panel.x + 100 && this._my >= ( this._panel.y - 100) && this._my < this._panel.y) {
-                    if (this._bg.over[this._bg.cbg] == 'house' && this._data.grassCount >=this._house.grassCost && this._data.sjCount >=this._house.sjCost) {
-                        this._house.level++;
-                        this._panel.show = false;
-                        this._data.grassCount = this._data.grassCount -this._house.grassCost;
-                        this._data.sjCount = this._data.sjCount -this._house.sjCost;
-                        return;
-                    }
-                    return;
-                }
-                if (this._mx >= this._panel.x && this._mx <= this._panel.x + 100 && this._my >= ( this._panel.y + 100) && this._my < this._panel.y + 200) {
-
-                    return;
-                }
-                if (this._mx >= this._panel.x && this._mx <= this._panel.x + 100 && this._my >= this._panel.y && this._my < this._panel.y + 100) {
-                    this._panel.show = false;
-                    return;
-                }
-            }
-
         }
+        if (this._panel.show && !this._bg.occupied[this._bg.cbg]) {
+            if (this._mx >= this._panel.x && this._mx <= this._panel.x + 100 && this._my >= (this._panel.y - 100) && this._my < this._panel.y) {
+                if (this._data.grassCount >= this._fish.grassCost && this._data.sjCount >= this._fish.sjCost && this._data.limit < this._house.limit) {
+                    this._bg.occupied[this._bg.cbg] = true;
+                    this._fish.limit++;
+                    this._panel.show = false;
+                    this._data.grassCount = this._data.grassCount - this._fish.grassCost;
+                    this._data.sjCount = this._data.sjCount - this._fish.sjCost;
+                    return;
+                }
+            }
+            if (this._mx >= this._panel.x && this._mx <= this._panel.x + 100 && this._my >= (this._panel.y + 100) && this._my < this._panel.y + 200) {
+                if (this._data.grassCount >= this._mogu.grassCost && this._data.sjCount >= this._mogu.sjCost && this._data.limit < this._house.limit) {
+                    this._bg.occupied[this._bg.cbg] = true;
+                    this._mogu.limit++;
+                    this._panel.show = false;
+                    this._data.grassCount = this._data.grassCount - this._mogu.grassCost;
+                    this._data.sjCount = this._data.sjCount - this._mogu.sjCost;
+                    return;
+                }
+            }
+            if (this._mx >= this._panel.x - 100 && this._mx <= this._panel.x && this._my >= this._panel.y && this._my < this._panel.y + 100) {
+                if (this._data.grassCount >= this._slm.grassCost && this._data.limit < this._house.limit) {
+                    this._bg.occupied[this._bg.cbg] = true;
+                    this._slm.limit++;
+                    this._panel.show = false;
+                    this._data.grassCount = this._data.grassCount - this._slm.grassCost;
+                }
+
+            }
+            if (this._mx >= this._panel.x + 100 && this._mx <= this._panel.x + 200 && this._my >= this._panel.y && this._my < this._panel.y + 100) {
+                if (this._data.grassCount >= this._dragon.grassCost && this._data.sjCount >= this._dragon.sjCost && this._data.limit < this._house.limit) {
+                    this._bg.occupied[this._bg.cbg] = true;
+                    this._dragon.limit++;
+                    this._panel.show = false;
+                    this._data.grassCount = this._data.grassCount - this._dragon.grassCost;
+                    this._data.sjCount = this._data.sjCount - this._dragon.sjCost;
+                }
+            }
+            if (this._mx >= this._panel.x && this._mx <= this._panel.x + 100 && this._my >= this._panel.y && this._my < this._panel.y + 100) {
+                this._panel.show = false;
+            }
+        }
+        if (this._panel.show && this._bg.occupied[this._bg.cbg]) {
+            if (this._mx >= this._panel.x && this._mx <= this._panel.x + 100 && this._my >= (this._panel.y - 100) && this._my < this._panel.y) {
+                if (this._bg.over[this._bg.cbg] == 'house' && this._data.grassCount >= this._house.grassCost && this._data.sjCount >= this._house.sjCost) {
+                    this._house.level++;
+                    this._panel.show = false;
+                    this._data.grassCount = this._data.grassCount - this._house.grassCost;
+                    this._data.sjCount = this._data.sjCount - this._house.sjCost;
+                }
+            }
+            if (this._mx >= this._panel.x && this._mx <= this._panel.x + 100 && this._my >= (this._panel.y + 100) && this._my < this._panel.y + 200) {
+
+                return;
+            }
+            if (this._mx >= this._panel.x && this._mx <= this._panel.x + 100 && this._my >= this._panel.y && this._my < this._panel.y + 100) {
+                this._panel.show = false;
+            }
+        }
+
     }
+
 }
 
 

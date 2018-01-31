@@ -1,8 +1,8 @@
 <template>
     <div class="games-contain">
         <div class="content">
-            <canvas id="canvas1" width="1000px" height="600px"></canvas>
-            <canvas id="canvas2" width="1000px" height="600px"></canvas>
+            <canvas id="canvas1" width="1200px" height="800px"></canvas>
+            <canvas id="canvas2" width="1200px" height="800px"></canvas>
         </div>
         <div class="text-center mt10">
             <button class="btn btn-warning btn-lg btn-orcish" @click="start">重新开始</button>
@@ -68,8 +68,8 @@
         position: relative;
     }
    .content {
-       width: 1000px;
-       height: 600px;
+       width: 1200px;
+       height: 800px;
        position: relative;
        margin: 0 auto;
        }
@@ -88,7 +88,7 @@
            top: 0;
            width: 250px;
            height: auto;
-           min-height: 600px;
+           min-height: 800px;
            background-color: yellow;
            padding: 10px 10px;
            font-size: 16px;
