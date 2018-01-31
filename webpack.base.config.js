@@ -66,7 +66,15 @@ module.exports = {
 
             {
                 test: /\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/,
-                loader: 'url-loader?limit=1024'
+                use: [{
+                    loader: 'url-loader',
+                    options: {
+                        limit: 1024,
+                        name () {
+                            return 'imgs/[name].[ext]';
+                        }
+                    }
+                }]
             },
             {
                 test: /\.(html|tpl)$/,

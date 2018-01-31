@@ -98,123 +98,123 @@ export default class MonsterGame {
         this._H = this._can2.height;
 
         this._bgPic = new Image();
-        this._bgPic.src = '/src/assets/img/monster/ground.png';
+        this._bgPic.src = require('../../assets/img/monster/ground.png');
         this._wlPic = new Image();
-        this._wlPic.src = "/src/assets/img/monster/wl.png";
+        this._wlPic.src = require('../../assets/img/monster/wl.png');
         this._grassPic = new Image();
-        this._grassPic.src = '/src/assets/img/monster/grass.png';
+        this._grassPic.src = require('../../assets/img/monster/grass.png');
         this._treePic = new Image();
-        this._treePic.src = '/src/assets/img/monster/tree.png';
+        this._treePic.src = require('../../assets/img/monster/tree.png');
         for (let i = 0; i < 4; i++) {
             this._farmerF[i] = new Image();
-            this._farmerF[i].src = "/src/assets/img/monster/farmers/font" + i + ".png";
+            this._farmerF[i].src = require('../../assets/img/monster/farmers/font' + i + '.png');
         }
         for (let i = 0; i < 4; i++) {
             this._farmerB[i] = new Image();
-            this._farmerB[i].src = "/src/assets/img/monster/farmers/back" + i + ".png";
+            this._farmerB[i].src = require('../../assets/img/monster/farmers/back' + i + '.png');
         }
         for (let i = 0; i < 4; i++) {
             this._farmerL[i] = new Image();
-            this._farmerL[i].src = "/src/assets/img/monster/farmers/left" + i + ".png";
+            this._farmerL[i].src = require('../../assets/img/monster/farmers/left' + i + '.png');
         }
         for (let i = 0; i < 4; i++) {
             this._farmerR[i] = new Image();
-            this._farmerR[i].src = "/src/assets/img/monster/farmers/right" + i + ".png";
+            this._farmerR[i].src = require('../../assets/img/monster/farmers/right' + i + '.png');
         }
         for (let i = 0; i < 4; i++) {
             this._maidF[i] = new Image();
-            this._maidF[i].src = "/src/assets/img/monster/maids/front" + i + ".png";
+            this._maidF[i].src = require('../../assets/img/monster/maids/front' + i + '.png');
         }
         for (let i = 0; i < 4; i++) {
             this._maidB[i] = new Image();
-            this._maidB[i].src = "/src/assets/img/monster/maids/back" + i + ".png";
+            this._maidB[i].src = require('../../assets/img/monster/maids/back' + i + '.png');
         }
         for (let i = 0; i < 4; i++) {
             this._maidL[i] = new Image();
-            this._maidL[i].src = "/src/assets/img/monster/maids/left" + i + ".png";
+            this._maidL[i].src = require('../../assets/img/monster/maids/left' + i + '.png');
         }
         for (let i = 0; i < 4; i++) {
             this._maidR[i] = new Image();
-            this._maidR[i].src = "/src/assets/img/monster/maids/right" + i + ".png";
+            this._maidR[i].src = require('../../assets/img/monster/maids/right' + i + '.png');
         }
         for (let i = 0; i < 4; i++) {
             this._knightF[i] = new Image();
-            this._knightF[i].src = "/src/assets/img/monster/knight/knightf" + i + ".png";
+            this._knightF[i].src = require('../../assets/img/monster/knight/knightf' + i + '.png');
         }
         for (let i = 0; i < 4; i++) {
             this._knightB[i] = new Image();
-            this._knightB[i].src = "/src/assets/img/monster/knight/knightb" + i + ".png";
+            this._knightB[i].src = require('../../assets/img/monster/knight/knightb' + i + '.png');
         }
         for (let i = 0; i < 4; i++) {
             this._knightL[i] = new Image();
-            this._knightL[i].src = "/src/assets/img/monster/knight/knightl" + i + ".png";
+            this._knightL[i].src = require('../../assets/img/monster/knight/knightl' + i + '.png');
         }
         for (let i = 0; i < 4; i++) {
             this._knightR[i] = new Image();
-            this._knightR[i].src = "/src/assets/img/monster/knight/knightr" + i + ".png";
+            this._knightR[i].src = require('../../assets/img/monster/knight/knightr' + i + '.png');
         }
         for (let i = 1; i <= 5; i++) {
             this._housePic[i] = new Image();
-            this._housePic[i].src = "/src/assets/img/monster/house/house" + i + ".png";
+            this._housePic[i].src = require('../../assets/img/monster/house/house' + i + '.png');
         }
         this._dragonLogo = new Image();
-        this._dragonLogo.src = "/src/assets/img/monster/logo/dragon.jpg";
+        this._dragonLogo.src = require('../../assets/img/monster/logo/dragon.jpg');
         this._fishLogo = new Image();
-        this._fishLogo.src = "/src/assets/img/monster/logo/fish.jpg";
+        this._fishLogo.src = require('../../assets/img/monster/logo/fish.jpg');
         this._slmLogo = new Image();
-        this._slmLogo.src = "/src/assets/img/monster/logo/slm.jpg";
+        this._slmLogo.src = require('../../assets/img/monster/logo/slm.jpg');
         this._moguLogo = new Image();
-        this._moguLogo.src = "/src/assets/img/monster/logo/mogu.jpg";
+        this._moguLogo.src = require('../../assets/img/monster/logo/mogu.jpg');
         for (let i = 0; i < 4; i++) {
             this._dragonPicl[i] = new Image();
-            this._dragonPicl[i].src = "/src/assets/img/monster/dragon/dragonl" + i + ".png";
+            this._dragonPicl[i].src = require('../../assets/img/monster/dragon/dragonl' + i + '.png');
         }
         for (let i = 0; i < 4; i++) {
             this._dragonPicr[i] = new Image();
-            this._dragonPicr[i].src = "/src/assets/img/monster/dragon/dragonr" + i + ".png";
+            this._dragonPicr[i].src = require('../../assets/img/monster/dragon/dragonr' + i + '.png');
         }
         for (let i = 0; i < 6; i++) {
             this._moguPicl[i] = new Image();
-            this._moguPicl[i].src = "/src/assets/img/monster/mogu/mogul" + i + ".png";
+            this._moguPicl[i].src = require('../../assets/img/monster/mogu/mogul' + i + '.png');
         }
         for (let i = 0; i < 6; i++) {
             this._moguPicr[i] = new Image();
-            this._moguPicr[i].src = "/src/assets/img/monster/mogu/mogur" + i + ".png";
+            this._moguPicr[i].src = require('../../assets/img/monster/mogu/mogur' + i + '.png');
         }
         for (let i = 0; i < 29; i++) {
             this._slmPicl[i] = new Image();
-            this._slmPicl[i].src = "/src/assets/img/monster/slm/slml" + i + ".png";
+            this._slmPicl[i].src = require('../../assets/img/monster/slm/slml' + i + '.png');
         }
         for (let i = 0; i < 29; i++) {
             this._slmPicr[i] = new Image();
-            this._slmPicr[i].src = "/src/assets/img/monster/slm/slmr" + i + ".png";
+            this._slmPicr[i].src = require('../../assets/img/monster/slm/slmr' + i + '.png');
         }
         for (let i = 0; i < 8; i++) {
             this._fishPicl[i] = new Image();
-            this._fishPicl[i].src = "/src/assets/img/monster/fish/fishl" + i + ".png";
+            this._fishPicl[i].src = require('../../assets/img/monster/fish/fishl' + i + '.png');
         }
         for (let i = 0; i < 8; i++) {
             this._fishPicr[i] = new Image();
-            this._fishPicr[i].src = "/src/assets/img/monster/fish/fishr" + i + ".png";
+            this._fishPicr[i].src = require('../../assets/img/monster/fish/fishr' + i + '.png');
         }
         this._dragonEgg = new Image();
-        this._dragonEgg.src = "/src/assets/img/monster/egg/dragonEgg.png";
+        this._dragonEgg.src = require('../../assets/img/monster/egg/dragonEgg.png');
         this._fishEgg = new Image();
-        this._fishEgg.src = "/src/assets/img/monster/egg/fishEgg.png";
+        this._fishEgg.src = require('../../assets/img/monster/egg/fishEgg.png');
         this._moguEgg = new Image();
-        this._moguEgg.src = "/src/assets/img/monster/egg/moguEgg.png";
+        this._moguEgg.src = require('../../assets/img/monster/egg/moguEgg.png');
         this._slmEgg = new Image();
-        this._slmEgg.src = "/src/assets/img/monster/egg/slmEgg.png";
+        this._slmEgg.src = require('../../assets/img/monster/egg/slmEgg.png');
         this._dragonPlan = new Image();
-        this._dragonPlan.src = "/src/assets/img/monster/plan/dragonPlan.png";
+        this._dragonPlan.src = require('../../assets/img/monster/plan/dragonPlan.png');
         this._fishPlan = new Image();
-        this._fishPlan.src = "/src/assets/img/monster/plan/fishPlan.png";
+        this._fishPlan.src = require('../../assets/img/monster/plan/fishPlan.png');
         this._moguPlan = new Image();
-        this._moguPlan.src = "/src/assets/img/monster/plan/moguPlan.png";
+        this._moguPlan.src = require('../../assets/img/monster/plan/moguPlan.png');
         this._slmPlan = new Image();
-        this._slmPlan.src = "/src/assets/img/monster/plan/slmPlan.png";
+        this._slmPlan.src = require('../../assets/img/monster/plan/slmPlan.png');
         this._sjPic = new Image();
-        this._sjPic.src = "/src/assets/img/monster/sj.png";
+        this._sjPic.src = require('../../assets/img/monster/sj.png');
 
     }
 

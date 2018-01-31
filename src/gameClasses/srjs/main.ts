@@ -71,46 +71,46 @@ export default class orcishGame {
         this._H = this._can2.height;
 
         this._bg = new Image();
-        this._bg.src = "/src/assets/img/orcish/bg.jpg";
+        this._bg.src = require('../../assets/img/orcish/bg.jpg');
         this._fzPic = new Image();
-        this._fzPic.src = "/src/assets/img/orcish/fz.png";
+        this._fzPic.src = require('../../assets/img/orcish/fz.png');
         this._yprPic = new Image();
-        this._yprPic.src = "/src/assets/img/orcish/ypr.png";
+        this._yprPic.src = require('../../assets/img/orcish/ypr.png');
         this._zbPic = new Image();
-        this._zbPic.src = "/src/assets/img/orcish/zb.png";
+        this._zbPic.src = require('../../assets/img/orcish/zb.png');
         this._szPic = new Image();
-        this._szPic.src = "/src/assets/img/orcish/sz.png";
+        this._szPic.src = require('../../assets/img/orcish/sz.png');
         this._ypyPic = new Image();
-        this._ypyPic.src = "/src/assets/img/orcish/ypy.png";
+        this._ypyPic.src = require('../../assets/img/orcish/ypy.png');
         this._xzPic = new Image();
-        this._xzPic.src = "/src/assets/img/orcish/xz.png";
+        this._xzPic.src = require('../../assets/img/orcish/xz.png');
         for (let i = 0; i < 4; i++) {
             this._srPicl[i] = new Image();
-            this._srPicl[i].src = "/src/assets/img/orcish/srl" + i + ".png";
+            this._srPicl[i].src = require('../../assets/img/orcish/srl' + i + '.png');
         }
         for (let i = 0; i < 4; i++) {
             this._srPicr[i] = new Image();
-            this._srPicr[i].src = "/src/assets/img/orcish/srr" + i + ".png";
+            this._srPicr[i].src = require('../../assets/img/orcish/srr' + i + '.png');
         }
         for (let i = 0; i < 7; i++) {
             this._jsPic[i] = new Image();
-            this._jsPic[i].src = "/src/assets/img/orcish/js" + i + ".png";
+            this._jsPic[i].src = require('../../assets/img/orcish/js' + i + '.png');
         }
         for (let i = 0; i < 8; i++) {
             this._boss1lPic[i] = new Image();
-            this._boss1lPic[i].src = "/src/assets/img/orcish/boss1l" + i + ".png";
+            this._boss1lPic[i].src = require('../../assets/img/orcish/boss1l' + i + '.png');
         }
         for (let i = 0; i < 8; i++) {
             this._boss1rPic[i] = new Image();
-            this._boss1rPic[i].src = "/src/assets/img/orcish/boss1r" + i + ".png";
+            this._boss1rPic[i].src = require('../../assets/img/orcish/boss1r' + i + '.png');
         }
         for (let i = 0; i < 8; i++) {
             this._boss2lPic[i] = new Image();
-            this._boss2lPic[i].src = "/src/assets/img/orcish/boss2l" + i + ".png";
+            this._boss2lPic[i].src = require('../../assets/img/orcish/boss2l' + i + '.png');
         }
         for (let i = 0; i < 8; i++) {
             this._boss2rPic[i] = new Image();
-            this._boss2rPic[i].src = "/src/assets/img/orcish/boss2r" + i + ".png";
+            this._boss2rPic[i].src = require('../../assets/img/orcish/boss2r' + i + '.png');
         }
     }
 
