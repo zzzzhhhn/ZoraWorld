@@ -34,8 +34,8 @@
     export default class MyComponent extends Vue {
 
         private signInData: signInData = {
-            userName: '',
-            passWord: ''
+            userName: 'zzzzhhhn',
+            passWord: '123456'
         };
 
         private nameWrong: boolean = false;
@@ -51,7 +51,7 @@
         }
 
         pwdChecker() {
-            if (/^[A-Za-z0-9]+$/.test(this.signInData.passWord) && !!this.signInData.passWord && this.signInData.passWord.length > 6 && this.signInData.passWord.length < 12) {
+            if (/^[A-Za-z0-9]+$/.test(this.signInData.passWord) && !!this.signInData.passWord && this.signInData.passWord.length >= 6 && this.signInData.passWord.length <= 12) {
                 this.pwdWrong = false;
             }else {
                 this.pwdWrong = true;
@@ -69,9 +69,9 @@
             }
             Util.ajax.post('server/main.php', {signInData: this.signInData}).then((res: any) => {
                 if (res.data.code === 0) {
-
+                    alert('成功')
                 } else {
-                    console.error('couldn`t get user data');
+                    alert('错误');
                 }
 
             });

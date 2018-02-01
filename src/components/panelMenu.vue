@@ -305,9 +305,16 @@
         .right-menu-item {
             width: 100%;
             text-align: center;
-            height: 80px;
-            line-height: 80px;
+            height: 100px;
+            line-height: 100px;
             font-size: 30px;
+
+            &:hover {
+
+                background: whitesmoke;
+                opacity: 1;
+                color: lightslategrey;
+            }
         }
 
         .left-menu {

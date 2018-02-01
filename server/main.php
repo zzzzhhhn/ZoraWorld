@@ -40,15 +40,48 @@ if(@$posts['menu']) {
 }else if(@$posts['index']) {
     $sql = "select * from content WHERE `iNo` = " . $posts['index'];
     returnResult(0, $sql);
+}else if(@$posts['signInData']) {
+    $name = $posts['signInData']['userName'] ;
+    $pwd = md5($posts['signInData']['passWord']) ;
+
+    $sql1 = "select Pwd from users WHERE  `Loginid` = '$name'";
+    $result1 = find($sql1);
+    $pwdSql = strrev($result1[0]['Pwd']);
+    if($pwd === $pwdSql) {
+        echoJSON(0, '成功');
+    }else {
+        echoJSON(1, '错误');
+    }
+}else if(@$posts['signUpData']) {
+    $name = $posts['signUpData']['userName'];
+    $pwd = $posts['signUpData']['passWord'];
+
+    $sql1 = "select count(*) from users WHERE  `Loginid` = '$name'";
+    $result1 = find($sql1, 2);
+
+    if ($result1[0][0] == 0) {
+        $pwd = strrev(md5($pwd));
+        $sql2 = "insert into users(Loginid, Pwd) VALUES('$name', '$pwd') ";
+        $result2 = find($sql2);
+        if ($result2 == 1) {
+            echoJSON(0, '成功');
+        } else {
+            echoJSON(-1, '失败');
+        };
+    } else {
+        echoJSON(1, '已被注册');
+    }
+
+
 }
 
 /**
  * @param $sql
  */
-function find($sql)
+function find($sql, $type = 1)
 {
     include_once('./mysql/MysqliHelper.php');
     $mysql = new MysqliHelper();
-    $result = $mysql->Execute($sql);
+    $result = $mysql->Execute($sql, $type);
     return $result;
 }
