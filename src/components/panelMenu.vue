@@ -2,17 +2,20 @@
     <div>
         <!--右菜单-->
         <div class="right-menu" :class="{'show-right-menu': showRightMenu, 'back-right-menu': backRightMenu}" @click.self="onshowRightMenu()">
-            <div class="right-menu-item" @click="onshowLeftMenu('novels')">小说</div>
-            <div class="right-menu-item" @click="onshowLeftMenu('games')">游戏</div>
+            <div class="right-menu-item cursor-pointer" @click="onshowLeftMenu('novels')">小说</div>
+            <div class="right-menu-item cursor-pointer" @click="onshowLeftMenu('games')">游戏</div>
         </div>
         <div class="right-menu-sign" :class="{'show-right-menu-sign': showRightMenuSign, 'back-right-menu-sign': backRightMenuSign}" @click.self="onshowRightMenu()">
-            <div class="right-menu-item">退出游戏</div>
+            <div class="right-menu-item cursor-pointer" @click="onshowLeftMenu('sign_in')">登录</div>
+            <div class="right-menu-item cursor-pointer" @click="onshowLeftMenu('sign_up')">注册</div>
         </div>
         <!--左菜单-->
         <div class="left-menu" :class="{'show-left-menu': showLeftMenu, 'back-left-menu': backLeftMenu}">
             <div class="left-menu-item" v-for="item in currentMenu" :key="item.mId" @click="onShowMain(item.mId, item.mName)">
                 <router-link :to="item.mUrl || '/'"><span>{{item.mName}}</span></router-link>
             </div>
+            <sign-in v-if="currentType === 'sign_in'"></sign-in>
+            <sign-up v-if="currentType === 'sign_up'"></sign-up>
         </div>
         <!--上标题-->
         <div class="top-title" :class="{'show-title': showTitle, 'back-title': backTitle}">
@@ -32,6 +35,7 @@
                 <Icon type="power" size="20" color="white" @click.native="onHideMain"></Icon>
             </div>
             <novel-panel v-if="currentType === 'novels' && !isReading" :novelData="novelData" @read="onBeginReading"></novel-panel>
+
             <div class="novel-content" v-if="isReading">
                 {{contentData.content}}
             </div>
@@ -42,10 +46,15 @@
 </template>
 
 <script>
-    import novelPanel from '../components/novelPanel';
+    import novelPanel from './novelPanel';
+    import signUp from './signUp';
+    import signIn from './signIn';
+    import Icon from "iview/src/components/icon/icon";
+
     export default {
         components: {
-            novelPanel
+            Icon,
+            novelPanel, signUp, signIn
         },
         props: {},
         data() {

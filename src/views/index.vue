@@ -6,7 +6,7 @@
 
 </template>
 <script>
-    import panelMenu from '../layout/panelMenu.vue';
+    import panelMenu from '../components/panelMenu.vue';
     export default {
         components: {
             panelMenu
