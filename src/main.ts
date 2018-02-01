@@ -23,7 +23,7 @@ Vue.prototype.$axios = Util;
 
 // 路由配置
 const RouterConfig = {
-    mode: <"history" | "hash" | "abstract" | undefined>'history',
+    // mode: <"history" | "hash" | "abstract" | undefined>'history',
     routes: Routers
 };
 const router = new VueRouter(RouterConfig);

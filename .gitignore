@@ -9,6 +9,5 @@ src/config/*.tmp
 src/config/env.js
 npm-debug.log
 yarn.lock
-.babelrc
 .editorconfig
 www/

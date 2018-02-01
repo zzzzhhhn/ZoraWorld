@@ -71,7 +71,7 @@ module.exports = {
                     options: {
                         limit: 1024,
                         name () {
-                            return 'imgs/[name].[ext]';
+                            return 'imgs/[name]' + Math.random() * 999 + '.[ext]';
                         }
                     }
                 }]
