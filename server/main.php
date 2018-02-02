@@ -44,13 +44,18 @@ if(@$posts['menu']) {
     $name = $posts['signInData']['userName'] ;
     $pwd = md5($posts['signInData']['passWord']) ;
 
-    $sql1 = "select Pwd from users WHERE  `Loginid` = '$name'";
+    $sql1 = "select * from users WHERE  `Loginid` = '$name'";
     $result1 = find($sql1);
-    $pwdSql = strrev($result1[0]['Pwd']);
-    if($pwd === $pwdSql) {
-        echoJSON(0, '成功');
+
+    if(count($result1) === 0) {
+        echoJSON(-1, '账号不存在');
     }else {
-        echoJSON(1, '错误');
+        $pwdSql = strrev($result1[0]['Pwd']);
+        if ($pwd === $pwdSql) {
+            echoJSON(0, $result1[0]);
+        } else {
+            echoJSON(1, '错误');
+        }
     }
 }else if(@$posts['signUpData']) {
     $name = $posts['signUpData']['userName'];

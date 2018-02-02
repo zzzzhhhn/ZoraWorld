@@ -6,7 +6,7 @@ import Vuex from 'vuex'
 import Util from './libs/util';
 import App from './app.vue';
 import 'iview/dist/styles/iview.css';
-import store from './store';
+import store from './store/index.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/less/layouts.less';
 

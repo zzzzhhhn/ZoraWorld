@@ -4,6 +4,7 @@
         <div class="right-menu" :class="{'show-right-menu': showRightMenu, 'back-right-menu': backRightMenu}" @click.self="onshowRightMenu()">
             <div class="right-menu-item cursor-pointer" @click="onshowLeftMenu('novels')">小说</div>
             <div class="right-menu-item cursor-pointer" @click="onshowLeftMenu('games')">游戏</div>
+            <div class="right-menu-item cursor-pointer" v-if="userData.roleId === '1'" @click="onshowLeftMenu('manage')">管理</div>
         </div>
         <div class="right-menu-sign" :class="{'show-right-menu-sign': showRightMenuSign, 'back-right-menu-sign': backRightMenuSign}" @click.self="onshowRightMenu()">
             <div class="right-menu-item cursor-pointer" @click="onshowLeftMenu('sign_in')">登录</div>
@@ -14,8 +15,14 @@
             <div class="left-menu-item" v-for="item in currentMenu" :key="item.mId" @click="onShowMain(item.mId, item.mName)">
                 <router-link :to="item.mUrl || '/'"><span>{{item.mName}}</span></router-link>
             </div>
-            <sign-in v-if="currentType === 'sign_in'"></sign-in>
-            <sign-up v-if="currentType === 'sign_up'"></sign-up>
+            <sign-in v-if="currentType === 'sign_in'" @success="onshowLeftMenu('novels')"></sign-in>
+            <sign-up v-if="currentType === 'sign_up'" @success="onshowLeftMenu('sign_in')"></sign-up>
+            <div class="btn-group btn-group-lg btn-manage" v-if="currentType === 'manage'" role="group" aria-label="...">
+                <button type="button" class="btn btn-default" @click="onShowMain('manage', 'novel')">管理小说</button>
+            </div>
+            <div class="btn-group btn-group-lg btn-manage" v-if="currentType === 'manage'" role="group" aria-label="...">
+                <button type="button" class="btn btn-default" @click="onShowMain('manage', 'game')">管理游戏</button>
+            </div>
         </div>
         <!--上标题-->
         <div class="top-title" :class="{'show-title': showTitle, 'back-title': backTitle}">
@@ -35,7 +42,7 @@
                 <Icon type="power" size="20" color="white" @click.native="onHideMain"></Icon>
             </div>
             <novel-panel v-if="currentType === 'novels' && !isReading" :novelData="novelData" @read="onBeginReading"></novel-panel>
-
+            <manage-game></manage-game>
             <div class="novel-content" v-if="isReading">
                 {{contentData.content}}
             </div>
@@ -50,11 +57,13 @@
     import signUp from './signUp';
     import signIn from './signIn';
     import Icon from "iview/src/components/icon/icon";
+    import { mapGetters } from 'vuex';
+    import manageGame from './manageGame';
 
     export default {
         components: {
             Icon,
-            novelPanel, signUp, signIn
+            novelPanel, signUp, signIn, manageGame
         },
         props: {},
         data() {
@@ -82,6 +91,10 @@
                 isReading: false,    //是否阅读状态
                 contentData: {},        //章节内容
                 indexData: {},    //章节信息
+                userData: {
+                    roleId: ''
+                },
+                manageType: ''
             }
         },
         created() {
@@ -167,6 +180,13 @@
                         }
 
                     });
+                }else if(id === 'manage') {
+                    this.manageType = name;
+                    if(name === 'novel') {
+                        this.currentTitle = '管理小说';
+                    }else {
+                        this.currentTitle = '管理游戏';
+                    }
                 }
                 this.showLeftMenu = false;
                 this.backLeftMenu = false;
@@ -234,10 +254,20 @@
              */
             onBackToIndex() {
                 this.isReading = false;
+            },
+
+        },
+        computed: mapGetters({
+            getUserData: 'listenUserData',
+        }),
+        watch: {
+            getUserData: {
+                handler(val) {
+                    this.userData = val;
+                },
+                deep: true
             }
         },
-        computed: {},
-        watch: {},
         destroyed() {
 
         }
@@ -245,6 +275,12 @@
 </script>
 
 <style lang="less">
+    @panel_color: black;
+    @panel_opacity: .5;
+    @font-face {
+        font-family: panel_font;
+        src: url("../assets/font/2.ttf");
+    }
     .zora-world {
         width: 100%;
         height: 100%;
@@ -252,6 +288,7 @@
         overflow: hidden;
         background: url("../assets/img/bg.jpg") no-repeat;
         background-size: cover;
+        font-family: panel_font;
 
         .right-menu {
             width: 20%;
@@ -260,9 +297,9 @@
             right: 20px;
             top: -47%;
             transition: top .5s ease-out;
-            background: lightgray;
+            background: @panel_color;
             background-size: contain;
-            opacity: 0.7;
+            opacity: @panel_opacity;
             border-radius: 10px;
 
             color: white;
@@ -285,12 +322,16 @@
             top: 51%;
             transition: right .5s ease-out;
 
-            background: lightgray;
+            background: @panel_color;
             background-size: contain;
-            opacity: 0.7;
+            opacity: @panel_opacity;
             border-radius: 10px;
 
             color: white;
+
+            .right-menu-item {
+                height: 50%;
+            }
 
             &.show-right-menu-sign {
                 right: 30px;
@@ -305,14 +346,13 @@
         .right-menu-item {
             width: 100%;
             text-align: center;
-            height: 100px;
+            height: 30%;
             line-height: 100px;
             font-size: 30px;
 
             &:hover {
-
+                border-radius: 10px;
                 background: whitesmoke;
-                opacity: 1;
                 color: lightslategrey;
             }
         }
@@ -325,9 +365,9 @@
             left: -74%;
             top: 10%;
             transition: left .5s ease-out;
-            background: lightgray;
+            background: @panel_color;
             background-size: cover;
-            opacity: 0.7;
+            opacity: @panel_opacity;
             border-radius: 10px;
             overflow-y: auto;
 
@@ -338,6 +378,15 @@
             &.back-left-menu {
                 transition: top .1s ease-out;
                 left: -10px;
+            }
+
+            .btn-manage {
+                width: 50%;
+                margin: 75px 25% 0;
+
+                button {
+                    width: 100%;
+                }
             }
 
             .left-menu-item {
@@ -364,9 +413,9 @@
             left: 25%;
             top: -9%;
             transition: top .5s ease-out;
-            background: lightgray;
+            background: @panel_color;
             background-size: cover;
-            opacity: 0.9;
+            opacity: @panel_opacity;
             border-radius: 10px;
             padding: 1%;
             font-size: 30px;
@@ -409,10 +458,10 @@
             transition: all .5s ease-out;
             overflow-y: auto;
 
-            background: lightgray;
+            background: @panel_color;
             background-size: cover;
             color: white;
-            opacity: 0.9;
+            opacity: @panel_opacity;
             border-radius: 10px;
 
             &.show-main {

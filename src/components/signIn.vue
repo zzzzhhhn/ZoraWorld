@@ -4,18 +4,18 @@
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-user"></span>
             </span>
-            <input type="text" class="form-control" v-model="signInData.userName" @blur="nameChecker" placeholder="账号" aria-describedby="sizing-addon1">
+            <input type="text" class="form-control" v-model="signInData.userName" @focus="onClearName" placeholder="账号" aria-describedby="sizing-addon1">
         </div>
-        <div class="alert alert-danger" role="alert" v-show="nameWrong">请输入字母或数字格式的昵称</div>
+        <div class="alert alert-danger" role="alert" v-show="nameWrong">账号不存在</div>
         <div class="input-group input-group-lg">
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-lock"></span>
             </span>
-            <input type="text" class="form-control" v-model="signInData.passWord" @blur="pwdChecker" placeholder="密码" aria-describedby="sizing-addon1">
+            <input type="password" class="form-control" v-model="signInData.passWord" @focus="onClearPwd" placeholder="密码" aria-describedby="sizing-addon1">
         </div>
-        <div class="alert alert-danger" role="alert" v-show="pwdWrong">请输入6~12位字母或数字格式的密码</div>
+        <div class="alert alert-danger" role="alert" v-show="pwdWrong">密码错误</div>
         <div class="btn-group btn-group-lg btn-sign-in" role="group" aria-label="...">
-             <button type="button" class="btn btn-default" :disabled="disabled" @click="onSubmit">登录</button>
+             <button type="button" class="btn btn-default" @click="onSubmit">登录</button>
         </div>
     </div>
 </template>
@@ -31,47 +31,35 @@
     import {Component, Emit, Prop, Vue, Watch} from 'vue-property-decorator';
 
     @Component
-    export default class MyComponent extends Vue {
+    export default class signIN extends Vue {
 
         private signInData: signInData = {
             userName: 'zzzzhhhn',
-            passWord: '123456'
+            passWord: 'zhnsdsg'
         };
 
         private nameWrong: boolean = false;
         private  pwdWrong: boolean = false;
+        private userData: any;
 
-        nameChecker() {
-            if (/^[A-Za-z0-9]+$/.test(this.signInData.userName) && !!this.signInData.userName) {
-                this.nameWrong = false;
-            }else {
-                this.nameWrong = true;
-            }
-            return this.nameWrong;
+        onClearName() {
+            this.nameWrong = false;
         }
 
-        pwdChecker() {
-            if (/^[A-Za-z0-9]+$/.test(this.signInData.passWord) && !!this.signInData.passWord && this.signInData.passWord.length >= 6 && this.signInData.passWord.length <= 12) {
-                this.pwdWrong = false;
-            }else {
-                this.pwdWrong = true;
-            }
-            return this.pwdWrong;
-        }
-
-        get disabled() {
-            return this.pwdWrong || this.nameWrong;
+        onClearPwd() {
+            this.pwdWrong = false;
         }
 
         onSubmit() {
-            if(this.nameChecker() || this.pwdChecker()) {
-                return;
-            }
             Util.ajax.post('server/main.php', {signInData: this.signInData}).then((res: any) => {
                 if (res.data.code === 0) {
-                    alert('成功')
-                } else {
-                    alert('错误');
+                    this.userData = res.data.data;
+                    this.$store.dispatch('getUserData', this.userData);
+                    this.$emit('success');
+                } else if(res.data.code === 1){
+                    this.pwdWrong = true;
+                }else if(res.data.code === -1) {
+                    this.nameWrong = true;
                 }
 
             });

@@ -11,14 +11,14 @@
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-lock"></span>
             </span>
-            <input type="text" class="form-control" v-model="signUpData.passWord" @blur="pwdChecker" placeholder="密码" aria-describedby="sizing-addon1">
+            <input type="password" class="form-control" v-model="signUpData.passWord" @blur="pwdChecker" placeholder="密码" aria-describedby="sizing-addon1">
         </div>
         <div class="alert alert-danger" role="alert" v-show="pwdWrong">请输入6~12位字母或数字格式的密码</div>
         <div class="input-group input-group-lg">
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-lock"></span>
             </span>
-            <input type="text" class="form-control" v-model="rePassWord" @blur="rePwdChecker" placeholder="确认密码" aria-describedby="sizing-addon1">
+            <input type="password" class="form-control" v-model="rePassWord" @blur="rePwdChecker" placeholder="确认密码" aria-describedby="sizing-addon1">
         </div>
         <div class="alert alert-danger" role="alert" v-show="rePwdWrong">请输入与上面相同的密码</div>
         <div class="btn-group btn-group-lg btn-sign-in" role="group" aria-label="...">
@@ -35,7 +35,7 @@
         passWord: string,
     }
     @Component
-    export default class MyComponent extends Vue {
+    export default class signUp extends Vue {
         private signUpData: signUpData = {
             userName: 'zzzzhhhn',
             passWord: '123456',
@@ -83,7 +83,7 @@
             }
             Util.ajax.post('server/main.php', {signUpData: this.signUpData}).then((res: any) => {
                 if (res.data.code === 0) {
-                    alert('成功')
+                    this.$emit('success');
                 } else if(res.data.code === 1){
                     alert('已被注册')
                 }else if(res.data.code === 1) {
