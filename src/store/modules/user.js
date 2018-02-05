@@ -5,14 +5,13 @@ const state = {
 }
 
 const mutations = {
-    [types.USER_DATA](state, data) {console.log(data)
+    [types.USER_DATA](state, data) {
         state.userData = data;
     }
 }
 
 const actions = {
     getUserData({commit}, data) {
-        console.log(data)
         commit(types.USER_DATA, data);
     }
 }

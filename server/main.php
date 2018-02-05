@@ -13,12 +13,16 @@ function echoJSON($withStatus, $andData, $andMessage = ''){
     echo $jsonstring;
 }
 
-function returnResult($code, $sql) {
+function returnResult($sql) {
     $result = find($sql);
     if(count($result) === 1) {
-        $result = $result[0];
+        echoJSON(0, $result[0]);
+    }else if(count($result) === 0) {
+        echoJSON(-1, '暂无数据');
+    }else {
+        echoJSON(0, $result);
     }
-    echoJSON($code, $result);
+
 }
 
 //作者：Linsw
@@ -29,7 +33,7 @@ function returnResult($code, $sql) {
 $posts = json_decode(file_get_contents('php://input', true), true);
 if(@$posts['menu']) {
     $sql = 'select * from menu';
-    returnResult(0, $sql);
+    returnResult($sql);
 }else if(@$posts['novels']) {
     $sql1 = "select * from book WHERE `mId` = " . $posts['novels'];
     $result1 = find($sql1)[0];
@@ -39,7 +43,7 @@ if(@$posts['menu']) {
     echoJSON(0, $result1);
 }else if(@$posts['index']) {
     $sql = "select * from content WHERE `iNo` = " . $posts['index'];
-    returnResult(0, $sql);
+    returnResult($sql);
 }else if(@$posts['signInData']) {
     $name = $posts['signInData']['userName'] ;
     $pwd = md5($posts['signInData']['passWord']) ;
@@ -67,21 +71,32 @@ if(@$posts['menu']) {
     if ($result1[0][0] == 0) {
         $pwd = strrev(md5($pwd));
         $sql2 = "insert into users(Loginid, Pwd) VALUES('$name', '$pwd') ";
-        $result2 = find($sql2);
-        if ($result2 == 1) {
-            echoJSON(0, '成功');
-        } else {
-            echoJSON(-1, '失败');
-        };
+        $result2 = update($sql2);
+
     } else {
         echoJSON(1, '已被注册');
     }
-
-
+}else if(@$posts['gameData']) {
+    $name = $posts['gameData']['mName'];
+    $url = $posts['gameData']['mUrl'];
+    $id = $posts['gameData']['mId'];
+    if ($id) {
+        $sql = "update menu set `mName` = '$name' ,`mUrl` = '$url '  WHERE `mId` = $id";
+    }else {
+        $sql = "insert into menu(mId, mName, mType, mUrl) VALUES (NULL, '$name', 2,'$url')";
+    }
+    update($sql);
+}else if(@$posts['gameId']) {
+    $id = @$posts['gameId'];
+    $sql = "delete from menu where `mId` = $id";
+    update($sql);
 }
 
 /**
+ * 查询数据
  * @param $sql
+ * @param int $type
+ * @return array|bool|mysqli_result
  */
 function find($sql, $type = 1)
 {
@@ -89,4 +104,22 @@ function find($sql, $type = 1)
     $mysql = new MysqliHelper();
     $result = $mysql->Execute($sql, $type);
     return $result;
+}
+
+/**
+ * 修改数据
+ * @param $sql
+ * @param int $type
+ */
+function update($sql, $type = 1)
+{
+    include_once('./mysql/MysqliHelper.php');
+    $mysql = new MysqliHelper();
+    $result = $mysql->Execute($sql, $type);
+
+    if ($result) {
+        echoJSON(0, 'success');
+    } else {
+        echoJSON(-1, 'failed');
+    };
 }

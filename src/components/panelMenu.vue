@@ -4,7 +4,8 @@
         <div class="right-menu" :class="{'show-right-menu': showRightMenu, 'back-right-menu': backRightMenu}" @click.self="onshowRightMenu()">
             <div class="right-menu-item cursor-pointer" @click="onshowLeftMenu('novels')">小说</div>
             <div class="right-menu-item cursor-pointer" @click="onshowLeftMenu('games')">游戏</div>
-            <div class="right-menu-item cursor-pointer" v-if="userData.roleId === '1'" @click="onshowLeftMenu('manage')">管理</div>
+            <div class="right-menu-item cursor-pointer"  @click="onshowLeftMenu('manage')">管理</div>
+            <!--v-if="userData.roleId === '1'"-->
         </div>
         <div class="right-menu-sign" :class="{'show-right-menu-sign': showRightMenuSign, 'back-right-menu-sign': backRightMenuSign}" @click.self="onshowRightMenu()">
             <div class="right-menu-item cursor-pointer" @click="onshowLeftMenu('sign_in')">登录</div>
@@ -109,6 +110,9 @@
                            this.menuLists.blogs.push(item);
                        }
                    });
+                   this.$store.dispatch('getNovelList', this.menuLists.novels);
+                    this.$store.dispatch('getGameList', this.menuLists.games);
+                    this.$store.dispatch('getBlogList', this.menuLists.blogs);
                 } else {
                     console.error('couldn`t get menu data');
                 }
@@ -277,6 +281,7 @@
 <style lang="less">
     @panel_color: black;
     @panel_opacity: .5;
+    @panel_right_color: #333;
     @font-face {
         font-family: panel_font;
         src: url("../assets/font/2.ttf");
@@ -297,7 +302,7 @@
             right: 20px;
             top: -47%;
             transition: top .5s ease-out;
-            background: @panel_color;
+            background: @panel_right_color;
             background-size: contain;
             opacity: @panel_opacity;
             border-radius: 10px;
@@ -322,7 +327,7 @@
             top: 51%;
             transition: right .5s ease-out;
 
-            background: @panel_color;
+            background: @panel_right_color ;
             background-size: contain;
             opacity: @panel_opacity;
             border-radius: 10px;
@@ -366,7 +371,7 @@
             top: 10%;
             transition: left .5s ease-out;
             background: @panel_color;
-            background-size: cover;
+            /*background-size: contain;*/
             opacity: @panel_opacity;
             border-radius: 10px;
             overflow-y: auto;
