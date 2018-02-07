@@ -37,13 +37,14 @@
         <!--下主体-->
         <div class="main" :class="{'show-main': showMain, 'back-main': backMain, 'expand': isExpand}">
             <div class="main-title">
-                <Icon type="ios-undo" size="20" color="white" v-if="isReading" @click.native="onBackToIndex"></Icon>
-                <Icon type="android-contract" size="20" color="white" v-if="isExpand" @click.native="onContract"></Icon>
-                <Icon type="android-expand" size="20" color="white" v-if="!isExpand" @click.native="onExpand"></Icon>
-                <Icon type="power" size="20" color="white" @click.native="onHideMain"></Icon>
+                <Icon type="ios-undo" class="cursor-pointer" size="20" color="white" v-if="isReading || currentManagePanel !== 'list'" @click.native="onBackToIndex"></Icon>
+                <Icon type="android-contract" class="cursor-pointer" size="20" color="white" v-if="isExpand" @click.native="onContract"></Icon>
+                <Icon type="android-expand" class="cursor-pointer" size="20" color="white" v-if="!isExpand" @click.native="onExpand"></Icon>
+                <Icon type="power" size="20" class="cursor-pointer" color="white" @click.native="onHideMain"></Icon>
             </div>
             <novel-panel v-if="currentType === 'novels' && !isReading" :novelData="novelData" @read="onBeginReading"></novel-panel>
-            <manage-game></manage-game>
+            <game-manage v-show="currentType === 'manage' && manageType === 'game'"></game-manage>
+            <novel-manage ref="novel_manage" v-show="currentType === 'manage' && manageType === 'novel'" @panel="getManagePanel"></novel-manage>
             <div class="novel-content" v-if="isReading">
                 {{contentData.content}}
             </div>
@@ -59,12 +60,12 @@
     import signIn from './signIn';
     import Icon from "iview/src/components/icon/icon";
     import { mapGetters } from 'vuex';
-    import manageGame from './manageGame';
+    import gameManage from './gameManage';
+    import novelManage from './novelManage';
 
     export default {
         components: {
-            Icon,
-            novelPanel, signUp, signIn, manageGame
+            Icon, novelPanel, signUp, signIn, gameManage, novelManage
         },
         props: {},
         data() {
@@ -90,6 +91,8 @@
                 isExpand: false,
                 currentTitle: '',
                 isReading: false,    //是否阅读状态
+                currentManagePanel: 'list',   //是否处于管理界面
+                managePanels: ['list', 'info', 'index', 'content'],
                 contentData: {},        //章节内容
                 indexData: {},    //章节信息
                 userData: {
@@ -99,25 +102,7 @@
             }
         },
         created() {
-            this.$axios.ajax.post('server/main.php', {menu: true}).then(res => {
-                if (res.data.code === 0) {
-                   res.data.data.forEach(item => {
-                       if(item.mType === '1') {
-                           this.menuLists.novels.push(item);
-                       }else if(item.mType === '2') {
-                           this.menuLists.games.push(item);
-                       }else if(item.mType === '3') {
-                           this.menuLists.blogs.push(item);
-                       }
-                   });
-                   this.$store.dispatch('getNovelList', this.menuLists.novels);
-                    this.$store.dispatch('getGameList', this.menuLists.games);
-                    this.$store.dispatch('getBlogList', this.menuLists.blogs);
-                } else {
-                    console.error('couldn`t get menu data');
-                }
-
-            });
+            this.$store.dispatch('getMenuList');
         },
         mounted() {
 
@@ -257,12 +242,28 @@
              * 回到目录页
              */
             onBackToIndex() {
-                this.isReading = false;
-            },
+                if(this.currentType === 'novels') {
+                    this.isReading = false;
+                }else {
+                    if(this.currentManagePanel !== 'list') {
+                        this.currentManagePanel = this.managePanels[this.managePanels.indexOf(this.currentManagePanel) - 1];
+                        this.$refs.novel_manage.changePanel(this.currentManagePanel);
+                    }
 
+                }
+            },
+            /**
+             * 切换管理界面
+             */
+            getManagePanel(val) {
+                this.currentManagePanel = val;
+            }
         },
         computed: mapGetters({
             getUserData: 'listenUserData',
+            getNovelData: 'listenNovelList',
+            getBlogData: 'listenBlogList',
+            getGameData: 'listenGameList'
         }),
         watch: {
             getUserData: {
@@ -270,7 +271,26 @@
                     this.userData = val;
                 },
                 deep: true
-            }
+            },
+            getNovelData: {
+                handler(val) {
+                    this.menuLists.novels = val;
+                },
+                deep: true
+            },
+            getGameData: {
+                handler(val) {
+                    this.menuLists.games = val;
+                },
+                deep: true
+            },
+            getBlogData: {
+                handler(val) {
+                    this.menuLists.blogs = val;
+                },
+                deep: true
+            },
+
         },
         destroyed() {
 
@@ -280,7 +300,7 @@
 
 <style lang="less">
     @panel_color: black;
-    @panel_opacity: .5;
+    @panel_opacity: .6;
     @panel_right_color: #333;
     @font-face {
         font-family: panel_font;

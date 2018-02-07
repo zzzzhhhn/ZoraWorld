@@ -30,21 +30,24 @@ function returnResult($sql) {
 //來源：简书
 //著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 
+
+
+
 $posts = json_decode(file_get_contents('php://input', true), true);
-if(@$posts['menu']) {
+if (@$posts['menu']) {
     $sql = 'select * from menu';
     returnResult($sql);
-}else if(@$posts['novels']) {
+}elseif(@$posts['novels']) {
     $sql1 = "select * from book WHERE `mId` = " . $posts['novels'];
     $result1 = find($sql1)[0];
     $sql2 = "select * from indexes WHERE `bNo` =" . $result1['bNo'];
     $result2 = find($sql2);
     $result1['indexes'] = $result2;
     echoJSON(0, $result1);
-}else if(@$posts['index']) {
+}elseif(@$posts['index']) {
     $sql = "select * from content WHERE `iNo` = " . $posts['index'];
     returnResult($sql);
-}else if(@$posts['signInData']) {
+}elseif(@$posts['signInData']) {
     $name = $posts['signInData']['userName'] ;
     $pwd = md5($posts['signInData']['passWord']) ;
 
@@ -61,7 +64,7 @@ if(@$posts['menu']) {
             echoJSON(1, '错误');
         }
     }
-}else if(@$posts['signUpData']) {
+}elseif(@$posts['signUpData']) {
     $name = $posts['signUpData']['userName'];
     $pwd = $posts['signUpData']['passWord'];
 
@@ -76,20 +79,57 @@ if(@$posts['menu']) {
     } else {
         echoJSON(1, '已被注册');
     }
-}else if(@$posts['gameData']) {
-    $name = $posts['gameData']['mName'];
-    $url = $posts['gameData']['mUrl'];
-    $id = $posts['gameData']['mId'];
-    if ($id) {
+}elseif(@$posts['menuData']) {
+    $name = $posts['menuData']['mName'];
+    $url = $posts['menuData']['mUrl'];
+    $id = $posts['menuData']['mId'];
+    $type = $posts['menuData']['mType'];
+    if ($id !== 0) {
         $sql = "update menu set `mName` = '$name' ,`mUrl` = '$url '  WHERE `mId` = $id";
     }else {
-        $sql = "insert into menu(mId, mName, mType, mUrl) VALUES (NULL, '$name', 2,'$url')";
+        $sql = "insert into menu(mId, mName, mType, mUrl) VALUES (NULL, '$name', $type,'$url')";
     }
     update($sql);
-}else if(@$posts['gameId']) {
-    $id = @$posts['gameId'];
+}elseif(@$posts['menuId']) {
+    $id = @$posts['menuId'];
     $sql = "delete from menu where `mId` = $id";
     update($sql);
+}elseif (@$posts['bookId']) {
+    $mId = @$posts['bookId'];
+    $sql = "select * from book where `mId` = " . $mId;
+    returnResult($sql);
+}elseif (@$posts['novelInfo']) {
+    $bNo = $posts['novelInfo']['bNo'];
+    $Theme = $posts['novelInfo']['Theme'];
+    $bDescribe = $posts['novelInfo']['bDescribe'];
+    $bookImg = $posts['novelInfo']['bookImg'];
+    $isEnd = $posts['novelInfo']['isEnd'];
+    $mId = $posts['novelInfo']['mId'];
+    if($bNo !== 0) {
+        $sql = "update book set `Theme` = '$Theme', `bDescribe` = '$bDescribe', `bookImg` = '$bookImg', `isEnd` = '$isEnd' WHERE  `bNo` = $bNo";
+    }else {
+        $sql = "insert into book(bNo, Theme, bDescribe, bookImg, isEnd, mId) values(null, '$Theme', '$bDescribe', '$bookImg', '$isEnd', $mId)";
+    }
+
+    update($sql);
+} elseif (@$posts['bNo']) {
+    $bNo = @$posts['bNo'];
+    $sql = "select * from indexes where `bNo` = " . $bNo;
+    returnResult($sql);
+}
+else {
+    $file = @$_FILES['file'];//得到传输的数据
+    $name = $file['name'];//文件名
+    $ex = strtolower(substr($name,strrpos($name,'.'))); //扩展名
+    $upload_path = "./uploads/"; //上传文件的存放路径
+    $new_name = rand().rand().$ex;
+//开始移动文件到相应的文件夹
+    if(move_uploaded_file($file['tmp_name'],$upload_path.$new_name)){
+        echoJSON( 0,$new_name);
+    }else{
+        echoJSON( -1,"failed!");
+    }
+
 }
 
 /**

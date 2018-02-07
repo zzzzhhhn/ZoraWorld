@@ -1,4 +1,5 @@
 import * as types from './types.js';
+import api from '../../api/menu.js';
 
 const state = {
     gameList: {},
@@ -19,14 +20,25 @@ const mutations = {
 }
 
 const actions = {
-    getGameList({commit}, data) {
-        commit(types.GAME_LIST, data);
-    },
-    getNovelList({commit}, data) {
-        commit(types.NOVEL_LIST, data);
-    },
-    getBlogList({commit}, data) {
-        commit(types.BLOG_LIST, data);
+    getMenuList({commit}, params) {
+        const novels = [];
+        const games = [];
+        const blogs = [];
+        api.getMenuData(data => {
+           data.data.forEach(item => {
+                if(item.mType === '1') {
+                    novels.push(item);
+                }else if(item.mType === '2') {
+                    games.push(item);
+                }else if(item.mType === '3') {
+                    blogs.push(item);
+                }
+            });
+            commit(types.GAME_LIST, games);
+            commit(types.NOVEL_LIST, novels);
+            commit(types.BLOG_LIST, blogs);
+        }, params);
+
     },
 }
 

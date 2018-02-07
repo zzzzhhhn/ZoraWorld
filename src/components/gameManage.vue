@@ -32,7 +32,7 @@
     }
 
     @Component
-    export default class manageGame extends Vue {
+    export default class gameManage extends Vue {
         private gameList: listType[] = [];
 
         created() {
@@ -44,11 +44,12 @@
          * @param {listType} data
          */
         updateGameData(data: listType) {
-            Util.ajax.post('server/main.php', {gameData: data}).then((res: any) => {
+            Util.ajax.post('server/main.php', {menuData: data}).then((res: any) => {
                 if (res.data.code === 0) {
-                    alert('修改成功')
+                    alert('保存成功');
+                    this.$store.dispatch('getMenuList');
                 } else {
-                    alert('修改失败');
+                    alert('保存失败');
                 }
             });
         }
@@ -58,7 +59,7 @@
          */
         addGameData() {
             this.gameList.push({
-                mId: null,
+                mId: 0,
                 mName: '',
                 mType: 2,
                 mUrl: ''
@@ -69,11 +70,9 @@
          * 删除
          */
         deleteGameData(id: number) {
-            Util.ajax.post('server/main.php', {gameId: id}).then((res: any) => {
+            Util.ajax.post('server/main.php', {menuId: id}).then((res: any) => {
                 if (res.data.code === 0) {
-                    this.gameList = this.gameList.filter((item) => {
-                        return item.mId !== id;
-                    })
+                    this.$store.dispatch('getMenuList');
                 } else {
                     alert('删除失败');
                 }

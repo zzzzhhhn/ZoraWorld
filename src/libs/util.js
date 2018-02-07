@@ -9,14 +9,14 @@ util.title = function(title) {
     window.document.title = title;
 };
 
-const ajaxUrl = env === 'development' ?
+util.ajaxUrl = env === 'development' ?
     'http://127.0.0.1:88' :
     env === 'production' ?
     'http://zoraworld.club' :
     'https://debug.url.com';
-
+const url = util.ajaxUrl;
 util.ajax = axios.create({
-    baseURL: ajaxUrl,
+    baseURL: url,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     timeout: 30000
 });
