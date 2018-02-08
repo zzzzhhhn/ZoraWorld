@@ -1,6 +1,6 @@
 <template>
     <div class="container" v-if="currentPanel === 'list'">
-        <div class="row mb20" v-for="item in novelList">
+        <div class="row mb20" v-for="item in novelList" :key="item.mId">
             <div class="col-xs-8 input-group input-group-lg pull-left" style="padding-right: 10px">
                 <span class="input-group-addon">书名</span>
                 <input class="form-control" v-model="item.mName"/>
@@ -9,7 +9,6 @@
                 <button class="btn btn-warning" @click="updateNovelData(item)">保存</button>
                 <button class="btn btn-danger" @click="deleteNovelData(item.mId)">删除</button>
                 <button class="btn btn-info" @click="novelInfoManage(item.mId)">信息管理</button>
-
             </div>
         </div>
         <div class="row btn-group btn-group-lg">
@@ -61,8 +60,24 @@
         <br/>
         <button class="btn btn-primary mt20" style="width: 200px" @click="novelIndexManage(postInfo.bNo)">章节管理</button>
     </div>
-    <div v-else-if="currentPanel === 'index'">
-        <Button type="primary" size="large" class="ml20 mb20" v-for="item in bookIndexes" :key="item.iNo" @click.native="novelContentManage(item.iNo)">{{item.iName}}</Button>
+    <div v-else-if="currentPanel === 'index'" class="container" style="width:90%;margin:auto">
+        <div class="row btn-group btn-group-lg">
+            <button class="btn btn-primary" @click="addIndexData">新增</button>
+        </div>
+        <div class="row">
+            <div class="mt20 col-xs-3 pl10" v-for="item in bookIndexes" :key="item.iNo">
+                <div class="col-xs-12 input-group" >
+                    <span class="input-group-addon"></span>
+                    <input class="form-control" v-model="item.iName" />
+                </div>
+                <div class=" btn-group  col-xs-12">
+                    <button class="btn btn-warning col-xs-4" @click="updateIndexData(item)">保存</button>
+                    <button class="btn btn-danger col-xs-4" @click="deleteIndexData(item.iNo)">删除</button>
+                    <button class="btn btn-info col-xs-4" @click="novelContentManage(item.iNo)">内容管理</button>
+                </div>
+            </div>
+
+        </div>
     </div>
     <div v-else-if="currentPanel === 'content'"></div>
 </template>
@@ -78,6 +93,18 @@
         mUrl: string
     }
 
+    interface indexType {
+        iNo: number,
+        iName: string,
+        bNo: number
+    }
+
+    interface contentType {
+        cNo: number,
+        content: string,
+        iNo: number
+    }
+
     @Component
     export default class novelManage extends Vue {
         private novelList: listType[] = [];
@@ -86,7 +113,10 @@
         private postInfo:any = {};
         private themeList: string[] = ['科幻','灵异','魔幻','网游','悬疑','校园','言情','都市','推理','犯罪'];
         private statusList: string[] = ['连载中', '已完结', '暂停更新'];
-        private bookIndexes: any[] = [];
+        private bookIndexes: indexType[] = [];
+        private currentBookNo: number;
+        private contentData: contentType | {} = {};
+    
 
         created() {
 
@@ -162,15 +192,10 @@
          * 章节管理
          */
         novelIndexManage(id: number) {
-            Util.ajax.post('server/main.php', {bNo: id}).then((res: any) => {
-                if (res.data.code === 0) {
-                    this.bookIndexes = res.data.data;
-                    this.currentPanel = 'index';
-                    this.$emit('panel', 'index');
-                } else {
-                    alert('保存失败');
-                }
-            });
+            this.currentBookNo = id;
+            this.$store.dispatch('getIndexList', this.currentBookNo);
+            this.currentPanel = 'index';
+            this.$emit('panel', 'index');
 
         }
 
@@ -187,7 +212,6 @@
                     this.$nextTick(() => {
                         $('.novel-upload .ivu-upload-drag').css({'background':"url('" + this.postInfo.bookImg + "') no-repeat",'background-size': 'cover'});
                     });
-
                 } else {
                     this.postInfo = {
                         bNo: 0,
@@ -198,14 +222,11 @@
                         mId: id
                     };
                 }
-
-
             });
-
         }
 
         /**
-         *
+         *  切换界面
          */
         changePanel(val: string) {
             this.currentPanel = val;
@@ -215,10 +236,57 @@
          * 内容管理
          */
         novelContentManage(id: number) {
+            Util.ajax.post('server/main.php', {iNo: id}).then((res: any) => {
             this.currentPanel = 'content';
             this.$emit('panel', 'content');
+            if (res.data.code === 0) {
+                    this.contentData = res.data.data;
+                } else {
+                    this.contentData = {
+                        cNo: 0,
+                        content: '',
+                        iNo: id,
+                    };
+                }
+            });
         }
-
+        /**
+         * 修改章节名
+         * @param data
+         */
+        updateIndexData(data: indexType) {
+            Util.ajax.post('server/main.php', { indexData: data }).then((res: any) => {
+                if (res.data.code === 0) {
+                    alert('保存成功');
+                    this.$store.dispatch('getIndexList', this.currentBookNo);
+                } else {
+                    alert('保存失败');
+                }
+            });
+        }
+        /**
+         * 删除章节
+         * @param id
+         */
+        deleteIndexData(id: number) {
+            Util.ajax.post('server/main.php', { indexId: id }).then((res: any) => {
+                if (res.data.code === 0) {
+                    this.$store.dispatch('getIndexList', this.currentBookNo);
+                } else {
+                    alert('删除失败');
+                }
+            });
+        }
+        /**
+         * 新增章节
+         */
+        addIndexData() {
+            this.bookIndexes.push({
+                iNo: 0,
+                iName: '',
+                bNo: this.currentBookNo
+            });
+        }
 
         /**
          * 计算属性获取vuex中的游戏列表
@@ -227,7 +295,9 @@
         get getNovelList() {
             return this.$store.getters.listenNovelList;
         }
-
+        get getIndexList() {
+            return this.$store.getters.listenIndexList;
+        }
         /**
          * watch 计算属性 赋值到data
          * @param {listType[]} val
@@ -235,6 +305,10 @@
         @Watch('getNovelList')
         watchNovelList(val: listType[]) {
             this.novelList = val;
+        }
+        @Watch('getIndexList')
+        watchIndexList(val: indexType[]) {
+            this.bookIndexes = val;
         }
 
     }

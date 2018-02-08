@@ -4,7 +4,8 @@ import api from '../../api/menu.js';
 const state = {
     gameList: {},
     novelList: {},
-    blogList: {}
+    blogList: {},
+    indexList: {}
 }
 
 const mutations = {
@@ -16,6 +17,9 @@ const mutations = {
     },
     [types.BLOG_LIST](state, data) {
         state.blogList = data;
+    },
+    [types.INDEX_LIST](state, data) {
+        state.indexList = data;
     }
 }
 
@@ -40,12 +44,18 @@ const actions = {
         }, params);
 
     },
+    getIndexList({ commit }, params) {
+        api.getIndexData(data => {
+            commit(types.INDEX_LIST, data.data);
+        }, params);
+    }
 }
 
 const getters = {
     listenGameList: state => state.gameList,
     listenNovelList: state => state.novelList,
     listenBlogList: state => state.blogList,
+    listenIndexList: state => state.indexList
 }
 
 export default {

@@ -29,4 +29,7 @@ export default {
     getMenuData(cb, params) {
         return fetch('server/main.php', {menu: true}, cb);
     },
+    getIndexData(cb, params) {
+        return fetch('server/main.php', { bNo: params }, cb);
+    },
 };

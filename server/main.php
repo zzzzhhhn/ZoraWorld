@@ -110,11 +110,29 @@ if (@$posts['menu']) {
     }else {
         $sql = "insert into book(bNo, Theme, bDescribe, bookImg, isEnd, mId) values(null, '$Theme', '$bDescribe', '$bookImg', '$isEnd', $mId)";
     }
-
     update($sql);
 } elseif (@$posts['bNo']) {
     $bNo = @$posts['bNo'];
     $sql = "select * from indexes where `bNo` = " . $bNo;
+    returnResult($sql);
+}elseif (@$posts['indexData']) {
+    $iNo = $posts['indexData']['iNo'];
+    $iName = $posts['indexData']['iName'];
+    $bNo = $posts['indexData']['bNo'];
+
+    if($iNo !== 0) {
+        $sql = "update indexes set `iName` = '$iName' WHERE  `iNo` = $iNo";
+    }else {
+        $sql = "insert into indexes(iNo, iName, bNo) values(null, '$iName', $bNo)";
+    }
+    update($sql);
+} elseif(@$posts['indexId']) {
+    $id = @$posts['indexId'];
+    $sql = "delete from indexes where `iNo` = $id";
+    update($sql);
+}elseif (@$posts['iNo']) {
+    $iNo = @$posts['iNo'];
+    $sql = "select * from content where `iNo` = " . $iNo;
     returnResult($sql);
 }
 else {
