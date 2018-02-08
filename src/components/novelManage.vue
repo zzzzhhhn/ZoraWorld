@@ -79,12 +79,19 @@
 
         </div>
     </div>
-    <div v-else-if="currentPanel === 'content'"></div>
+    <div v-else-if="currentPanel === 'content'" class="text-center">
+        <div id="toolbar"></div>
+        <div id="editor" style="height:600px;"></div>
+        <div class="btn-group btn-group-lg mt20">
+            <button class="btn btn-primary" style="width:200px" @click="addContentData">保存</button>
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
     import {Component, Emit, Prop, Vue, Watch} from 'vue-property-decorator';
     import Util from '../libs/util';
+    const E = require('wangeditor');
 
     interface listType {
         mId: number,
@@ -115,7 +122,8 @@
         private statusList: string[] = ['连载中', '已完结', '暂停更新'];
         private bookIndexes: indexType[] = [];
         private currentBookNo: number;
-        private contentData: contentType | {} = {};
+        private contentData: contentType;
+        private editor: any;
     
 
         created() {
@@ -247,6 +255,24 @@
                         content: '',
                         iNo: id,
                     };
+                }
+                this.$nextTick(()=> {
+                        this.editor = new E('#toolbar','#editor')
+                        this.editor.create();
+                        this.editor.txt.html('<p>' + this.contentData.content + '用 JS 设置的内容</p>');
+                    });
+            });
+        }
+        /**
+         * 保存内容
+         */
+        addContentData() {
+            this.contentData.content = this.editor.txt.html();
+             Util.ajax.post('server/main.php', { contentData: this.contentData }).then((res: any) => {
+                if (res.data.code === 0) {
+                    alert('保存成功');
+                } else {
+                    alert('保存失败');
                 }
             });
         }

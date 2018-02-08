@@ -134,6 +134,17 @@ if (@$posts['menu']) {
     $iNo = @$posts['iNo'];
     $sql = "select * from content where `iNo` = " . $iNo;
     returnResult($sql);
+}elseif (@$posts['contentData']) {
+    $cNo = $posts['contentData']['cNo'];
+    $content = $posts['contentData']['content'];
+    $iNo = $posts['contentData']['iNo'];
+
+    if($cNo !== 0) {
+        $sql = "update content set `content` = '$content' WHERE  `cNo` = $cNo";
+    }else {
+        $sql = "insert into content(cNo, content, iNo) values(null, '$content', $iNo)";
+    }
+    update($sql);
 }
 else {
     $file = @$_FILES['file'];//得到传输的数据
