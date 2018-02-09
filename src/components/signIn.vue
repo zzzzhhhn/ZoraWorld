@@ -78,7 +78,7 @@
         .btn-sign-in,
         .input-group {
             width: 50%;
-            margin: 75px 25% 0;
+            margin: 50px 25% 0;
 
         }
 

@@ -56,13 +56,18 @@
             flex: auto;
             padding-left: 30px;
 
+            button {
+                font-size: 20px;
+                text-shadow: 0 0 10px gray;
+            }
+
             .novel-msg {
                 margin-top: 20px;
                 height: 30px;
                 line-height: 30px;
                 font-size: 20px;
-                color: lightgoldenrodyellow;
-
+                color: lightyellow;
+                text-shadow: 0 0 10px gray;
                 span {
                     color: lightcyan;
                 }
@@ -73,11 +78,12 @@
                 font-size: 20px;
                 color: lightcyan;
                 margin: 20px 0;
+                text-shadow: 0 0 10px gray;
 
                 .describe-content {
                     margin-top: 10px;
                     font-size: 16px;
-                    color: lightgoldenrodyellow;
+                    color: lightyellow;
                     height: 100px;
                     overflow-y: auto;
                 }
@@ -89,6 +95,8 @@
 
     .novel-indexes {
         padding: 0 10%;
+        color: lightcyan;
+        text-shadow: 0 0 10px gray;
 
         .indexes-item {
             color: lightyellow;
@@ -97,10 +105,10 @@
             line-height: 30px;
             text-align: center;
             border-radius: 10px;
+            font-size: 20px;
 
             &:hover {
-                background: lightcyan;
-                color: lightgreen;
+                color: lightgoldenrodyellow;
             }
         }
     }

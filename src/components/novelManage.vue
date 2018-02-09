@@ -54,7 +54,7 @@
             <Option v-for="item in statusList" :value="item" :key="item">{{ item }}</Option>
         </Select>
         <br/>
-        <Input v-model="postInfo.bDescribe" type="textarea" :rows="4" placeholder="简介" style="width: 400px"></Input>
+        <textarea v-model="postInfo.bDescribe" type="textarea" class="form-control" placeholder="简介" style="width: 400px; margin: auto"></textarea>
         <br/>
         <button class="btn btn-primary mt20" style="width: 200px" @click="updateNovelInfo">保存</button>
         <br/>

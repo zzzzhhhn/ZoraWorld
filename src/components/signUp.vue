@@ -22,7 +22,7 @@
         </div>
         <div class="alert alert-danger" role="alert" v-show="rePwdWrong">请输入与上面相同的密码</div>
         <div class="btn-group btn-group-lg btn-sign-in" role="group" aria-label="...">
-            <button type="button" class="btn btn-default" :disabled="disabled" @click="onSubmit">登录</button>
+            <button type="button" class="btn btn-default" :disabled="disabled" @click="onSubmit">注册</button>
         </div>
     </div>
 </template>

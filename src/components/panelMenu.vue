@@ -1,19 +1,20 @@
 <template>
     <div>
         <!--右菜单-->
-        <div class="right-menu" :class="{'show-right-menu': showRightMenu, 'back-right-menu': backRightMenu}" @click.self="onshowRightMenu()">
+        <div class="right-menu" >
             <div class="right-menu-item cursor-pointer" @click="onshowLeftMenu('novels')">小说</div>
             <div class="right-menu-item cursor-pointer" @click="onshowLeftMenu('games')">游戏</div>
-            <div class="right-menu-item cursor-pointer"  @click="onshowLeftMenu('manage')">管理</div>
-            <!--v-if="userData.roleId === '1'"-->
+            <div class="right-menu-item cursor-pointer" v-if="userData.roleId === '1'" @click="onshowLeftMenu('manage')">管理</div>
+            <div class="user-name" @click.self="onshowRightMenu()">欢迎您，{{!!userData.userName ? userData.userName : '游客250'}}</div>
+           
         </div>
-        <div class="right-menu-sign" :class="{'show-right-menu-sign': showRightMenuSign, 'back-right-menu-sign': backRightMenuSign}" @click.self="onshowRightMenu()">
-            <div class="right-menu-item cursor-pointer" @click="onshowLeftMenu('sign_in')">登录</div>
-            <div class="right-menu-item cursor-pointer" @click="onshowLeftMenu('sign_up')">注册</div>
+        <div class="right-menu-sign"  @click.self="onshowRightMenu()">
+            <div class="right-menu-item cursor-pointer right-menu-sign-item" @click="onshowLeftMenu('sign_in')">登录</div>
+            <div class="right-menu-item cursor-pointer right-menu-sign-item" @click="onshowLeftMenu('sign_up')">注册</div>
         </div>
         <!--左菜单-->
-        <div class="left-menu" :class="{'show-left-menu': showLeftMenu, 'back-left-menu': backLeftMenu}">
-            <div class="left-menu-item" v-for="item in currentMenu" :key="item.mId" @click="onShowMain(item.mId, item.mName)">
+        <div class="left-menu" :class="{'show-left-menu': showLeftMenu, 'back-left-menu': backLeftMenu, 'sign': currentType === 'sign_in' || currentType === 'sign_up'}">
+            <div class="left-menu-item cursor-pointer" v-for="item in currentMenu" :key="item.mId" @click="onShowMain(item.mId, item.mName)">
                 <router-link :to="item.mUrl || '/'"><span>{{item.mName}}</span></router-link>
             </div>
             <sign-in v-if="currentType === 'sign_in'" @success="onshowLeftMenu('novels')"></sign-in>
@@ -71,9 +72,6 @@
         data() {
             return {
                 showRightMenu: false,    //菜单面板是否显示
-                backRightMenu: false,
-                showRightMenuSign: false,
-                backRightMenuSign: false,
                 showLeftMenu: false,
                 backLeftMenu: false,
                 currentType: '',     //当前显示菜单类型
@@ -98,34 +96,58 @@
                 userData: {
                     roleId: ''
                 },
-                manageType: ''
+                manageType: '',
+                right_right_menu_sign: '',      //右下菜单收起长度
+                top_right_menu: '',     //右菜单收起长度
+                tempType: '',
             }
         },
         created() {
             this.$store.dispatch('getMenuList');
         },
         mounted() {
-
+            this.rightMenuResize();
+            window.onresize = () => {
+                this.rightMenuResize();
+                this.leftMenuItemResize();
+            }
         },
         methods: {
+            rightMenuResize() {
+                const width_right = $('.right-menu').width();
+                $('.right-menu').height(width_right * 649 / 425);
+                const  height_right = $('.right-menu').height();
+                const width_right_sign = $('.right-menu-sign').width();
+                $('.right-menu-sign').height(width_right_sign * 425 / 649);
+                const height_right_sign = $('.right-menu-sign').height();
+                this.top_right_menu = height_right * 0.9 * -1 + 'px';
+                this.right_right_menu_sign = width_right_sign * 0.9 * -1;
+                $('.right-menu').css('top', this.top_right_menu);
+                $('.right-menu-sign').css('right', this.right_right_menu_sign);
+            },
+            leftMenuItemResize() {
+                const width_left_item = $('.left-menu-item').width();
+                $('.left-menu-item').height(width_left_item * 606 /107);
+                $('.left-menu-item').css('font-size', width_left_item / 3 + 'px');
+            },
             /**
              * 显示面板
              */
             onshowRightMenu() {
                 if(!this.showRightMenu) {
                     this.showRightMenu = true;
+                    $('.right-menu').css('top', 0);
                     setTimeout(() => {
-                        this.backRightMenu = true;
-                        this.showRightMenuSign = true;
+                        $('.right-menu').css('top', -10 + 'px');
+                        $('.right-menu-sign').css('right', 0);
                     }, 500);
                     setTimeout(() => {
-                        this.backRightMenuSign = true;
+                        $('.right-menu-sign').css('right', -10 + 'px');
                     }, 1000);
                 } else {
-                    this.backRightMenuSign = false;
-                    this.showRightMenuSign = false;
+                    $('.right-menu-sign').css('right', this.right_right_menu_sign);
                     setTimeout(() => {
-                        this.backRightMenu = false;
+                        $('.right-menu').css('top', this.top_right_menu);
                         this.showRightMenu = false;
                     }, 500);
                 }
@@ -136,23 +158,38 @@
              * @param type
              */
             onshowLeftMenu(type) {
-                if(type !== this.currentType && this.showLeftMenu) {
+                if(type !== this.tempType && this.showLeftMenu) {
+                    this.showLeftMenu = false;
                     this.backLeftMenu = false;
                     setTimeout(() => {
-                        this.backLeftMenu = true;
-                    }, 100);
+                        this.currentType = type;
+                        this.currentMenu = this.menuLists[type];
+                        this.$nextTick(() => {
+                            this.leftMenuItemResize();
+                            this.showLeftMenu = true;
+                            setTimeout(() => {
+                                this.backLeftMenu = true;
+                            }, 500);
+                        });
+                        this.tempType = type;
+                    },500);
                 }else if(!this.showLeftMenu) {
-                    this.showLeftMenu = true;
-                    setTimeout(() => {
-                        this.backLeftMenu = true;
-                    }, 500);
+                    this.currentType = type;
+                    this.currentMenu = this.menuLists[type];
+                    this.$nextTick(() => {
+                        this.leftMenuItemResize();
+                        this.showLeftMenu = true;
+                        setTimeout(() => {
+                            this.backLeftMenu = true;
+                        }, 500);
+                    });
                 }else {
                     this.showLeftMenu = false;
                     this.backLeftMenu = false;
                 }
 
-                this.currentType = type;
-                this.currentMenu = this.menuLists[type];
+
+
             },
             /**
              * 显示标题和主体
@@ -179,10 +216,10 @@
                 }
                 this.showLeftMenu = false;
                 this.backLeftMenu = false;
-                this.backRightMenu = false;
                 this.showRightMenu = false;
-                this.backRightMenuSign = false;
-                this.showRightMenuSign = false;
+                $('.right-menu-sign').css('right', this.right_right_menu_sign);
+                $('.right-menu').css('top', this.top_right_menu);
+
                 setTimeout(() => {
                     this.showMain = true;
                     this.showTitle = true;
@@ -317,67 +354,60 @@
 
         .right-menu {
             width: 20%;
-            height: 50%;
             position: absolute;
             right: 20px;
-            top: -47%;
             transition: top .5s ease-out;
-            background: @panel_right_color;
+            background: url('../assets/img/right1.png') no-repeat;
             background-size: contain;
             opacity: @panel_opacity;
-            border-radius: 10px;
 
             color: white;
 
-            &.show-right-menu {
-                 top: 0;
-             }
-
-            &.back-right-menu {
-                transition: top .1s ease-out;
-                top: -10px;
+            .user-name {
+                width: 100%;
+                height: 10%;
+                position: absolute;
+                bottom: 0;
+                text-align: center;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
         }
 
         .right-menu-sign {
-            width: 20%;
-            height: 30%;
+            width: 21%;
             position: absolute;
-            right: -19%;
-            top: 51%;
+            bottom: 10%;
             transition: right .5s ease-out;
 
-            background: @panel_right_color ;
+            background: url('../assets/img/right2.png') no-repeat;
             background-size: contain;
             opacity: @panel_opacity;
-            border-radius: 10px;
 
-            color: white;
+            .right-menu-item.right-menu-sign-item {
+                width: 40%;
+                height: 100%;
+                float: left;
+                writing-mode: vertical-rl;
 
-            .right-menu-item {
-                height: 50%;
-            }
-
-            &.show-right-menu-sign {
-                right: 30px;
-            }
-
-            &.back-right-menu-sign {
-                transition: right .1s ease-out;
-                right: 20px;
+                &:first-child {
+                    margin-left: 10%;
+                }
             }
         }
 
         .right-menu-item {
             width: 100%;
-            text-align: center;
-            height: 30%;
-            line-height: 100px;
+            height: 20%;
             font-size: 30px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
             &:hover {
-                border-radius: 10px;
-                background: whitesmoke;
                 color: lightslategrey;
             }
         }
@@ -390,11 +420,16 @@
             left: -74%;
             top: 10%;
             transition: left .5s ease-out;
-            background: @panel_color;
-            /*background-size: contain;*/
-            opacity: @panel_opacity;
             border-radius: 10px;
-            overflow-y: auto;
+            overflow-x: auto;
+            overflow-y: hidden;
+            display: flex;
+            flex-direction: row;
+
+            &.sign {
+                background: url("../assets/img/left1.png") no-repeat;
+                background-size: contain;
+            }
 
             &.show-left-menu {
                 left: 0;
@@ -415,18 +450,27 @@
             }
 
             .left-menu-item {
-                width: 100%;
-                text-align: center;
-                height: 50px;
-                line-height: 50px;
-                font-size: 20px;
+                width: 9%;
+                writing-mode: vertical-rl;
+                opacity: .7;
+                margin-right: 1%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: url('../assets/img/zhu2.png') no-repeat;
+                background-size: contain;
+
+                a {
+                    color: #333;
+                }
 
                 &:hover {
-                    background: lavender;
+                    opacity: .8;
                 }
 
                 a:hover {
                     text-decoration: none;
+                
                 }
             }
         }
@@ -438,15 +482,16 @@
             left: 25%;
             top: -9%;
             transition: top .5s ease-out;
-            background: @panel_color;
-            background-size: cover;
+            background: url("../assets/img/wood.jpg");
             opacity: @panel_opacity;
-            border-radius: 10px;
+            border-radius: 0 0 50px 50px;
             padding: 1%;
-            font-size: 30px;
-            line-height: 180%;
+            font-size: 40px;
+            font-weight: bold;
+            line-height: 150%;
             text-align: center;
-            color: lightsalmon;
+            color: #222;
+            text-shadow: 2px 2px 10px palegoldenrod;
 
             .novel-msg {
 
@@ -483,10 +528,10 @@
             transition: all .5s ease-out;
             overflow-y: auto;
 
-            background: @panel_color;
-            background-size: cover;
+            background: url("../assets/img/sc.jpg");
+            background-size: contain;
             color: white;
-            opacity: @panel_opacity;
+            opacity: .9;
             border-radius: 10px;
 
             &.show-main {
