@@ -110,7 +110,11 @@
             window.onresize = () => {
                 this.rightMenuResize();
                 this.leftMenuItemResize();
-            }
+            };
+            // setTimeout(() => {
+            //     $('.zora-world').addClass('loaded');
+            // },3000);
+
         },
         methods: {
             rightMenuResize() {
@@ -154,7 +158,7 @@
             },
 
             /**
-             * 显示主体菜单
+             * 显示左侧菜单
              * @param type
              */
             onshowLeftMenu(type) {
@@ -163,18 +167,22 @@
                     this.backLeftMenu = false;
                     setTimeout(() => {
                         this.currentType = type;
-                        this.currentMenu = this.menuLists[type];
-                        this.$nextTick(() => {
-                            this.leftMenuItemResize();
-                            this.showLeftMenu = true;
-                            setTimeout(() => {
-                                this.backLeftMenu = true;
-                            }, 500);
-                        });
-                        this.tempType = type;
+                        setTimeout(() => {
+                            this.currentMenu = this.menuLists[type];
+                            this.$nextTick(() => {
+                                this.leftMenuItemResize();
+                                this.showLeftMenu = true;
+                                setTimeout(() => {
+                                    this.backLeftMenu = true;
+                                }, 500);
+                            });
+                            this.tempType = type;
+                        },300);
+
                     },500);
                 }else if(!this.showLeftMenu) {
                     this.currentType = type;
+                    this.tempType = type;
                     this.currentMenu = this.menuLists[type];
                     this.$nextTick(() => {
                         this.leftMenuItemResize();
@@ -348,9 +356,14 @@
         height: 100%;
         position: relative;
         overflow: hidden;
-        background: url("../assets/img/bg.jpg") no-repeat;
+        background-image: url("../assets/img/bg.jpg");
+        background-repeat: no-repeat;
         background-size: cover;
         font-family: panel_font;
+
+        /*&.loaded {*/
+            /*background-image: url("../assets/img/bg.jpg");*/
+        /*}*/
 
         .right-menu {
             width: 20%;
@@ -417,7 +430,7 @@
             height: 80%;
             padding: 20px;
             position: absolute;
-            left: -74%;
+            left: -80%;
             top: 10%;
             transition: left .5s ease-out;
             border-radius: 10px;
@@ -480,7 +493,7 @@
             height: 10%;
             position: absolute;
             left: 25%;
-            top: -9%;
+            top: -10%;
             transition: top .5s ease-out;
             background: url("../assets/img/wood.jpg");
             opacity: @panel_opacity;
@@ -524,7 +537,7 @@
             height: 89%;
             position: absolute;
             left: 5%;
-            bottom: -88%;
+            bottom: -89%;
             transition: all .5s ease-out;
             overflow-y: auto;
 
